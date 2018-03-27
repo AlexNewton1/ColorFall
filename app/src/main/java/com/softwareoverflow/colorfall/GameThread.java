@@ -1,47 +1,53 @@
 package com.softwareoverflow.colorfall;
 
+import android.app.Activity;
 import android.graphics.Canvas;
 import android.view.SurfaceHolder;
 
-/**
- * Created by Alex on 07/02/2018.
- */
 
 public class GameThread extends Thread {
-    private GameView gameView;
+    private static GameView gameView;
     private final SurfaceHolder surfaceHolder;
     private boolean running;
-    private static Canvas canvas;
 
-    public static final int TARGET_FPS = 30;
+    private static final int TARGET_FPS = 40;
+    private static final long TARGET_FRAME_TIME = 1000 / TARGET_FPS;
 
 
     GameThread(SurfaceHolder surfaceHolder, GameView gameView) {
         super();
         this.surfaceHolder = surfaceHolder;
-        this.gameView = gameView;
+
+        GameThread.gameView = gameView;
     }
+
 
     @Override
     public void run()
     {
+        Canvas canvas;
 
-        long startTime;
-        long timeMillis;
-        long waitTime;
-        long totalTime = 0;
-        int frameCount =0;
-        long targetTime = 1000/TARGET_FPS;
-
+        long previousFrameTime = System.currentTimeMillis();
 
         while(running) {
-            startTime = System.nanoTime();
-            canvas = null;
+            long currentTime=System.currentTimeMillis();
+            long frameTime = currentTime - previousFrameTime;
+            previousFrameTime=currentTime;
 
+            gameView.update(frameTime);
+
+            long sleep = TARGET_FRAME_TIME - frameTime;
+            if (sleep > 0) {
+                try {
+                    Thread.sleep(sleep);
+                } catch(InterruptedException e) {}
+            }
+
+            canvas = null;
             try {
+
                 canvas = this.surfaceHolder.lockCanvas();
                 synchronized (surfaceHolder) {
-                    gameView.update();
                     gameView.draw(canvas);
                 }
             } catch (Exception e) {
@@ -58,29 +64,17 @@ public class GameThread extends Thread {
                     }
                 }
             }
-
-            timeMillis = (System.nanoTime() - startTime) / 1000000;
-            waitTime = targetTime-timeMillis;
-
-            if(waitTime < 2) waitTime = 2;
-
-            try{
-                Thread.sleep(waitTime);
-            }catch(Exception e){
-                e.printStackTrace();
-            }
-
-            totalTime += System.nanoTime()-startTime;
-            frameCount++;
-            if(frameCount == TARGET_FPS)
-            {
-                double averageFPS = 1000/((totalTime/frameCount)/1000000);
-                frameCount =0;
-                totalTime = 0;
-                System.out.println(averageFPS);
-            }
         }
 
+    }
+
+    public static void playerScored(){
+        ((Activity) gameView.getContext()).runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                gameView.playerScored();
+            }
+        });
     }
 
     void setRunning(boolean isRunning) {

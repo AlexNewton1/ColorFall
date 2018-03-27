@@ -2,11 +2,12 @@ package com.softwareoverflow.colorfall.activities;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 
 import com.softwareoverflow.colorfall.GameView;
+import com.softwareoverflow.colorfall.R;
 
 public class MainActivity extends Activity {
 
@@ -17,13 +18,17 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        setContentView(R.layout.activity_main);
 
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        int height = displayMetrics.heightPixels;
-        int width = displayMetrics.widthPixels;
+        gameView = findViewById(R.id.gameView);
 
-        gameView = new GameView(this, width, height);
-        setContentView(gameView);
+        Log.d("debug", "end of onCreate");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(gameView != null)
+            gameView.resume();
     }
 }
