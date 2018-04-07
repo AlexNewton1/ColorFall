@@ -2,6 +2,7 @@ package com.softwareoverflow.colorfall;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.util.AttributeSet;
@@ -12,6 +13,7 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.widget.TextView;
 
+import com.softwareoverflow.colorfall.activities.EndGameActivity;
 import com.softwareoverflow.colorfall.characters.GameObject;
 import com.softwareoverflow.colorfall.characters.Piece;
 
@@ -23,9 +25,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private GameThread gameThread;
 
     private int screenX, screenY;
-    private static int score = 0;
-    private TextView scoreTextView;
-    private Context context;
+    private static int score = 0, lives = 3;
+    private TextView scoreTextView, livesTextView;
 
     private float x1, y1;
     private GameObject touchedObject;
@@ -134,7 +135,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         screenY = holder.getSurfaceFrame().height();
 
         scoreTextView = ((View) getParent()).findViewById(R.id.scoreTextView);
-        Log.d("debug", "DAS TEXT VIEW: " + scoreTextView);
+        livesTextView = ((View) getParent()).findViewById(R.id.livesTextView);
+        livesTextView.setText(String.valueOf(lives));
 
         addGameObjects(this.getContext(), 3);
 
@@ -186,6 +188,15 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     public void playerScored(){
         score++;
         scoreTextView.setText(String.valueOf(score));
+    }
+
+    public void playerLostLife() {
+        lives--;
+        livesTextView.setText(String.valueOf(lives));
+
+        if(lives <= 0){
+            getContext().startActivity(new Intent(getContext(), EndGameActivity.class));
+        }
     }
 
     public void resume() {
