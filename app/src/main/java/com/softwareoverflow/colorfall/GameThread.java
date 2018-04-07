@@ -77,6 +77,15 @@ public class GameThread extends Thread {
         });
     }
 
+    public static void playerLostLife() {
+        ((Activity) gameView.getContext()).runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                gameView.playerLostLife();
+            }
+        });
+    }
+
     void setRunning(boolean isRunning) {
         running = isRunning;
     }

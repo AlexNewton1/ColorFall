@@ -1,7 +1,6 @@
 package com.softwareoverflow.colorfall.characters;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.softwareoverflow.colorfall.GameThread;
 import com.softwareoverflow.colorfall.GameView;
@@ -50,10 +49,10 @@ public class Piece extends GameObject{
         int panelColour = GameView.colours[panel].getColour();
         int pieceColour = this.getColour().getColour();
 
-        Log.d("scores", "SCORED: " + (panelColour == pieceColour));
-
          if(panelColour == pieceColour)
              GameThread.playerScored();
+         else
+             GameThread.playerLostLife();
     }
 
     @Override
