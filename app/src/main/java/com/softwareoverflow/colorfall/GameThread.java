@@ -1,14 +1,14 @@
 package com.softwareoverflow.colorfall;
 
-import android.app.Activity;
 import android.graphics.Canvas;
+import android.util.Log;
 import android.view.SurfaceHolder;
 
 
 public class GameThread extends Thread {
-    private static GameView gameView;
+    private GameView gameView;
     private final SurfaceHolder surfaceHolder;
-    private boolean running;
+    private volatile boolean running;
 
     private static final int TARGET_FPS = 40;
     private static final long TARGET_FRAME_TIME = 1000 / TARGET_FPS;
@@ -18,7 +18,7 @@ public class GameThread extends Thread {
         super();
         this.surfaceHolder = surfaceHolder;
 
-        GameThread.gameView = gameView;
+        this.gameView = gameView;
     }
 
 
@@ -30,6 +30,7 @@ public class GameThread extends Thread {
         long previousFrameTime = System.currentTimeMillis();
 
         while(running) {
+
             long currentTime=System.currentTimeMillis();
             long frameTime = currentTime - previousFrameTime;
             previousFrameTime=currentTime;
@@ -40,13 +41,13 @@ public class GameThread extends Thread {
             if (sleep > 0) {
                 try {
                     Thread.sleep(sleep);
-                } catch(InterruptedException e) {}
+                } catch(InterruptedException e) { e.printStackTrace(); }
             }
 
             canvas = null;
             try {
 
-                canvas = this.surfaceHolder.lockCanvas();
+                canvas = surfaceHolder.lockCanvas();
                 synchronized (surfaceHolder) {
                     gameView.draw(canvas);
                 }
@@ -68,25 +69,8 @@ public class GameThread extends Thread {
 
     }
 
-    public static void playerScored(){
-        ((Activity) gameView.getContext()).runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                gameView.playerScored();
-            }
-        });
-    }
-
-    public static void playerLostLife() {
-        ((Activity) gameView.getContext()).runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                gameView.playerLostLife();
-            }
-        });
-    }
-
     void setRunning(boolean isRunning) {
         running = isRunning;
+        Log.d("debug", "setRunning: " + isRunning);
     }
 }

@@ -10,29 +10,29 @@ import com.softwareoverflow.colorfall.Colour;
 
 public abstract class GameObject{
 
-    final int screenX, screenY;
-    protected int x = 0, y =0, speed = 1;
+    final int screenX;
+    int x = 0, y =0;
+    float speed = 1;
     private Context context;
 
 
     private Bitmap bitmap;
     private Colour colour;
 
-    public GameObject(Context context,  int screenX, int screenY){
+    GameObject(Context context,  int screenX){
         this.context = context;
 
         this.screenX = screenX;
-        this.screenY = screenY;
 
         //placeholder to init bitmap
         setColour(Colour.BLUE);
     }
 
-    public Colour getColour(){
+    Colour getColour(){
         return colour;
     }
 
-    public Bitmap getBitmap() {
+    Bitmap getBitmap() {
         return bitmap;
     }
 
@@ -41,12 +41,15 @@ public abstract class GameObject{
         createBitmap(colour.getBitmapRef());
     }
 
+    public int getY(){
+        return y;
+    }
+
     private void createBitmap(int bitmapRes){
         bitmap = BitmapFactory.decodeResource(context.getResources(), bitmapRes);
         bitmap = Bitmap.createScaledBitmap(bitmap, 250, 250, true);
     }
 
-    public abstract void update(double frameTime);
 
     public void draw(Canvas canvas){
         canvas.drawBitmap(bitmap, x, y, null);
@@ -63,7 +66,21 @@ public abstract class GameObject{
     }
 
     /**
-     * @param direction - either 1 or -1, for right and left directions respectively
+     * @param frameTime The time of the frame, used to maintain a smooth ui
      */
-    abstract public void onSwipe(int direction);
+    public abstract void update(double frameTime);
+    /**
+     *
+     * @return true if the piece scored a point, false otherwise
+     */
+    public abstract boolean didPieceScore(Colour[] colours);
+    /**
+     * reset the piece
+     */
+    public abstract void resetPiece(Colour[] colours);
+    /**
+     * @param endX - The xValue at the end of the swipe. Used to calculate which panel the ball
+     *             should be moved to.
+     */
+    public abstract void onSwipe(float endX);
 }

@@ -2,8 +2,7 @@ package com.softwareoverflow.colorfall.characters;
 
 import android.content.Context;
 
-import com.softwareoverflow.colorfall.GameThread;
-import com.softwareoverflow.colorfall.GameView;
+import com.softwareoverflow.colorfall.Colour;
 
 import java.util.Random;
 
@@ -15,24 +14,17 @@ public class Piece extends GameObject{
     private int panelWidth;
     private float speedX;
 
-    public Piece(Context context, int screenX, int screenY){
-        super(context, screenX, screenY);
-
+    public Piece(Context context, int screenX){
+        super(context, screenX);
         panelWidth = screenX / 3;
         speedX = panelWidth / 50;
-
         random = new Random();
-        y = screenY;
     }
 
 
     @Override
     public void update(double frameTime) {
         y += speed * frameTime;
-        if(y > screenY) {
-            checkIfScored();
-            resetPiece();
-        }
 
         if(targetX != x){
             int direction = (targetX > x) ? 1 : -1;
@@ -44,40 +36,39 @@ public class Piece extends GameObject{
         }
     }
 
-    private void checkIfScored(){
+    @Override
+    public boolean didPieceScore(Colour[] colours){
         int panel = targetX / panelWidth;
-        int panelColour = GameView.colours[panel].getColour();
+        int panelColour = colours[panel].getColour();
         int pieceColour = this.getColour().getColour();
 
-         if(panelColour == pieceColour)
-             GameThread.playerScored();
-         else
-             GameThread.playerLostLife();
+        return panelColour == pieceColour;
     }
 
     @Override
-    public void onSwipe(int direction) {
-        targetX += direction * panelWidth;
-
-        if(targetX < 0 || targetX > screenX) { targetX = x; }
-        if(targetX > screenX) { targetX = x; }
+    public void onSwipe(float endX) {
+        int panelNum = (int) (endX / panelWidth);
+        targetX = getPxFromPanelNum(panelNum);
     }
 
-    private void resetPiece(){
-        int index = random.nextInt(GameView.colours.length);
-        setColour(GameView.colours[index]);
+    public void resetPiece(Colour[] colours){
+        int index = random.nextInt(colours.length);
+        setColour(colours[index]);
 
         int start = random.nextInt(3);
-        targetX = x = (int) (panelWidth * (start + 0.5) - getBitmap().getWidth() / 2);
+        targetX = x = getPxFromPanelNum(start);
 
-        int maxSpeed = 2;
-        int minSpeed = 1;
-        speed = random.nextInt(maxSpeed - minSpeed) + minSpeed;
+        int maxSpeed = 100;
+        int minSpeed = 30;
+        speed = (random.nextInt(maxSpeed - minSpeed) + minSpeed) / 100f;
 
+        int minStartY = 1000;
+        int maxStartY = 2000;
+        int startY = (random.nextInt(maxStartY - minStartY) + minStartY);
+        y = -random.nextInt(startY) - getBitmap().getHeight();
+    }
 
-        int maxY = speed * 5000;
-        y = -random.nextInt(maxY) - getBitmap().getHeight();
-
-        GameView.movePieceToFront(this);
+    private int getPxFromPanelNum(int panelNum){
+        return (int) (panelWidth * (panelNum + 0.5) - getBitmap().getWidth() / 2);
     }
 }

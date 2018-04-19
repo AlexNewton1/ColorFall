@@ -1,6 +1,7 @@
 package com.softwareoverflow.colorfall;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Canvas;
@@ -17,30 +18,25 @@ import com.softwareoverflow.colorfall.activities.EndGameActivity;
 import com.softwareoverflow.colorfall.characters.GameObject;
 import com.softwareoverflow.colorfall.characters.Piece;
 
-import java.util.ArrayList;
-import java.util.Random;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
-    private GameThread gameThread;
+    private GameThread gameThread = null;
+    private Activity gameActivity;
+    private TouchEventHandler touchEventHandler;
 
+    //UI items
     private int screenX, screenY;
     private static int score = 0, lives = 3;
     private TextView scoreTextView, livesTextView;
 
-    private float x1, y1;
-    private GameObject touchedObject;
-    private long downTime = 0;
-    private static final int SWIPE_MIN_DISTANCE = 120;
-    private static final int SWIPE_MAX_OFF_PATH = 250;
-    private static final int SWIPE_MAX_TIME = 1200;
 
-    public static final Colour[] colours = {Colour.BLUE, Colour.RED, Colour.YELLOW};
-
+    public final Colour[] colours = {Colour.BLUE, Colour.RED, Colour.YELLOW};
     private Paint paint = new Paint();
 
 
-    private static ArrayList<GameObject> gameObjects = new ArrayList<>();
+    private static CopyOnWriteArrayList<GameObject> gameObjects = new CopyOnWriteArrayList<>();
 
 
     public GameView(Context context) {
@@ -65,21 +61,17 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     private void setup(Context context){
-
+        Log.d("debug", "GameView setup");
+        gameActivity = ((Activity) context);
+        gameObjects.clear();
+        lives = 3;
+        score = 0;
+        touchEventHandler = new TouchEventHandler(this);
         getHolder().addCallback(this);
-        gameThread = new GameThread(getHolder(), this);
         setFocusable(true);
+
     }
 
-    private void addGameObjects(Context context, int numObjects) {
-        Random random = new Random();
-        for (int i = 0; i < numObjects; i++) {
-            gameObjects.add(new Piece(context, screenX, screenY));
-
-            int index = random.nextInt(colours.length);
-            gameObjects.get(i).setColour(colours[index]);
-        }
-    }
 
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
@@ -87,50 +79,18 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        Log.d("debug", "EVENT: " + "" + event.getAction());
+        performClick();
+        return touchEventHandler.handleEvent(event);
+    }
 
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                downTime = System.nanoTime();
-                x1 = event.getX();
-                y1 = event.getY();
-
-                touchedObject = null;
-                for (int i = gameObjects.size() - 1; i >= 0; i--) {
-                    GameObject gameObject = gameObjects.get(i);
-                    if (gameObject.isObjectTouched(x1, y1)) {
-                        touchedObject = gameObject;
-                        break;
-                    }
-                }
-
-                return true;
-            case MotionEvent.ACTION_UP:
-                float x2 = event.getX();
-                float y2 = event.getY();
-
-                float deltaX = x2 - x1;
-                float deltaY = y2 - y1;
-
-                float deltaT = (System.nanoTime() - downTime) / 1000000;
-
-                if (Math.abs(deltaX) > SWIPE_MIN_DISTANCE &&
-                        Math.abs(deltaY) < SWIPE_MAX_OFF_PATH && deltaT < SWIPE_MAX_TIME) {
-
-                    Log.d("debug", "OBJ: " + touchedObject);
-                    if (touchedObject != null) {
-                        Log.d("debug", "Updating obj");
-                        touchedObject.onSwipe(deltaX > 0 ? 1 : -1);
-                    }
-                }
-                return true;
-        }
-        return super.onTouchEvent(event);
+    @Override
+    public boolean performClick() {
+        return super.performClick();
     }
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-        Log.d("debug", holder.getSurfaceFrame().width() + ", " + holder.getSurfaceFrame().height());
+        Log.d("debug", "Surface created");
         screenX = holder.getSurfaceFrame().width();
         screenY = holder.getSurfaceFrame().height();
 
@@ -138,30 +98,61 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         livesTextView = ((View) getParent()).findViewById(R.id.livesTextView);
         livesTextView.setText(String.valueOf(lives));
 
-        addGameObjects(this.getContext(), 3);
+        if(gameObjects.isEmpty()){
+            addGameObjects(this.getContext(), 3);
+        }
 
-        gameThread.setRunning(true);
         gameThread.start();
+        Log.d("debug", "gameThread alive: " + gameThread.isAlive());
     }
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
-        boolean retry = true;
-        while (retry) {
-            try {
-                gameThread.setRunning(false);
-                gameThread.join();
+        Log.d("debug", "surface destroyed");
 
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            retry = false;
+    }
+
+    private void addGameObjects(Context context, int numObjects) {
+        gameObjects.clear();
+
+        for (int i = 0; i < numObjects; i++) {
+            Piece piece = new Piece(context, screenX);
+            piece.resetPiece(colours);
+            gameObjects.add(piece);
         }
+    }
+
+    public CopyOnWriteArrayList<GameObject> getGameObjects(){
+        return gameObjects;
     }
 
     public void update(double frameTime) {
         for (GameObject gameObject : gameObjects) {
             gameObject.update(frameTime);
+
+            if(gameObject.getY() > screenY) {
+                if(gameObject.didPieceScore(colours)){
+                    gameActivity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            playerScored();
+                        }
+                    });
+                } else {
+                    gameActivity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            playerLostLife();
+                        }
+                    });
+                }
+
+                //bring to front when looping
+                gameObjects.remove(gameObject);
+                gameObjects.add(gameObject);
+
+                gameObject.resetPiece(colours);
+            }
         }
     }
 
@@ -179,31 +170,44 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                 gameObject.draw(canvas);
             }
         }
-    }
 
-    //CURRENTLY UNIMPLEMENTED!
-    public static void movePieceToFront(GameObject piece) {
     }
 
     public void playerScored(){
+        Log.d("debug", "playerScored");
         score++;
         scoreTextView.setText(String.valueOf(score));
     }
 
     public void playerLostLife() {
+        Log.d("debug", "playerLostLife, remaining: " + (lives -1));
         lives--;
         livesTextView.setText(String.valueOf(lives));
 
         if(lives <= 0){
-            getContext().startActivity(new Intent(getContext(), EndGameActivity.class));
+            gameActivity.startActivity(new Intent(gameActivity, EndGameActivity.class));
+            gameActivity.finish();
         }
     }
 
-    public void resume() {
-        if(gameThread != null){
-            gameThread.setRunning(true);
-            gameThread = new GameThread(getHolder(), this);
-        }
+    public void onResume() {
+        Log.d("debug", "onResume");
+        gameThread = new GameThread(getHolder(), this);
+        gameThread.setRunning(true);
+    }
 
+    public void onPause(){
+        //stop the thread
+        boolean retry = true;
+        while (retry) {
+            try {
+                gameThread.setRunning(false);
+                gameThread.join();
+
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            retry = false;
+        }
     }
 }
