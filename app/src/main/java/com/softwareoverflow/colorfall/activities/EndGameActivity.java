@@ -6,13 +6,13 @@ import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
-import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.softwareoverflow.colorfall.R;
 
 public class EndGameActivity extends AppCompatActivity {
 
-    private ImageButton playAgainButton;
+    private TextView playAgainButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
