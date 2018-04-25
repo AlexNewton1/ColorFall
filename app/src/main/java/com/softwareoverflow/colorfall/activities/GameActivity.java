@@ -7,6 +7,7 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import com.softwareoverflow.colorfall.GameView;
+import com.softwareoverflow.colorfall.Level;
 import com.softwareoverflow.colorfall.R;
 
 public class GameActivity extends Activity {
@@ -21,7 +22,18 @@ public class GameActivity extends Activity {
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_game_screen);
 
+        //default value
+        Level level  = Level.EASY;
+
+        Bundle extras = getIntent().getExtras();
+        if(extras != null){
+            String levelDifficulty = extras.getString("difficulty");
+            level = Level.valueOf(levelDifficulty);
+        }
+
         gameView = findViewById(R.id.gameView);
+        gameView.setLevel(level);
+
         //pauseScreen = findViewById(R.id.pauseScreen);
     }
 

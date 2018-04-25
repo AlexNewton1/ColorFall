@@ -6,8 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -28,11 +28,11 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     //UI items
     private int screenX, screenY;
-    private static int score = 0, lives = 3;
+    private static int score = -1, lives = 3;
     private TextView scoreTextView, livesTextView;
 
+    Level level;
 
-    public final Colour[] colours = {Colour.BLUE, Colour.RED, Colour.YELLOW};
     private Paint paint = new Paint();
 
 
@@ -61,15 +61,19 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     private void setup(Context context){
-        Log.d("debug", "GameView setup");
         gameActivity = ((Activity) context);
+
         gameObjects.clear();
         lives = 3;
         score = 0;
+
         touchEventHandler = new TouchEventHandler(this);
         getHolder().addCallback(this);
         setFocusable(true);
+    }
 
+    public void setLevel(Level level){
+        this.level = level;
     }
 
 
@@ -90,7 +94,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-        Log.d("debug", "Surface created");
         screenX = holder.getSurfaceFrame().width();
         screenY = holder.getSurfaceFrame().height();
 
@@ -99,25 +102,24 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         livesTextView.setText(String.valueOf(lives));
 
         if(gameObjects.isEmpty()){
-            addGameObjects(this.getContext(), 3);
+            addGameObjects(this.getContext());
         }
 
+        scoreTextView.setText(String.valueOf(score));
+        livesTextView.setText(String.valueOf(lives));
+
         gameThread.start();
-        Log.d("debug", "gameThread alive: " + gameThread.isAlive());
     }
 
     @Override
-    public void surfaceDestroyed(SurfaceHolder holder) {
-        Log.d("debug", "surface destroyed");
+    public void surfaceDestroyed(SurfaceHolder holder) {}
 
-    }
-
-    private void addGameObjects(Context context, int numObjects) {
+    private void addGameObjects(Context context) {
         gameObjects.clear();
 
-        for (int i = 0; i < numObjects; i++) {
-            Piece piece = new Piece(context, screenX);
-            piece.resetPiece(colours);
+        for (int i = 0; i < level.getNumBalls(); i++) {
+            Piece piece = new Piece(context, screenX, level.getNumPanels());
+            piece.resetPiece(level);
             gameObjects.add(piece);
         }
     }
@@ -131,7 +133,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             gameObject.update(frameTime);
 
             if(gameObject.getY() > screenY) {
-                if(gameObject.didPieceScore(colours)){
+                if(gameObject.didPieceScore(level)){
                     gameActivity.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -151,7 +153,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                 gameObjects.remove(gameObject);
                 gameObjects.add(gameObject);
 
-                gameObject.resetPiece(colours);
+                gameObject.resetPiece(level);
             }
         }
     }
@@ -160,11 +162,13 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     public void draw(Canvas canvas) {
         super.draw(canvas);
         if (canvas != null) {
-            for(int i=0; i<colours.length; i++){
-                paint.setColor(colours[i].getColour());
-                canvas.drawRect(screenX / 3 * i, 0, screenX / 3 * (i + 1), screenY, paint);
-            }
+            int panelWidth = screenX / level.getNumPanels();
 
+            for(int i=0; i<level.getColours().length; i++){
+                int colour = ContextCompat.getColor(gameActivity, level.getColours()[i].getColour());
+                paint.setColor(colour);
+                canvas.drawRect(panelWidth * i, 0, panelWidth * (i + 1), screenY, paint);
+            }
 
             for (GameObject gameObject : gameObjects) {
                 gameObject.draw(canvas);
@@ -174,13 +178,11 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     public void playerScored(){
-        Log.d("debug", "playerScored");
         score++;
         scoreTextView.setText(String.valueOf(score));
     }
 
     public void playerLostLife() {
-        Log.d("debug", "playerLostLife, remaining: " + (lives -1));
         lives--;
         livesTextView.setText(String.valueOf(lives));
 
@@ -191,7 +193,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     public void onResume() {
-        Log.d("debug", "onResume");
         gameThread = new GameThread(getHolder(), this);
         gameThread.setRunning(true);
     }

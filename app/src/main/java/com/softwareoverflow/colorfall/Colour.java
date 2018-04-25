@@ -1,16 +1,15 @@
 package com.softwareoverflow.colorfall;
 
-import android.graphics.Color;
-
 /**
  * Created by Alex on 20/03/2018.
  */
 
 public enum Colour {
 
-    BLUE (R.drawable.blue_ball, Color.BLUE),
-    YELLOW (R.drawable.yellow_ball, Color.YELLOW),
-    RED (R.drawable.red_ball, Color.RED);
+    BLUE (R.drawable.blue_ball, R.color.blue),
+    ORANGE (R.drawable.orange_ball, R.color.orange),
+    PINK (R.drawable.pink_ball, R.color.pink),
+    PURPLE(R.drawable.purple_ball, R.color.purple);
 
 
     private int bitmap;

@@ -16,15 +16,38 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    public void playGame(View v) {
 
-    public void playGame(View v){
-
-        startActivity(new Intent(this, GameActivity.class));
-
-
-        //TODO get levels from v.getId() and pass in
-        switch (v.getId()){
-
+        String difficulty;
+        switch (v.getId()) {
+            case R.id.playEasy:
+                difficulty = "EASY";
+                break;
+            case R.id.playMedium:
+                difficulty = "MEDIUM";
+                break;
+            case R.id.playHard:
+                difficulty = "HARD";
+                break;
+            case R.id.playInsane:
+                difficulty = "INSANE";
+                break;
+            default:
+                difficulty = "EASY";
+                break;
         }
+
+        Intent gameIntent = new Intent(this, GameActivity.class);
+        gameIntent.putExtra("difficulty", difficulty);
+        startActivity(gameIntent);
+    }
+
+    public void rollCredits(View v) {
+
+
+    }
+
+    public void showSettings(View v) {
+
     }
 }
