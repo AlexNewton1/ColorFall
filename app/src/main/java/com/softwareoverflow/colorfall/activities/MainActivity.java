@@ -42,12 +42,9 @@ public class MainActivity extends AppCompatActivity {
         startActivity(gameIntent);
     }
 
-    public void rollCredits(View v) {
+    //TODO - implement rollCredits
+    public void rollCredits(View v) { }
 
-
-    }
-
-    public void showSettings(View v) {
-
-    }
+    //TODO - implement showSettings
+    public void showSettings(View v) { }
 }

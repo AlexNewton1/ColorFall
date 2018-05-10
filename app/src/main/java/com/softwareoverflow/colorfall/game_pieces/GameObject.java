@@ -1,4 +1,4 @@
-package com.softwareoverflow.colorfall.characters;
+package com.softwareoverflow.colorfall.game_pieces;
 
 import android.content.Context;
 import android.graphics.Bitmap;

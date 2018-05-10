@@ -8,16 +8,17 @@ import java.util.Random;
 
 public enum Level {
 
-    EASY(3, 3, 50, 100), MEDIUM(3, 3, 75, 125), HARD(4, 4, 75, 125), INSANE(4, 6, 100, 150);
+    EASY(3, 3, 50, 100), MEDIUM(3, 3, 75, 125), HARD(4, 4, 75, 125), INSANE(4, 6, 85, 150);
 
     private Colour[] colours;
     private int numPanels, numBalls, minSpeed, maxSpeed;
+    private final int DEFAULT_MIN_SPEED, DEFAULT_MAX_SPEED;
 
     Level(int numPanels, int numBalls, int minSpeed, int maxSpeed){
         this.numPanels = numPanels;
         this.numBalls = numBalls;
-        this.minSpeed = minSpeed;
-        this.maxSpeed = maxSpeed;
+        this.minSpeed = this.DEFAULT_MIN_SPEED =minSpeed;
+        this.maxSpeed = this.DEFAULT_MAX_SPEED = maxSpeed;
 
         colours = new Colour[numPanels];
 
@@ -50,5 +51,15 @@ public enum Level {
 
     public int getMaxSpeed() {
         return maxSpeed;
+    }
+
+    public void speedUp(){
+        this.maxSpeed *= 1.2;
+        this.minSpeed *= 1.2;
+    }
+
+    public void resetSpeed(){
+        minSpeed = DEFAULT_MIN_SPEED;
+        maxSpeed = DEFAULT_MAX_SPEED;
     }
 }

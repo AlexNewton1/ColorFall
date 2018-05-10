@@ -3,7 +3,7 @@ package com.softwareoverflow.colorfall;
 import android.util.Log;
 import android.view.MotionEvent;
 
-import com.softwareoverflow.colorfall.characters.GameObject;
+import com.softwareoverflow.colorfall.game_pieces.GameObject;
 
 import java.util.concurrent.CopyOnWriteArrayList;
 

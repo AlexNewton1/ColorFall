@@ -24,17 +24,17 @@ public class GameActivity extends Activity {
 
         //default value
         Level level  = Level.EASY;
-
         Bundle extras = getIntent().getExtras();
         if(extras != null){
             String levelDifficulty = extras.getString("difficulty");
             level = Level.valueOf(levelDifficulty);
         }
+        level.resetSpeed();
 
         gameView = findViewById(R.id.gameView);
         gameView.setLevel(level);
 
-        //pauseScreen = findViewById(R.id.pauseScreen);
+        //TODO - add a pauseScreen (R.id.pauseScreen);
     }
 
     @Override

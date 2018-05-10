@@ -15,16 +15,20 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.softwareoverflow.colorfall.activities.EndGameActivity;
-import com.softwareoverflow.colorfall.characters.GameObject;
-import com.softwareoverflow.colorfall.characters.Piece;
+import com.softwareoverflow.colorfall.game_pieces.GameObject;
+import com.softwareoverflow.colorfall.game_pieces.Piece;
+import com.softwareoverflow.colorfall.media.SoundEffectHandler;
 
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
+    //Game Items
     private GameThread gameThread = null;
     private Activity gameActivity;
     private TouchEventHandler touchEventHandler;
+    private SoundEffectHandler soundEffectHandler;
+
 
     //UI items
     private int screenX, screenY;
@@ -61,6 +65,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     private void setup(Context context){
+        soundEffectHandler = new SoundEffectHandler(context);
+
         gameActivity = ((Activity) context);
 
         gameObjects.clear();
@@ -178,8 +184,17 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     public void playerScored(){
+
         score++;
         scoreTextView.setText(String.valueOf(score));
+
+        int levelUpInterval = 25;
+        if(score % levelUpInterval == 0){
+            soundEffectHandler.playSound(SoundEffectHandler.Sound.LEVEL_UP);
+            level.speedUp();
+        } else {
+            soundEffectHandler.playSound(SoundEffectHandler.Sound.SCORE);
+        }
     }
 
     public void playerLostLife() {
@@ -187,9 +202,16 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         livesTextView.setText(String.valueOf(lives));
 
         if(lives <= 0){
-            gameActivity.startActivity(new Intent(gameActivity, EndGameActivity.class));
+            soundEffectHandler.playSound(SoundEffectHandler.Sound.GAME_OVER);
+            Intent endGameIntent = new Intent(gameActivity, EndGameActivity.class);
+            endGameIntent.putExtra("score", score);
+            endGameIntent.putExtra("difficulty", level.name());
+            gameActivity.startActivity(endGameIntent);
             gameActivity.finish();
+        } else {
+            soundEffectHandler.playSound(SoundEffectHandler.Sound.LOSE_LIFE);
         }
+
     }
 
     public void onResume() {
