@@ -1,4 +1,4 @@
-package com.softwareoverflow.colorfall.characters;
+package com.softwareoverflow.colorfall.game_pieces;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 
 import com.softwareoverflow.colorfall.Colour;
+import com.softwareoverflow.colorfall.Level;
 
 
 public abstract class GameObject{
@@ -73,11 +74,11 @@ public abstract class GameObject{
      *
      * @return true if the piece scored a point, false otherwise
      */
-    public abstract boolean didPieceScore(Colour[] colours);
+    public abstract boolean didPieceScore(Level level);
     /**
      * reset the piece
      */
-    public abstract void resetPiece(Colour[] colours);
+    public abstract void resetPiece(Level level);
     /**
      * @param endX - The xValue at the end of the swipe. Used to calculate which panel the ball
      *             should be moved to.

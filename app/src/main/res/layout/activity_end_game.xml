@@ -66,9 +66,9 @@
                 android:textSize="18sp" />
 
             <TextView
+                android:id="@+id/endGameScoreTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="23"
                 android:textSize="18sp" />
 
         </LinearLayout>
@@ -85,9 +85,9 @@
                 android:textSize="18sp" />
 
             <TextView
+                android:id="@+id/endGameHiScoreTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="23"
                 android:textSize="18sp" />
 
         </LinearLayout>

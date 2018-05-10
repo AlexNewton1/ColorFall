@@ -1,8 +1,8 @@
-package com.softwareoverflow.colorfall.characters;
+package com.softwareoverflow.colorfall.game_pieces;
 
 import android.content.Context;
 
-import com.softwareoverflow.colorfall.Colour;
+import com.softwareoverflow.colorfall.Level;
 
 import java.util.Random;
 
@@ -14,10 +14,11 @@ public class Piece extends GameObject{
     private int panelWidth;
     private float speedX;
 
-    public Piece(Context context, int screenX){
+    public Piece(Context context, int screenX, int numPanels){
         super(context, screenX);
-        panelWidth = screenX / 3;
-        speedX = panelWidth / 50;
+        panelWidth = screenX / numPanels;
+
+        speedX = panelWidth / 20;
         random = new Random();
     }
 
@@ -37,9 +38,9 @@ public class Piece extends GameObject{
     }
 
     @Override
-    public boolean didPieceScore(Colour[] colours){
+    public boolean didPieceScore(Level level){
         int panel = targetX / panelWidth;
-        int panelColour = colours[panel].getColour();
+        int panelColour = level.getColours()[panel].getColour();
         int pieceColour = this.getColour().getColour();
 
         return panelColour == pieceColour;
@@ -51,24 +52,26 @@ public class Piece extends GameObject{
         targetX = getPxFromPanelNum(panelNum);
     }
 
-    public void resetPiece(Colour[] colours){
-        int index = random.nextInt(colours.length);
-        setColour(colours[index]);
+    public void resetPiece(Level level){
+        int index = random.nextInt(level.getColours().length);
+        setColour(level.getColours()[index]);
 
         int start = random.nextInt(3);
         targetX = x = getPxFromPanelNum(start);
 
-        int maxSpeed = 100;
-        int minSpeed = 30;
+        int maxSpeed = level.getMaxSpeed();
+        int minSpeed = level.getMinSpeed();
         speed = (random.nextInt(maxSpeed - minSpeed) + minSpeed) / 100f;
 
-        int minStartY = 1000;
-        int maxStartY = 2000;
+        int minStartY = minSpeed * 20;
+        int maxStartY = maxSpeed * 50;
         int startY = (random.nextInt(maxStartY - minStartY) + minStartY);
         y = -random.nextInt(startY) - getBitmap().getHeight();
     }
 
     private int getPxFromPanelNum(int panelNum){
+        if(panelNum < 0 ) panelNum = 0;
+        else if(panelNum > screenX / panelWidth) panelNum = (screenX / panelWidth) - 1;
         return (int) (panelWidth * (panelNum + 0.5) - getBitmap().getWidth() / 2);
     }
 }
