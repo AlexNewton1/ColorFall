@@ -1,6 +1,5 @@
 package com.softwareoverflow.colorfall;
 
-import android.util.Log;
 import android.view.MotionEvent;
 
 import com.softwareoverflow.colorfall.game_pieces.GameObject;
@@ -55,13 +54,11 @@ public class TouchEventHandler {
                         Math.abs(deltaY) < SWIPE_MAX_OFF_PATH && deltaT < SWIPE_MAX_TIME) {
 
                     if (touchedObject != null) {
-                        Log.d("debug", "Sending object for swipe");
                         touchedObject.onSwipe(x2);
                     }
                 }
                 return true;
         }
         return false;
-
     }
 }

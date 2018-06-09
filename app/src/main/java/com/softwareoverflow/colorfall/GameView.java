@@ -6,15 +6,19 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.softwareoverflow.colorfall.activities.EndGameActivity;
+import com.softwareoverflow.colorfall.animations.CountdownAnimation;
 import com.softwareoverflow.colorfall.game_pieces.GameObject;
 import com.softwareoverflow.colorfall.game_pieces.Piece;
 import com.softwareoverflow.colorfall.media.SoundEffectHandler;
@@ -29,11 +33,15 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private TouchEventHandler touchEventHandler;
     private SoundEffectHandler soundEffectHandler;
 
-
     //UI items
     private int screenX, screenY;
     private static int score = -1, lives = 3;
     private TextView scoreTextView, livesTextView;
+
+    //Pause screen items
+    ImageView countdownTimer;
+    private ConstraintLayout pauseLayout;
+    private boolean isPaused;
 
     Level level;
 
@@ -65,7 +73,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     private void setup(Context context){
-        soundEffectHandler = new SoundEffectHandler(context);
+        soundEffectHandler = SoundEffectHandler.getInstance(context);
 
         gameActivity = ((Activity) context);
 
@@ -90,7 +98,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         performClick();
-        return touchEventHandler.handleEvent(event);
+        return isPaused || touchEventHandler.handleEvent(event);
     }
 
     @Override
@@ -103,6 +111,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         screenX = holder.getSurfaceFrame().width();
         screenY = holder.getSurfaceFrame().height();
 
+        pauseLayout = ((View) getParent()).findViewById(R.id.game_paused_view);
+        countdownTimer = ((View) getParent()).findViewById(R.id.countdown_image_view);
         scoreTextView = ((View) getParent()).findViewById(R.id.scoreTextView);
         livesTextView = ((View) getParent()).findViewById(R.id.livesTextView);
         livesTextView.setText(String.valueOf(lives));
@@ -114,7 +124,12 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         scoreTextView.setText(String.valueOf(score));
         livesTextView.setText(String.valueOf(lives));
 
-        gameThread.start();
+        if(isPaused) {
+            pauseLayout.setVisibility(VISIBLE);
+        } else {
+            Log.d("debug", "surfaceCreated, resuming game");
+            startCountdown();
+        }
     }
 
     @Override
@@ -171,9 +186,11 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             int panelWidth = screenX / level.getNumPanels();
 
             for(int i=0; i<level.getColours().length; i++){
-                int colour = ContextCompat.getColor(gameActivity, level.getColours()[i].getColour());
+                int colour = ContextCompat.getColor(gameActivity,
+                        level.getColours()[i].getColour());
                 paint.setColor(colour);
-                canvas.drawRect(panelWidth * i, 0, panelWidth * (i + 1), screenY, paint);
+                canvas.drawRect(panelWidth * i, 0, panelWidth * (i + 1),
+                        screenY, paint);
             }
 
             for (GameObject gameObject : gameObjects) {
@@ -184,7 +201,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     public void playerScored(){
-
         score++;
         scoreTextView.setText(String.valueOf(score));
 
@@ -207,6 +223,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             endGameIntent.putExtra("score", score);
             endGameIntent.putExtra("difficulty", level.name());
             gameActivity.startActivity(endGameIntent);
+
             gameActivity.finish();
         } else {
             soundEffectHandler.playSound(SoundEffectHandler.Sound.LOSE_LIFE);
@@ -214,9 +231,37 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     }
 
+    public void startCountdown(){
+        pauseLayout.setVisibility(GONE);
+        gameThread.updateCanvas();
+        countdownTimer.setVisibility(VISIBLE);
+
+        float scaleX = screenX / 2;
+        float scaleY = screenY / 2;
+        CountdownAnimation countdownAnimation = new CountdownAnimation(countdownTimer, scaleX, scaleY,
+                this);
+        countdownAnimation.start();
+    }
+
+    public void startGame(){
+        isPaused = false;
+        pauseLayout.setVisibility(GONE);
+        countdownTimer.setVisibility(GONE);
+        gameThread.setRunning(true);
+
+        if(!gameThread.isAlive()){
+            gameThread.start();
+        }
+    }
+
     public void onResume() {
         gameThread = new GameThread(getHolder(), this);
-        gameThread.setRunning(true);
+        if(isPaused){
+            pauseLayout.setVisibility(VISIBLE);
+            countdownTimer.setVisibility(GONE);
+        } else {
+            gameThread.setRunning(true);
+        }
     }
 
     public void onPause(){
@@ -226,11 +271,13 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             try {
                 gameThread.setRunning(false);
                 gameThread.join();
-
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
             retry = false;
         }
+
+        CountdownAnimation.setInCountdown(false);
+        isPaused = true;
     }
 }

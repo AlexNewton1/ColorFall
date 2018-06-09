@@ -3,12 +3,14 @@ package com.softwareoverflow.colorfall.activities;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
 import com.softwareoverflow.colorfall.GameView;
 import com.softwareoverflow.colorfall.Level;
 import com.softwareoverflow.colorfall.R;
+import com.softwareoverflow.colorfall.media.BackgroundMusicService;
 
 public class GameActivity extends Activity {
 
@@ -33,14 +35,22 @@ public class GameActivity extends Activity {
 
         gameView = findViewById(R.id.gameView);
         gameView.setLevel(level);
+    }
 
-        //TODO - add a pauseScreen (R.id.pauseScreen);
+    public void resumeGame(View v){
+        gameView.startCountdown();
+    }
+
+    public void quitGame(View v){
+        onBackPressed();
+        this.finish();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
 
+        BackgroundMusicService.stopMusic();
         if(gameView != null){
             gameView.onPause();
         }
@@ -50,6 +60,7 @@ public class GameActivity extends Activity {
     protected void onResume() {
         super.onResume();
 
+        BackgroundMusicService.resumeMusic();
         if(gameView != null){
             gameView.onResume();
         }
