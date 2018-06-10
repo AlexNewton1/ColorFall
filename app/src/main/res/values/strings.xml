@@ -19,6 +19,14 @@
     <string name="on">On</string>
     <string name="off">Off</string>
 
+    <!--___________________Hi Scores Screen Resources_______________-->
+    <string name="high_scores">High Scores</string>
+    <string name="beginner">Beginner:</string>
+    <string name="easy">Easy:</string>
+    <string name="medium">Medium:</string>
+    <string name="hard">Hard:</string>
+    <string name="insane">Insane:</string>
+
     <!--___________________Game Screen Resources___________________-->
     <string name="game_paused">Game\nPaused</string>
     <string name="resume">Resume</string>
