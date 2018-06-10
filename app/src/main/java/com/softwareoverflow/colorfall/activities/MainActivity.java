@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void showHiScores(View v) {
-       // startActivity(new Intent(this, HiScoresActivity.class));
+       startActivity(new Intent(this, HiScoresActivity.class));
     }
 
     public void showSettings(View v) {

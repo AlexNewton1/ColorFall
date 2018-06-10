@@ -22,7 +22,8 @@
         </activity>
         <activity android:name=".activities.GameActivity" />
         <activity android:name=".activities.EndGameActivity" />
-        <activity android:name=".activities.SettingsActivity"></activity>
+        <activity android:name=".activities.SettingsActivity" />
+        <activity android:name=".activities.HiScoresActivity"></activity>
     </application>
 
 </manifest>

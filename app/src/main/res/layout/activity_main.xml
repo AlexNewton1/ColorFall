@@ -134,7 +134,7 @@
         android:layout_marginBottom="36dp"
         android:layout_marginEnd="36dp"
         android:text="@string/credits"
-        android:onClick="rollCredits"
+        android:onClick="showHiScores"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
