@@ -11,18 +11,39 @@
         android:id="@+id/textView3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="32dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:gravity="center"
-        android:text="ColourFall"
+        android:text="@string/app_name"
         android:textSize="30sp"
-        app:layout_constraintBottom_toTopOf="@+id/playEasy"
+        app:layout_constraintBottom_toTopOf="@+id/playBeginner"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.504"
         app:layout_constraintVertical_chainStyle="spread" />
+
+    <TextView
+        android:id="@+id/playBeginner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:onClick="playGame"
+        android:text="@string/level_beginner"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@+id/playEasy"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.56"
+        app:layout_constraintVertical_chainStyle="packed" />
 
     <TextView
         android:id="@+id/playEasy"
@@ -33,13 +54,13 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:onClick="playGame"
-        android:text="Easy"
+        android:text="@string/level_easy"
         android:textSize="24sp"
         app:layout_constraintBottom_toTopOf="@+id/playMedium"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/playBeginner"
         app:layout_constraintVertical_bias="0.5"
         app:layout_constraintVertical_chainStyle="packed" />
 
@@ -52,7 +73,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:onClick="playGame"
-        android:text="Medium"
+        android:text="@string/level_medium"
         android:textSize="24sp"
         app:layout_constraintBottom_toTopOf="@+id/playHard"
         app:layout_constraintEnd_toEndOf="parent"
@@ -70,7 +91,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:onClick="playGame"
-        android:text="Hard"
+        android:text="@string/level_hard"
         android:textSize="24sp"
         app:layout_constraintBottom_toTopOf="@+id/playInsane"
         app:layout_constraintEnd_toEndOf="parent"
@@ -82,12 +103,11 @@
         android:id="@+id/playInsane"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:onClick="playGame"
-        android:text="Insane"
+        android:text="@string/level_insane"
         android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -97,25 +117,25 @@
 
 
     <TextView
-        android:id="@+id/creditsTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="36dp"
-        android:layout_marginEnd="36dp"
-        android:text="Credits"
-        android:onClick="rollCredits"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <TextView
         android:id="@+id/settingsTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="36dp"
         android:layout_marginStart="36dp"
         android:onClick="showSettings"
-        android:text="Settings"
+        android:text="@string/settings"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/creditsTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="36dp"
+        android:layout_marginEnd="36dp"
+        android:text="@string/credits"
+        android:onClick="rollCredits"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -12,6 +11,7 @@ import android.view.animation.LinearInterpolator;
 import android.widget.TextView;
 
 import com.softwareoverflow.colorfall.R;
+import com.softwareoverflow.colorfall.media.BackgroundMusicService;
 
 public class EndGameActivity extends AppCompatActivity {
 
@@ -70,10 +70,21 @@ public class EndGameActivity extends AppCompatActivity {
 
 
     public void playAgain(View v){
-        Log.d("debug", "endGameAcitivity: " + difficulty);
         Intent gameIntent = new Intent(this, GameActivity.class);
         gameIntent.putExtra("difficulty", difficulty);
         startActivity(gameIntent);
         this.finish();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        BackgroundMusicService.stopMusic();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        BackgroundMusicService.resumeMusic();
     }
 }

@@ -1,14 +1,12 @@
 package com.softwareoverflow.colorfall;
 
-import android.util.Log;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
 
 public enum Level {
 
-    EASY(3, 3, 50, 100), MEDIUM(3, 3, 75, 125), HARD(4, 4, 75, 125), INSANE(4, 6, 85, 150);
+    BEGINNER(3, 3, 50, 100), EASY(3, 4, 60, 110), MEDIUM(3, 4, 75, 125), HARD(4, 4, 75, 125), INSANE(4, 6, 85, 150);
 
     private Colour[] colours;
     private int numPanels, numBalls, minSpeed, maxSpeed;
@@ -26,7 +24,6 @@ public enum Level {
 
         Random random = new Random();
         for(int i=0; i<numPanels; i++){
-            Log.d("debug", "" + allColours.size());
             int index = random.nextInt(allColours.size());
             colours[i] = allColours.get(index);
             allColours.remove(index);
