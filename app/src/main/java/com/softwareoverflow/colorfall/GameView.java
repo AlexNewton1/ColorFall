@@ -47,7 +47,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     private Paint paint = new Paint();
 
-
     private static CopyOnWriteArrayList<GameObject> gameObjects = new CopyOnWriteArrayList<>();
 
 

@@ -6,6 +6,7 @@ import android.media.MediaPlayer;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.softwareoverflow.colorfall.R;
 
@@ -13,6 +14,7 @@ public class BackgroundMusicService extends Service {
 
     private static MediaPlayer mediaPlayer;
     private static float volume = 0;
+    public static boolean changingActivity;
 
     private static boolean playMusic = true;
 
@@ -62,18 +64,20 @@ public class BackgroundMusicService extends Service {
         fadeHandler.post(fadeInRunnable);
     }
 
-    @Override
+   /* @Override
     public void onDestroy() {
-        if(mediaPlayer !=null ) {
+        if(mediaPlayer != null  && mediaPlayer.isPlaying()) {
             mediaPlayer.stop();
         }
         super.onDestroy();
-    }
+    }*/
 
     public static void stopMusic(){
-        if(mediaPlayer != null) {
+        if(mediaPlayer != null && !changingActivity) {
             volume = 0;
             mediaPlayer.pause();
+
+            Log.e("debug", "Stopped music");
         }
     }
 
@@ -81,12 +85,17 @@ public class BackgroundMusicService extends Service {
         if(mediaPlayer != null && playMusic) {
             mediaPlayer.start();
             fadeIn();
+
+            Log.e("debug", "resumed music");
         }
     }
 
     public static void releaseResources() {
-        if(mediaPlayer !=null ) {
+        if(mediaPlayer != null ) {
+            mediaPlayer.stop();
             mediaPlayer.release();
+
+            Log.e("debug", "Released resources");
         }
     }
 
