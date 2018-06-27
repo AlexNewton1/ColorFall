@@ -5,8 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 
-import com.softwareoverflow.colorfall.Colour;
-import com.softwareoverflow.colorfall.Level;
+import com.softwareoverflow.colorfall.game.Level;
 
 
 public abstract class GameObject{

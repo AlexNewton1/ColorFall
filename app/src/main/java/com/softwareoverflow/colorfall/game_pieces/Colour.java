@@ -1,4 +1,6 @@
-package com.softwareoverflow.colorfall;
+package com.softwareoverflow.colorfall.game_pieces;
+
+import com.softwareoverflow.colorfall.R;
 
 /**
  * Created by Alex on 20/03/2018.

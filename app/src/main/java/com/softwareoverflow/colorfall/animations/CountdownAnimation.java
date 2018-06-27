@@ -7,7 +7,7 @@ import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
 
-import com.softwareoverflow.colorfall.GameView;
+import com.softwareoverflow.colorfall.game.GameView;
 import com.softwareoverflow.colorfall.R;
 
 public class CountdownAnimation {

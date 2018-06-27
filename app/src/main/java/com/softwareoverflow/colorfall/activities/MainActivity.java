@@ -8,7 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
 
-import com.softwareoverflow.colorfall.Level;
+import com.softwareoverflow.colorfall.game.Level;
 import com.softwareoverflow.colorfall.R;
 import com.softwareoverflow.colorfall.media.BackgroundMusicService;
 import com.softwareoverflow.colorfall.media.SoundEffectHandler;

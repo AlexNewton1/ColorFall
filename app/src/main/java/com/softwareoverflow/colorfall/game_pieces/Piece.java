@@ -2,7 +2,7 @@ package com.softwareoverflow.colorfall.game_pieces;
 
 import android.content.Context;
 
-import com.softwareoverflow.colorfall.Level;
+import com.softwareoverflow.colorfall.game.Level;
 
 import java.util.Random;
 

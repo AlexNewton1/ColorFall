@@ -7,8 +7,8 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
-import com.softwareoverflow.colorfall.GameView;
-import com.softwareoverflow.colorfall.Level;
+import com.softwareoverflow.colorfall.game.GameView;
+import com.softwareoverflow.colorfall.game.Level;
 import com.softwareoverflow.colorfall.R;
 import com.softwareoverflow.colorfall.media.BackgroundMusicService;
 
@@ -34,7 +34,7 @@ public class GameActivity extends Activity {
         level.resetSpeed();
 
         gameView = findViewById(R.id.gameView);
-        gameView.setLevel(level);
+        gameView.setLevel(level, this);
     }
 
     public void resumeGame(View v){
