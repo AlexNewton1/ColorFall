@@ -1,4 +1,6 @@
-package com.softwareoverflow.colorfall;
+package com.softwareoverflow.colorfall.game;
+
+import com.softwareoverflow.colorfall.game_pieces.Colour;
 
 import java.util.ArrayList;
 import java.util.Arrays;

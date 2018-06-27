@@ -11,6 +11,9 @@ import android.widget.TextView;
 
 import com.softwareoverflow.colorfall.R;
 
+//TODO - Fix outline not appearing properly
+//TODO - Start / Stop music when setting gets changed, instead of only when returning to homepage
+//TODO - add sound effect for turning on sound effects
 public class SettingsActivity extends AppCompatActivity {
 
     private SharedPreferences sharedPreferences;

@@ -7,7 +7,7 @@
     tools:context=".activities.GameActivity">
 
 
-    <com.softwareoverflow.colorfall.GameView xmlns:android="http://schemas.android.com/apk/res/android"
+    <com.softwareoverflow.colorfall.game.GameView xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/gameView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

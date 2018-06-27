@@ -8,6 +8,7 @@ import android.util.Log;
 import com.softwareoverflow.colorfall.R;
 
 import java.util.HashMap;
+import java.util.Random;
 
 /**
  * SoundEffectHandler is responsible for playing all sound effects in the game.
@@ -16,7 +17,9 @@ import java.util.HashMap;
 public class SoundEffectHandler {
 
     public enum Sound {
-        LEVEL_UP(R.raw.level_up), SCORE(R.raw.score), LOSE_LIFE(R.raw.lose_life), GAME_OVER(R.raw.game_over);
+        LEVEL_UP(R.raw.level_up), SCORE(R.raw.score), LOSE_LIFE(R.raw.lose_life),
+        GAME_OVER(R.raw.game_over), NEW_HI_MALE(R.raw.new_hi_male),
+        NEW_HI_FEMALE(R.raw.new_hi_female);
 
         private int resId;
 
@@ -79,6 +82,7 @@ public class SoundEffectHandler {
         soundPool.play(soundId, 1, 1, 1, 0, 1);
     }
 
+    //TODO - release this onDestroy of gameActivity?
     public void release(){
         if(soundPool !=null ) {
             soundPool.release();
@@ -88,5 +92,16 @@ public class SoundEffectHandler {
 
     public static void setPlaySounds(boolean playSounds){
         SoundEffectHandler.playSounds = playSounds;
+    }
+
+    public void newHiScore(){
+        Random random = new Random();
+        if(random.nextBoolean()){
+            Log.e("debug", "MALE");
+            playSound(Sound.NEW_HI_MALE);
+        } else {
+            Log.e("debug", "FEMALE");
+            playSound(Sound.NEW_HI_FEMALE);
+        }
     }
 }

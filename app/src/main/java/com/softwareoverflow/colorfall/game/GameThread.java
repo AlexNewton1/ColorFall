@@ -1,4 +1,4 @@
-package com.softwareoverflow.colorfall;
+package com.softwareoverflow.colorfall.game;
 
 import android.graphics.Canvas;
 import android.view.SurfaceHolder;

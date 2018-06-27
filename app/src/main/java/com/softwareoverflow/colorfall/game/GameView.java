@@ -1,9 +1,10 @@
-package com.softwareoverflow.colorfall;
+package com.softwareoverflow.colorfall.game;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.support.constraint.ConstraintLayout;
@@ -17,6 +18,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.softwareoverflow.colorfall.R;
 import com.softwareoverflow.colorfall.activities.EndGameActivity;
 import com.softwareoverflow.colorfall.animations.CountdownAnimation;
 import com.softwareoverflow.colorfall.game_pieces.GameObject;
@@ -36,6 +38,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     //UI items
     private int screenX, screenY;
     private static int score = -1, lives = 3;
+    private int oldHiScore;
     private TextView scoreTextView, livesTextView;
 
     //Pause screen items
@@ -85,8 +88,11 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         setFocusable(true);
     }
 
-    public void setLevel(Level level){
+    public void setLevel(Level level, Context context){
         this.level = level;
+
+        SharedPreferences sharedPrefs = context.getSharedPreferences("scores", Context.MODE_PRIVATE);
+        oldHiScore = sharedPrefs.getInt(level.name(), 0);
     }
 
 
@@ -209,6 +215,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             level.speedUp();
         } else {
             soundEffectHandler.playSound(SoundEffectHandler.Sound.SCORE);
+        }
+
+        if(score == oldHiScore + 1){
+            soundEffectHandler.newHiScore();
         }
     }
 
