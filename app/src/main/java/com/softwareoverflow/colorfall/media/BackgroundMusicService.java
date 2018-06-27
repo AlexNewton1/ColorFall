@@ -27,6 +27,7 @@ public class BackgroundMusicService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+
         mediaPlayer = MediaPlayer.create(this, R.raw.background_music);
         mediaPlayer.setLooping(true);
         mediaPlayer.setVolume(0, 0);
@@ -45,9 +46,7 @@ public class BackgroundMusicService extends Service {
     }
 
     private static void fadeIn(){
-
         final Handler fadeHandler = new Handler();
-
         final Runnable fadeInRunnable = new Runnable() {
             @Override
             public void run() {
@@ -64,15 +63,17 @@ public class BackgroundMusicService extends Service {
         fadeHandler.post(fadeInRunnable);
     }
 
-   /* @Override
+    @Override
     public void onDestroy() {
         if(mediaPlayer != null  && mediaPlayer.isPlaying()) {
             mediaPlayer.stop();
+            mediaPlayer.release();
         }
         super.onDestroy();
-    }*/
+    }
 
     public static void stopMusic(){
+        Log.e("debug", "Stopping music: " + mediaPlayer.toString() + ", " +  changingActivity);
         if(mediaPlayer != null && !changingActivity) {
             volume = 0;
             mediaPlayer.pause();
@@ -87,6 +88,15 @@ public class BackgroundMusicService extends Service {
             fadeIn();
 
             Log.e("debug", "resumed music");
+        }
+    }
+
+    public static void restartMusic(){
+        Log.e("debug", "restartMusic: " + mediaPlayer + ", " + playMusic);
+        if(mediaPlayer != null && playMusic) {
+            volume = 0;
+            mediaPlayer.seekTo(0);
+            resumeMusic();
         }
     }
 

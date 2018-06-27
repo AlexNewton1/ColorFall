@@ -89,7 +89,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void checkSettings(){
         SharedPreferences sharedPreferences = getSharedPreferences("settings", MODE_PRIVATE);
-
         BackgroundMusicService.setPlayMusic(sharedPreferences.getBoolean("music", true));
         SoundEffectHandler.setPlaySounds(sharedPreferences.getBoolean("sounds", true));
     }
@@ -107,15 +106,17 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onPause() {
+        Log.e("debug", "Main onPause");
         BackgroundMusicService.stopMusic();
         super.onPause();
     }
 
-    @Override
+/*    @Override
     protected void onStop() {
+        Log.e("debug", "Main onStop");
         BackgroundMusicService.stopMusic();
         super.onStop();
-    }
+    }*/
 
     @Override
     protected void onDestroy() {
