@@ -1,4 +1,4 @@
-package com.softwareoverflow.colorfall;
+package com.softwareoverflow.colorfall.game;
 
 import android.view.MotionEvent;
 
