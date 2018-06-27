@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -24,8 +25,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         checkSettings();
-        backgroundMusic = new Intent(this, BackgroundMusicService.class);
-        startService(backgroundMusic);
     }
 
 
@@ -56,10 +55,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void showHiScores(View v) {
+        BackgroundMusicService.changingActivity = true;
        startActivity(new Intent(this, HiScoresActivity.class));
     }
 
     public void showSettings(View v) {
+        BackgroundMusicService.changingActivity = true;
         Intent settingsIntent = new Intent(this, SettingsActivity.class);
         startActivityForResult(settingsIntent, SETTINGS_REQUEST_CODE);
     }
@@ -95,6 +96,10 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
+        backgroundMusic = new Intent(this, BackgroundMusicService.class);
+        startService(backgroundMusic);
+
+        BackgroundMusicService.changingActivity = false;
         BackgroundMusicService.resumeMusic();
 
         super.onResume();
@@ -103,22 +108,20 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         BackgroundMusicService.stopMusic();
-
         super.onPause();
     }
 
     @Override
     protected void onStop() {
         BackgroundMusicService.stopMusic();
-
         super.onStop();
     }
 
     @Override
     protected void onDestroy() {
+        Log.e("debug", "MainActivity onDestroy");
         BackgroundMusicService.releaseResources();
         stopService(backgroundMusic);
-
         super.onDestroy();
     }
 }

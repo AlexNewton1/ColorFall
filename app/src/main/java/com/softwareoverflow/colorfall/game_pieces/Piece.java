@@ -11,12 +11,10 @@ public class Piece extends GameObject{
     private Random random;
 
     private int targetX;
-    private int panelWidth;
     private float speedX;
 
     public Piece(Context context, int screenX, int numPanels){
-        super(context, screenX);
-        panelWidth = screenX / numPanels;
+        super(context, screenX, numPanels);
 
         speedX = panelWidth / 20;
         random = new Random();

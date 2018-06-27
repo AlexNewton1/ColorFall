@@ -2,7 +2,6 @@ package com.softwareoverflow.colorfall.activities;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.constraint.ConstraintLayout;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -15,7 +14,6 @@ import com.softwareoverflow.colorfall.media.BackgroundMusicService;
 public class GameActivity extends Activity {
 
     private GameView gameView;
-    private ConstraintLayout pauseScreen;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

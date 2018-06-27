@@ -87,4 +87,10 @@ public class EndGameActivity extends AppCompatActivity {
         super.onResume();
         BackgroundMusicService.resumeMusic();
     }
+
+    @Override
+    public void onBackPressed() {
+        BackgroundMusicService.changingActivity = true;
+        super.onBackPressed();
+    }
 }
