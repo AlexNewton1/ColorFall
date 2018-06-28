@@ -10,7 +10,6 @@ import android.graphics.Paint;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -132,7 +131,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         if(isPaused) {
             pauseLayout.setVisibility(VISIBLE);
         } else {
-            Log.d("debug", "surfaceCreated, resuming game");
             startCountdown();
         }
     }

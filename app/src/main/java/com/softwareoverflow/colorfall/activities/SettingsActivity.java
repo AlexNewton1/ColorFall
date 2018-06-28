@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.softwareoverflow.colorfall.R;
+import com.softwareoverflow.colorfall.media.BackgroundMusicService;
 
 //TODO - Fix outline not appearing properly
 //TODO - Start / Stop music when setting gets changed, instead of only when returning to homepage
@@ -50,30 +51,13 @@ public class SettingsActivity extends AppCompatActivity {
         }
     }
 
-    public void cancelSettings(View v){
-        onBackPressed();
-    }
-
-    public void saveSettings(View v){
-        sharedPreferences.edit().putBoolean("music", playMusic).apply();
-        sharedPreferences.edit().putBoolean("sounds", playSounds).apply();
-
-        Intent returnIntent = new Intent();
-        setResult(Activity.RESULT_OK, returnIntent);
-        finish();
-    }
-
     public void changeSettings(View v){
         switch (v.getId()){
             case R.id.play_music_off:
-                playMusic = false;
-                playMusicOn.setBackground(null);
-                playMusicOff.setBackground(borderDrawable);
+                setMusic(false);
                 break;
             case R.id.play_music_on:
-                playMusic = true;
-                playMusicOff.setBackground(null);
-                playMusicOn.setBackground(borderDrawable);
+                setMusic(true);
                 break;
             case R.id.play_sounds_off:
                 playSounds = false;
@@ -86,5 +70,64 @@ public class SettingsActivity extends AppCompatActivity {
                 playSoundsOn.setBackground(borderDrawable);
                 break;
         }
+    }
+
+    public void setMusic(boolean music){
+        playMusic = music;
+        BackgroundMusicService.setPlayMusic(music);
+        if(music) {
+            BackgroundMusicService.restartMusic();
+            playMusicOff.setBackground(null);
+            playMusicOn.setBackground(borderDrawable);
+        } else {
+            BackgroundMusicService.stopMusic();
+            playMusicOn.setBackground(null);
+            playMusicOff.setBackground(borderDrawable);
+        }
+    }
+
+    public void cancelSettings(View v){
+        if(playMusic != sharedPreferences.getBoolean("music", true)) {
+            playMusic = sharedPreferences.getBoolean("music", true);
+            setMusic(playMusic);
+        }
+        onBackPressed();
+    }
+
+    public void saveSettings(View v){
+        sharedPreferences.edit().putBoolean("music", playMusic).apply();
+        sharedPreferences.edit().putBoolean("sounds", playSounds).apply();
+
+        BackgroundMusicService.changingActivity = true;
+        Intent returnIntent = new Intent();
+        setResult(Activity.RESULT_OK, returnIntent);
+        finish();
+    }
+
+    @Override
+    protected void onResume() {
+        if(!BackgroundMusicService.changingActivity) {
+            startService(new Intent(this, BackgroundMusicService.class));
+        }
+        BackgroundMusicService.changingActivity = false;
+
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        if(!BackgroundMusicService.changingActivity) {
+            stopService(new Intent(this, BackgroundMusicService.class));
+        }
+        super.onPause();
+    }
+
+    @Override
+    public void onBackPressed() {
+        playMusic = sharedPreferences.getBoolean("music", true);
+        BackgroundMusicService.setPlayMusic(playMusic);
+
+        BackgroundMusicService.changingActivity = true;
+        super.onBackPressed();
     }
 }

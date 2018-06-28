@@ -5,18 +5,16 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
-import com.softwareoverflow.colorfall.game.Level;
 import com.softwareoverflow.colorfall.R;
+import com.softwareoverflow.colorfall.game.Level;
 import com.softwareoverflow.colorfall.media.BackgroundMusicService;
 import com.softwareoverflow.colorfall.media.SoundEffectHandler;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Intent backgroundMusic;
     private final int SETTINGS_REQUEST_CODE = 1;
 
     @Override
@@ -49,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
 
+        BackgroundMusicService.changingActivity = true;
         Intent gameIntent = new Intent(this, GameActivity.class);
         gameIntent.putExtra("difficulty", difficulty);
         startActivity(gameIntent);
@@ -89,39 +88,34 @@ public class MainActivity extends AppCompatActivity {
 
     private void checkSettings(){
         SharedPreferences sharedPreferences = getSharedPreferences("settings", MODE_PRIVATE);
-
         BackgroundMusicService.setPlayMusic(sharedPreferences.getBoolean("music", true));
         SoundEffectHandler.setPlaySounds(sharedPreferences.getBoolean("sounds", true));
     }
 
     @Override
     protected void onResume() {
-        backgroundMusic = new Intent(this, BackgroundMusicService.class);
-        startService(backgroundMusic);
+        checkSettings();
+
+        if(!BackgroundMusicService.changingActivity) {
+            startService(new Intent(this, BackgroundMusicService.class));
+        }
 
         BackgroundMusicService.changingActivity = false;
-        BackgroundMusicService.resumeMusic();
 
         super.onResume();
     }
 
     @Override
     protected void onPause() {
-        BackgroundMusicService.stopMusic();
+        if(!BackgroundMusicService.changingActivity) {
+            stopService(new Intent(this, BackgroundMusicService.class));
+        }
         super.onPause();
     }
 
     @Override
-    protected void onStop() {
-        BackgroundMusicService.stopMusic();
-        super.onStop();
-    }
-
-    @Override
     protected void onDestroy() {
-        Log.e("debug", "MainActivity onDestroy");
-        BackgroundMusicService.releaseResources();
-        stopService(backgroundMusic);
+        stopService(new Intent(this, BackgroundMusicService.class));
         super.onDestroy();
     }
 }

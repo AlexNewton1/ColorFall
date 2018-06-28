@@ -97,10 +97,8 @@ public class SoundEffectHandler {
     public void newHiScore(){
         Random random = new Random();
         if(random.nextBoolean()){
-            Log.e("debug", "MALE");
             playSound(Sound.NEW_HI_MALE);
         } else {
-            Log.e("debug", "FEMALE");
             playSound(Sound.NEW_HI_FEMALE);
         }
     }
