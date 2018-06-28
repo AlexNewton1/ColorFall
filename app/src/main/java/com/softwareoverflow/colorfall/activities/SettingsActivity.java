@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -28,9 +27,6 @@ public class SettingsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
-
-        BackgroundMusicService.changingActivity = false;
-        Log.e("debug", "Settings onCreate: " + BackgroundMusicService.changingActivity);
 
         playMusicOn = findViewById(R.id.play_music_on);
         playMusicOff = findViewById(R.id.play_music_off);
@@ -56,15 +52,12 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     public void changeSettings(View v){
-        Log.e("debug", "Called changeSettings");
         switch (v.getId()){
             case R.id.play_music_off:
                 setMusic(false);
-                Log.e("debug", "Called stopMusic");
                 break;
             case R.id.play_music_on:
                 setMusic(true);
-                Log.e("debug", "Called restart");
                 break;
             case R.id.play_sounds_off:
                 playSounds = false;
@@ -94,6 +87,10 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     public void cancelSettings(View v){
+        if(playMusic != sharedPreferences.getBoolean("music", true)) {
+            playMusic = sharedPreferences.getBoolean("music", true);
+            setMusic(playMusic);
+        }
         onBackPressed();
     }
 
@@ -105,6 +102,24 @@ public class SettingsActivity extends AppCompatActivity {
         Intent returnIntent = new Intent();
         setResult(Activity.RESULT_OK, returnIntent);
         finish();
+    }
+
+    @Override
+    protected void onResume() {
+        if(!BackgroundMusicService.changingActivity) {
+            startService(new Intent(this, BackgroundMusicService.class));
+        }
+        BackgroundMusicService.changingActivity = false;
+
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        if(!BackgroundMusicService.changingActivity) {
+            stopService(new Intent(this, BackgroundMusicService.class));
+        }
+        super.onPause();
     }
 
     @Override

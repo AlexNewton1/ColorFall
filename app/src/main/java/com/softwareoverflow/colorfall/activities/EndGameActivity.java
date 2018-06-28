@@ -70,6 +70,7 @@ public class EndGameActivity extends AppCompatActivity {
 
 
     public void playAgain(View v){
+        BackgroundMusicService.changingActivity = true;
         Intent gameIntent = new Intent(this, GameActivity.class);
         gameIntent.putExtra("difficulty", difficulty);
         startActivity(gameIntent);
@@ -77,15 +78,21 @@ public class EndGameActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-        BackgroundMusicService.stopMusic();
+    protected void onResume() {
+        if(!BackgroundMusicService.changingActivity) {
+            startService(new Intent(this, BackgroundMusicService.class));
+        }
+        BackgroundMusicService.changingActivity = false;
+
+        super.onResume();
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        BackgroundMusicService.resumeMusic();
+    protected void onPause() {
+        if(!BackgroundMusicService.changingActivity) {
+            stopService(new Intent(this, BackgroundMusicService.class));
+        }
+        super.onPause();
     }
 
     @Override

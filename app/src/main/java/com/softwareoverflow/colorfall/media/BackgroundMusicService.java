@@ -6,7 +6,6 @@ import android.media.MediaPlayer;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import com.softwareoverflow.colorfall.R;
 
@@ -35,6 +34,7 @@ public class BackgroundMusicService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        volume = 0;
         mediaPlayer.start();
         fadeIn();
 
@@ -50,6 +50,10 @@ public class BackgroundMusicService extends Service {
         final Runnable fadeInRunnable = new Runnable() {
             @Override
             public void run() {
+                if(mediaPlayer == null || !playMusic || !mediaPlayer.isPlaying()){
+                    return;
+                }
+
                 if(volume < 1) {
                     volume += 0.05;
                     mediaPlayer.setVolume(volume, volume);
@@ -63,22 +67,23 @@ public class BackgroundMusicService extends Service {
         fadeHandler.post(fadeInRunnable);
     }
 
+    public static boolean getPlayMusic(){
+        return playMusic;
+    }
+
     @Override
     public void onDestroy() {
-        if(mediaPlayer != null  && mediaPlayer.isPlaying()) {
-            mediaPlayer.stop();
+        if(mediaPlayer != null) {
             mediaPlayer.release();
+            mediaPlayer = null;
         }
         super.onDestroy();
     }
 
     public static void stopMusic(){
-        Log.e("debug", "Stopping music: " + mediaPlayer.toString() + ", " +  changingActivity);
-        if(mediaPlayer != null && !changingActivity) {
+        if(mediaPlayer != null && !changingActivity && mediaPlayer.isPlaying()) {
             volume = 0;
             mediaPlayer.pause();
-
-            Log.e("debug", "Stopped music");
         }
     }
 
@@ -86,26 +91,13 @@ public class BackgroundMusicService extends Service {
         if(mediaPlayer != null && playMusic) {
             mediaPlayer.start();
             fadeIn();
-
-            Log.e("debug", "resumed music");
         }
     }
-
     public static void restartMusic(){
-        Log.e("debug", "restartMusic: " + mediaPlayer + ", " + playMusic);
         if(mediaPlayer != null && playMusic) {
             volume = 0;
             mediaPlayer.seekTo(0);
             resumeMusic();
-        }
-    }
-
-    public static void releaseResources() {
-        if(mediaPlayer != null ) {
-            mediaPlayer.stop();
-            mediaPlayer.release();
-
-            Log.e("debug", "Released resources");
         }
     }
 

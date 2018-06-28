@@ -1,14 +1,15 @@
 package com.softwareoverflow.colorfall.activities;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.softwareoverflow.colorfall.R;
 import com.softwareoverflow.colorfall.game.GameView;
 import com.softwareoverflow.colorfall.game.Level;
-import com.softwareoverflow.colorfall.R;
 import com.softwareoverflow.colorfall.media.BackgroundMusicService;
 
 public class GameActivity extends Activity {
@@ -40,27 +41,42 @@ public class GameActivity extends Activity {
     }
 
     public void quitGame(View v){
-        onBackPressed();
+        BackgroundMusicService.changingActivity = true;
         this.finish();
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-
-        BackgroundMusicService.stopMusic();
-        if(gameView != null){
-            gameView.onPause();
-        }
-    }
-
-    @Override
     protected void onResume() {
-        super.onResume();
+        if(!BackgroundMusicService.changingActivity) {
+            startService(new Intent(this, BackgroundMusicService.class));
+        }
+        BackgroundMusicService.changingActivity = false;
 
-        BackgroundMusicService.resumeMusic();
         if(gameView != null){
             gameView.onResume();
         }
+
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        if(!BackgroundMusicService.changingActivity) {
+            stopService(new Intent(this, BackgroundMusicService.class));
+        }
+
+        if(gameView != null){
+            gameView.onPause();
+        }
+
+        super.onPause();
+    }
+
+    @Override
+    public void onBackPressed() {
+        BackgroundMusicService.changingActivity = true;
+        onPause();
+        onResume();
+        BackgroundMusicService.changingActivity = false;
     }
 }

@@ -1,14 +1,13 @@
 package com.softwareoverflow.colorfall.animations;
 
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
 
-import com.softwareoverflow.colorfall.game.GameView;
 import com.softwareoverflow.colorfall.R;
+import com.softwareoverflow.colorfall.game.GameView;
 
 public class CountdownAnimation {
 
@@ -33,9 +32,7 @@ public class CountdownAnimation {
         scaleAnim.setDuration(1000);
         scaleAnim.setAnimationListener(new Animation.AnimationListener() {
             @Override
-            public void onAnimationStart(Animation animation) {
-                Log.d("debug", "Started animation: " + countdown);
-            }
+            public void onAnimationStart(Animation animation) {}
 
             @Override
             public void onAnimationEnd(Animation animation) {
@@ -46,7 +43,6 @@ public class CountdownAnimation {
                 }
 
                 if( countdown > 1) {
-                    Log.d("debug", "calling animation recursively");
                     countdown--;
                     start();
                 } else {
