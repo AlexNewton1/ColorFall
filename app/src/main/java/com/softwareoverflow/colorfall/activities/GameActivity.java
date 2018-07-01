@@ -31,6 +31,7 @@ public class GameActivity extends Activity {
             level = Level.valueOf(levelDifficulty);
         }
         level.resetSpeed();
+        level.setColours();
 
         gameView = findViewById(R.id.gameView);
         gameView.setLevel(level, this);
