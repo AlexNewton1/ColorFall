@@ -21,15 +21,7 @@ public enum Level {
         this.maxSpeed = this.DEFAULT_MAX_SPEED = maxSpeed;
 
         colours = new Colour[numPanels];
-
-        ArrayList<Colour> allColours = new ArrayList<>(Arrays.asList(Colour.values()));
-
-        Random random = new Random();
-        for(int i=0; i<numPanels; i++){
-            int index = random.nextInt(allColours.size());
-            colours[i] = allColours.get(index);
-            allColours.remove(index);
-        }
+        setColours();
     }
 
     public Colour[] getColours() {
@@ -60,5 +52,16 @@ public enum Level {
     public void resetSpeed(){
         minSpeed = DEFAULT_MIN_SPEED;
         maxSpeed = DEFAULT_MAX_SPEED;
+    }
+
+    public void setColours(){
+        ArrayList<Colour> allColours = new ArrayList<>(Arrays.asList(Colour.values()));
+
+        Random random = new Random();
+        for(int i=0; i<numPanels; i++){
+            int index = random.nextInt(allColours.size());
+            colours[i] = allColours.get(index);
+            allColours.remove(index);
+        }
     }
 }
