@@ -16,7 +16,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="32dp"
         android:text="@string/settings"
-        android:textSize="25sp"
+        android:textSize="45sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -39,31 +39,35 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:layout_weight="2"
             android:gravity="center_vertical|end"
-            android:text="@string/settings_music" />
+            android:text="@string/settings_music"
+            android:textSize="25sp" />
 
         <TextView
             android:id="@+id/play_music_on"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_margin="4dp"
+            android:layout_weight="1"
             android:gravity="center"
             android:onClick="changeSettings"
             android:padding="8dp"
-            android:text="@string/on" />
-
+            android:text="@string/on"
+            android:textSize="25sp" />
 
         <TextView
             android:id="@+id/play_music_off"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_margin="4dp"
+            android:layout_weight="1"
             android:gravity="center"
             android:onClick="changeSettings"
             android:padding="8dp"
             android:paddingTop="4dp"
-            android:text="@string/off" />
+            android:text="@string/off"
+            android:textSize="25sp" />
     </LinearLayout>
 
 
@@ -83,28 +87,33 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:layout_weight="2"
             android:gravity="center_vertical|end"
-            android:text="@string/settings_sound_effects" />
+            android:text="@string/settings_sound_effects"
+            android:textSize="25sp" />
 
         <TextView
             android:id="@+id/play_sounds_on"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_margin="4dp"
+            android:layout_weight="1"
             android:onClick="changeSettings"
             android:padding="8dp"
-            android:text="@string/on" />
+            android:text="@string/on"
+            android:textSize="25sp" />
 
 
         <TextView
             android:id="@+id/play_sounds_off"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_margin="4dp"
+            android:layout_weight="1"
             android:onClick="changeSettings"
             android:padding="8dp"
-            android:text="@string/off" />
+            android:text="@string/off"
+            android:textSize="25sp" />
     </LinearLayout>
 
 
@@ -116,6 +125,7 @@
         android:layout_marginEnd="8dp"
         android:onClick="cancelSettings"
         android:text="@string/cancel"
+        android:textSize="25sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/save_settings"
         app:layout_constraintHorizontal_bias="0.5"
@@ -129,6 +139,7 @@
         android:layout_marginBottom="16dp"
         android:onClick="saveSettings"
         android:text="@string/save"
+        android:textSize="25sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
