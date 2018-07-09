@@ -11,14 +11,15 @@ import android.widget.TextView;
 
 import com.softwareoverflow.colorfall.R;
 import com.softwareoverflow.colorfall.media.BackgroundMusicService;
+import com.softwareoverflow.colorfall.media.SoundEffectHandler;
 
 //TODO - Fix outline not appearing properly
-//TODO - Start / Stop music when setting gets changed, instead of only when returning to homepage
-//TODO - add sound effect for turning on sound effects
 public class SettingsActivity extends AppCompatActivity {
 
     private SharedPreferences sharedPreferences;
     private boolean playMusic, playSounds;
+
+    private SoundEffectHandler soundEffectHandler;
 
     TextView playMusicOn, playMusicOff, playSoundsOn, playSoundsOff;
     private Drawable borderDrawable;
@@ -27,6 +28,8 @@ public class SettingsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
+
+        soundEffectHandler = SoundEffectHandler.getInstance(this);
 
         playMusicOn = findViewById(R.id.play_music_on);
         playMusicOff = findViewById(R.id.play_music_off);
@@ -65,6 +68,7 @@ public class SettingsActivity extends AppCompatActivity {
                 playSoundsOff.setBackground(borderDrawable);
                 break;
             case R.id.play_sounds_on:
+                soundEffectHandler.playSound(SoundEffectHandler.Sound.SCORE);
                 playSounds = true;
                 playSoundsOff.setBackground(null);
                 playSoundsOn.setBackground(borderDrawable);
