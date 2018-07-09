@@ -54,6 +54,7 @@
             android:text="@string/on" />
 
 
+
         <TextView
             android:id="@+id/play_music_off"
             android:layout_width="wrap_content"
