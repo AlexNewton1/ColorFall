@@ -3,12 +3,14 @@ package com.softwareoverflow.colorfall.activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.softwareoverflow.colorfall.R;
 import com.softwareoverflow.colorfall.media.BackgroundMusicService;
 import com.softwareoverflow.colorfall.media.SoundEffectHandler;
@@ -42,15 +44,15 @@ public class SettingsActivity extends AppCompatActivity {
 
         borderDrawable = getDrawable(R.drawable.white_border);
         if (playMusic) {
-            playMusicOn.setBackground(borderDrawable);
+            playMusicOff.setTextColor(Color.GRAY);
         } else {
-            playMusicOff.setBackground(borderDrawable);
+            playMusicOn.setTextColor(Color.GRAY);
         }
 
         if (playSounds) {
-            playSoundsOn.setBackground(borderDrawable);
+            playSoundsOff.setTextColor(Color.GRAY);
         } else {
-            playSoundsOff.setBackground(borderDrawable);
+            playSoundsOn.setTextColor(Color.GRAY);
         }
     }
 
@@ -64,14 +66,14 @@ public class SettingsActivity extends AppCompatActivity {
                 break;
             case R.id.play_sounds_off:
                 playSounds = false;
-                playSoundsOn.setBackground(null);
-                playSoundsOff.setBackground(borderDrawable);
+                playSoundsOn.setTextColor(Color.GRAY);
+                playSoundsOff.setTextColor(Color.WHITE);
                 break;
             case R.id.play_sounds_on:
                 soundEffectHandler.playSound(SoundEffectHandler.Sound.SCORE);
                 playSounds = true;
-                playSoundsOff.setBackground(null);
-                playSoundsOn.setBackground(borderDrawable);
+                playSoundsOff.setTextColor(Color.GRAY);
+                playSoundsOn.setTextColor(Color.WHITE);
                 break;
         }
     }
@@ -81,12 +83,12 @@ public class SettingsActivity extends AppCompatActivity {
         BackgroundMusicService.setPlayMusic(music);
         if(music) {
             BackgroundMusicService.restartMusic();
-            playMusicOff.setBackground(null);
-            playMusicOn.setBackground(borderDrawable);
+            playMusicOn.setTextColor(Color.WHITE);
+            playMusicOff.setTextColor(Color.GRAY);
         } else {
             BackgroundMusicService.stopMusic();
-            playMusicOn.setBackground(null);
-            playMusicOff.setBackground(borderDrawable);
+            playMusicOff.setTextColor(Color.WHITE);
+            playMusicOn.setTextColor(Color.GRAY);
         }
     }
 
@@ -106,6 +108,11 @@ public class SettingsActivity extends AppCompatActivity {
         Intent returnIntent = new Intent();
         setResult(Activity.RESULT_OK, returnIntent);
         finish();
+
+        FirebaseAnalytics analytics = FirebaseAnalytics.getInstance(this);
+        analytics.setUserProperty("background_music", String.valueOf(playMusic));
+        analytics.setUserProperty("sound_effects", String.valueOf(playSounds));
+
     }
 
     @Override
