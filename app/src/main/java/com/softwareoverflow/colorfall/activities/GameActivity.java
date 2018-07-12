@@ -7,6 +7,9 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.softwareoverflow.colorfall.R;
 import com.softwareoverflow.colorfall.game.GameView;
 import com.softwareoverflow.colorfall.game.Level;
@@ -24,9 +27,9 @@ public class GameActivity extends Activity {
         setContentView(R.layout.activity_game_screen);
 
         //default value
-        Level level  = Level.EASY;
+        Level level = Level.EASY;
         Bundle extras = getIntent().getExtras();
-        if(extras != null){
+        if (extras != null) {
             String levelDifficulty = extras.getString("difficulty");
             level = Level.valueOf(levelDifficulty);
         }
@@ -35,25 +38,41 @@ public class GameActivity extends Activity {
 
         gameView = findViewById(R.id.gameView);
         gameView.setLevel(level, this);
+
+        setupAd();
+        sendAnalytics(level.name());
     }
 
-    public void resumeGame(View v){
+    private void setupAd() {
+        AdView adView = findViewById(R.id.game_banner_ad);
+        adView.loadAd(new AdRequest.Builder().build());
+    }
+
+    private void sendAnalytics(String levelName) {
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "Started new game");
+        bundle.putString(FirebaseAnalytics.Param.LEVEL_NAME, levelName);
+
+        FirebaseAnalytics.getInstance(this).logEvent(FirebaseAnalytics.Event.LEVEL_START, bundle);
+    }
+
+    public void resumeGame(View v) {
         gameView.startCountdown();
     }
 
-    public void quitGame(View v){
+    public void quitGame(View v) {
         BackgroundMusicService.changingActivity = true;
         this.finish();
     }
 
     @Override
     protected void onResume() {
-        if(!BackgroundMusicService.changingActivity) {
+        if (!BackgroundMusicService.changingActivity) {
             startService(new Intent(this, BackgroundMusicService.class));
         }
         BackgroundMusicService.changingActivity = false;
 
-        if(gameView != null){
+        if (gameView != null) {
             gameView.onResume();
         }
 
@@ -62,11 +81,11 @@ public class GameActivity extends Activity {
 
     @Override
     protected void onPause() {
-        if(!BackgroundMusicService.changingActivity) {
+        if (!BackgroundMusicService.changingActivity) {
             stopService(new Intent(this, BackgroundMusicService.class));
         }
 
-        if(gameView != null){
+        if (gameView != null) {
             gameView.onPause();
         }
 

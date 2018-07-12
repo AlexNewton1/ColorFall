@@ -23,6 +23,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         checkSettings();
+
+        //TODO - Initialize MobileAds to decrease wait time for first request
+        //use gradle for this to hide away private keys
+        
+        //MobileAds.initialize(this, getString(R.string.app_ad_id));
     }
 
 
