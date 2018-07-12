@@ -4,19 +4,27 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
 import android.widget.TextView;
 
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.softwareoverflow.colorfall.R;
 import com.softwareoverflow.colorfall.media.BackgroundMusicService;
 
 public class EndGameActivity extends AppCompatActivity {
 
+    private InterstitialAd interstitialAd;
     private TextView playAgainButton, scoreTextView, hiScoreTextView;
     private String difficulty;
+
+    private boolean isPlayingAgain = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +46,45 @@ public class EndGameActivity extends AppCompatActivity {
         animatePlayAgainButton();
         showScore(score);
         checkIfHiScore(score);
+
+        interstitialAd = new InterstitialAd(this);
+        interstitialAd.setAdUnitId(getString(R.string.end_game_interstitial_ad));
+        interstitialAd.loadAd(new AdRequest.Builder().build());
+        interstitialAd.setAdListener(new AdListener(){
+            @Override
+            public void onAdFailedToLoad(int i) {
+                super.onAdFailedToLoad(i);
+                leaveActivity();
+            }
+
+            @Override
+            public void onAdOpened() {
+                super.onAdOpened();
+
+                FirebaseAnalytics analytics = FirebaseAnalytics.getInstance(EndGameActivity.this);
+                Bundle bundle = new Bundle();
+                bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "End game interstitial ad shown");
+                analytics.logEvent(FirebaseAnalytics.Event.VIEW_ITEM, bundle);
+            }
+
+            @Override
+            public void onAdClosed() {
+                leaveActivity();
+            }
+        });
+    }
+
+    private void leaveActivity(){
+        BackgroundMusicService.changingActivity = true;
+
+        if(isPlayingAgain){
+            Intent gameIntent = new Intent(this, GameActivity.class);
+            gameIntent.putExtra("difficulty", difficulty);
+            startActivity(gameIntent);
+            this.finish();
+        } else {
+            super.onBackPressed();
+        }
     }
 
     private void animatePlayAgainButton(){
@@ -68,14 +115,14 @@ public class EndGameActivity extends AppCompatActivity {
         hiScoreTextView.setText(String.valueOf(levelHiScore));
     }
 
-
     public void playAgain(View v){
-        BackgroundMusicService.changingActivity = true;
-        Intent gameIntent = new Intent(this, GameActivity.class);
-        gameIntent.putExtra("difficulty", difficulty);
-        startActivity(gameIntent);
-        this.finish();
+        isPlayingAgain = true;
+        if(interstitialAd.isLoaded()){
+            Log.d("debug", "SHOWING AD!");
+            interstitialAd.show();
+        }
     }
+
 
     @Override
     protected void onResume() {
@@ -97,7 +144,9 @@ public class EndGameActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        BackgroundMusicService.changingActivity = true;
-        super.onBackPressed();
+        if(interstitialAd.isLoaded()){
+            Log.d("debug", "SHOWING AD!");
+            interstitialAd.show();
+        }
     }
 }
