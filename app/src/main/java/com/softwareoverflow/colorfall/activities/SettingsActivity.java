@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.softwareoverflow.colorfall.R;
 import com.softwareoverflow.colorfall.media.BackgroundMusicService;
 import com.softwareoverflow.colorfall.media.SoundEffectHandler;
@@ -107,6 +108,11 @@ public class SettingsActivity extends AppCompatActivity {
         Intent returnIntent = new Intent();
         setResult(Activity.RESULT_OK, returnIntent);
         finish();
+
+        FirebaseAnalytics analytics = FirebaseAnalytics.getInstance(this);
+        analytics.setUserProperty("background_music", String.valueOf(playMusic));
+        analytics.setUserProperty("sound_effects", String.valueOf(playSounds));
+
     }
 
     @Override

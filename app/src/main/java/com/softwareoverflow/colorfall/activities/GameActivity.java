@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.softwareoverflow.colorfall.R;
 import com.softwareoverflow.colorfall.game.GameView;
 import com.softwareoverflow.colorfall.game.Level;
@@ -35,6 +36,16 @@ public class GameActivity extends Activity {
 
         gameView = findViewById(R.id.gameView);
         gameView.setLevel(level, this);
+
+        sendAnalytics(level.name());
+    }
+
+    private void sendAnalytics(String levelName){
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "Started new game");
+        bundle.putString(FirebaseAnalytics.Param.LEVEL_NAME, levelName);
+
+        FirebaseAnalytics.getInstance(this).logEvent(FirebaseAnalytics.Event.LEVEL_START, bundle);
     }
 
     public void resumeGame(View v){
