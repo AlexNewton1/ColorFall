@@ -1,7 +1,5 @@
 package com.softwareoverflow.colorfall.game_pieces;
 
-import android.content.Context;
-
 import com.softwareoverflow.colorfall.game.Level;
 
 import java.util.Random;
@@ -13,8 +11,8 @@ public class Piece extends GameObject{
     private int targetX;
     private float speedX;
 
-    public Piece(Context context, int screenX, int numPanels){
-        super(context, screenX, numPanels);
+    public Piece(int screenX, int numPanels){
+        super(screenX, numPanels);
 
         speedX = panelWidth / 20;
         random = new Random();

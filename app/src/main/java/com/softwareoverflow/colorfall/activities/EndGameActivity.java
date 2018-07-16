@@ -14,7 +14,6 @@ import android.widget.TextView;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
-import com.google.firebase.analytics.FirebaseAnalytics;
 import com.softwareoverflow.colorfall.R;
 import com.softwareoverflow.colorfall.media.BackgroundMusicService;
 
@@ -51,21 +50,6 @@ public class EndGameActivity extends AppCompatActivity {
         interstitialAd.setAdUnitId(getString(R.string.end_game_interstitial_ad));
         interstitialAd.loadAd(new AdRequest.Builder().build());
         interstitialAd.setAdListener(new AdListener(){
-            @Override
-            public void onAdFailedToLoad(int i) {
-                super.onAdFailedToLoad(i);
-                leaveActivity();
-            }
-
-            @Override
-            public void onAdOpened() {
-                super.onAdOpened();
-
-                FirebaseAnalytics analytics = FirebaseAnalytics.getInstance(EndGameActivity.this);
-                Bundle bundle = new Bundle();
-                bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "End game interstitial ad shown");
-                analytics.logEvent(FirebaseAnalytics.Event.VIEW_ITEM, bundle);
-            }
 
             @Override
             public void onAdClosed() {
@@ -118,8 +102,9 @@ public class EndGameActivity extends AppCompatActivity {
     public void playAgain(View v){
         isPlayingAgain = true;
         if(interstitialAd.isLoaded()){
-            Log.d("debug", "SHOWING AD!");
             interstitialAd.show();
+        } else {
+            leaveActivity();
         }
     }
 
@@ -145,8 +130,9 @@ public class EndGameActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         if(interstitialAd.isLoaded()){
-            Log.d("debug", "SHOWING AD!");
             interstitialAd.show();
+        } else {
+            leaveActivity();
         }
     }
 }

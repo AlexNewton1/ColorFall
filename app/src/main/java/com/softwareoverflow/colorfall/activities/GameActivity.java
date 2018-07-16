@@ -3,10 +3,13 @@ package com.softwareoverflow.colorfall.activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.firebase.analytics.FirebaseAnalytics;
@@ -26,6 +29,12 @@ public class GameActivity extends Activity {
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_game_screen);
 
+        setupGame();
+
+        setupAd();
+    }
+
+    private void setupGame(){
         //default value
         Level level = Level.EASY;
         Bundle extras = getIntent().getExtras();
@@ -39,13 +48,36 @@ public class GameActivity extends Activity {
         gameView = findViewById(R.id.gameView);
         gameView.setLevel(level, this);
 
-        setupAd();
         sendAnalytics(level.name());
     }
 
     private void setupAd() {
-        AdView adView = findViewById(R.id.game_banner_ad);
-        adView.loadAd(new AdRequest.Builder().build());
+        final AdView adView = findViewById(R.id.game_banner_ad);
+        adView.setAdListener(new AdListener(){
+            @Override
+            public void onAdFailedToLoad(int i) {
+                super.onAdFailedToLoad(i);
+                Log.d("debug", "FAILED TO LOAD");
+                adView.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAdLoaded() {
+                super.onAdLoaded();
+                Log.d("debug", "AD LOADED!");
+                adView.setVisibility(View.VISIBLE);
+            }
+        });
+
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Log.d("debug", "RUNNING IT!");
+                AdRequest adRequest = new AdRequest.Builder().build();
+                adView.loadAd(adRequest);
+            }
+        }, 1000);
     }
 
     private void sendAnalytics(String levelName) {

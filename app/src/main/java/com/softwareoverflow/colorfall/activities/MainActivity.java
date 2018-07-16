@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
 
+import com.google.android.gms.ads.MobileAds;
 import com.softwareoverflow.colorfall.R;
 import com.softwareoverflow.colorfall.game.Level;
 import com.softwareoverflow.colorfall.media.BackgroundMusicService;
@@ -26,8 +27,7 @@ public class MainActivity extends AppCompatActivity {
 
         //TODO - Initialize MobileAds to decrease wait time for first request
         //use gradle for this to hide away private keys
-        
-        //MobileAds.initialize(this, getString(R.string.app_ad_id));
+        MobileAds.initialize(this, getString(R.string.app_ad_id));
     }
 
 

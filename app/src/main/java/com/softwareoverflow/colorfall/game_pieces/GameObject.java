@@ -1,8 +1,6 @@
 package com.softwareoverflow.colorfall.game_pieces;
 
-import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 
 import com.softwareoverflow.colorfall.game.Level;
@@ -14,18 +12,13 @@ public abstract class GameObject{
     int x = 0, y =0;
     float speed = 1;
     int panelWidth;
-    private int bitmapSize;
-
-    private Context context;
 
     private Bitmap bitmap;
     private Colour colour;
 
-    GameObject(Context context,  int screenX, int numPanels){
-        this.context = context;
+    GameObject(int screenX, int numPanels){
         this.screenX = screenX;
         this.panelWidth = screenX / numPanels;
-        this.bitmapSize = (int) (panelWidth * 0.8);
 
         //placeholder to init bitmap
         setColour(Colour.BLUE);
@@ -39,18 +32,13 @@ public abstract class GameObject{
         return bitmap;
     }
 
-    public void setColour(Colour colour) {
+    void setColour(Colour colour) {
         this.colour = colour;
-        createBitmap(colour.getBitmapRef());
+        this.bitmap = Bitmaps.getBitmap(colour);
     }
 
     public int getY(){
         return y;
-    }
-
-    private void createBitmap(int bitmapRes){
-        bitmap = BitmapFactory.decodeResource(context.getResources(), bitmapRes);
-        bitmap = Bitmap.createScaledBitmap(bitmap, bitmapSize, bitmapSize, true);
     }
 
 
