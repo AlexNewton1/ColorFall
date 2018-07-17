@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -12,8 +11,8 @@ import android.view.animation.LinearInterpolator;
 import android.widget.TextView;
 
 import com.google.android.gms.ads.AdListener;
-import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
+import com.softwareoverflow.colorfall.AdvertHandler;
 import com.softwareoverflow.colorfall.R;
 import com.softwareoverflow.colorfall.media.BackgroundMusicService;
 
@@ -29,6 +28,9 @@ public class EndGameActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_end_game);
+
+        //setup advert in advance of playing again
+        new AdvertHandler().setupGameBanner(this);
 
         playAgainButton = findViewById(R.id.playAgainButton);
         scoreTextView = findViewById(R.id.endGameScoreTextView);
@@ -46,9 +48,7 @@ public class EndGameActivity extends AppCompatActivity {
         showScore(score);
         checkIfHiScore(score);
 
-        interstitialAd = new InterstitialAd(this);
-        interstitialAd.setAdUnitId(getString(R.string.end_game_interstitial_ad));
-        interstitialAd.loadAd(new AdRequest.Builder().build());
+        interstitialAd = new AdvertHandler().createInterstitialAd(this);
         interstitialAd.setAdListener(new AdListener(){
 
             @Override
@@ -129,7 +129,7 @@ public class EndGameActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if(interstitialAd.isLoaded()){
+        if(interstitialAd != null && interstitialAd.isLoaded()){
             interstitialAd.show();
         } else {
             leaveActivity();

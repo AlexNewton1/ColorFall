@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.google.android.gms.ads.MobileAds;
+import com.softwareoverflow.colorfall.AdvertHandler;
 import com.softwareoverflow.colorfall.R;
 import com.softwareoverflow.colorfall.game.Level;
 import com.softwareoverflow.colorfall.media.BackgroundMusicService;
@@ -23,16 +24,17 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //setup advert in advance
+        new AdvertHandler().setupGameBanner(this);
+
         checkSettings();
 
-        //TODO - Initialize MobileAds to decrease wait time for first request
-        //use gradle for this to hide away private keys
+        //TODO use gradle for this to hide away private keys
         MobileAds.initialize(this, getString(R.string.app_ad_id));
     }
 
 
     public void playGame(View v) {
-
         String difficulty = Level.BEGINNER.name(); //default to beginner
         switch (v.getId()) {
             case R.id.playBeginner:
@@ -60,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void showHiScores(View v) {
         BackgroundMusicService.changingActivity = true;
-       startActivity(new Intent(this, HiScoresActivity.class));
+        startActivity(new Intent(this, HiScoresActivity.class));
     }
 
     public void showSettings(View v) {
