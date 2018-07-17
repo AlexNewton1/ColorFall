@@ -20,6 +20,7 @@ import android.widget.TextView;
 import com.softwareoverflow.colorfall.R;
 import com.softwareoverflow.colorfall.activities.EndGameActivity;
 import com.softwareoverflow.colorfall.animations.CountdownAnimation;
+import com.softwareoverflow.colorfall.game_pieces.Bitmaps;
 import com.softwareoverflow.colorfall.game_pieces.GameObject;
 import com.softwareoverflow.colorfall.game_pieces.Piece;
 import com.softwareoverflow.colorfall.media.SoundEffectHandler;
@@ -115,6 +116,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         screenX = holder.getSurfaceFrame().width();
         screenY = holder.getSurfaceFrame().height();
 
+        int bitmapSize = (int) (screenX / level.getNumPanels() * 0.8);
+        Bitmaps.initialize(gameActivity, bitmapSize);
+
         pauseLayout = ((View) getParent()).findViewById(R.id.game_paused_view);
         countdownTimer = ((View) getParent()).findViewById(R.id.countdown_image_view);
         scoreTextView = ((View) getParent()).findViewById(R.id.scoreTextView);
@@ -122,7 +126,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         livesTextView.setText(String.valueOf(lives));
 
         if(gameObjects.isEmpty()){
-            addGameObjects(this.getContext());
+            addGameObjects();
         }
 
         scoreTextView.setText(String.valueOf(score));
@@ -138,11 +142,11 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {}
 
-    private void addGameObjects(Context context) {
+    private void addGameObjects() {
         gameObjects.clear();
 
         for (int i = 0; i < level.getNumBalls(); i++) {
-            Piece piece = new Piece(context, screenX, level.getNumPanels());
+            Piece piece = new Piece(screenX, level.getNumPanels());
             piece.resetPiece(level);
             gameObjects.add(piece);
         }

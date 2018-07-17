@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -12,9 +11,8 @@ import android.view.animation.LinearInterpolator;
 import android.widget.TextView;
 
 import com.google.android.gms.ads.AdListener;
-import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
-import com.google.firebase.analytics.FirebaseAnalytics;
+import com.softwareoverflow.colorfall.AdvertHandler;
 import com.softwareoverflow.colorfall.R;
 import com.softwareoverflow.colorfall.media.BackgroundMusicService;
 
@@ -30,6 +28,9 @@ public class EndGameActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_end_game);
+
+        //setup advert in advance of playing again
+        new AdvertHandler().setupGameBanner(this);
 
         playAgainButton = findViewById(R.id.playAgainButton);
         scoreTextView = findViewById(R.id.endGameScoreTextView);
@@ -47,25 +48,8 @@ public class EndGameActivity extends AppCompatActivity {
         showScore(score);
         checkIfHiScore(score);
 
-        interstitialAd = new InterstitialAd(this);
-        interstitialAd.setAdUnitId(getString(R.string.end_game_interstitial_ad));
-        interstitialAd.loadAd(new AdRequest.Builder().build());
+        interstitialAd = new AdvertHandler().createInterstitialAd(this);
         interstitialAd.setAdListener(new AdListener(){
-            @Override
-            public void onAdFailedToLoad(int i) {
-                super.onAdFailedToLoad(i);
-                leaveActivity();
-            }
-
-            @Override
-            public void onAdOpened() {
-                super.onAdOpened();
-
-                FirebaseAnalytics analytics = FirebaseAnalytics.getInstance(EndGameActivity.this);
-                Bundle bundle = new Bundle();
-                bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "End game interstitial ad shown");
-                analytics.logEvent(FirebaseAnalytics.Event.VIEW_ITEM, bundle);
-            }
 
             @Override
             public void onAdClosed() {
@@ -118,8 +102,9 @@ public class EndGameActivity extends AppCompatActivity {
     public void playAgain(View v){
         isPlayingAgain = true;
         if(interstitialAd.isLoaded()){
-            Log.d("debug", "SHOWING AD!");
             interstitialAd.show();
+        } else {
+            leaveActivity();
         }
     }
 
@@ -144,9 +129,10 @@ public class EndGameActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if(interstitialAd.isLoaded()){
-            Log.d("debug", "SHOWING AD!");
+        if(interstitialAd != null && interstitialAd.isLoaded()){
             interstitialAd.show();
+        } else {
+            leaveActivity();
         }
     }
 }

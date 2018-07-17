@@ -3,13 +3,13 @@ package com.softwareoverflow.colorfall.activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
+import android.view.ViewGroup;
 
-import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.firebase.analytics.FirebaseAnalytics;
+import com.softwareoverflow.colorfall.AdvertHandler;
 import com.softwareoverflow.colorfall.R;
 import com.softwareoverflow.colorfall.game.GameView;
 import com.softwareoverflow.colorfall.game.Level;
@@ -18,14 +18,30 @@ import com.softwareoverflow.colorfall.media.BackgroundMusicService;
 public class GameActivity extends Activity {
 
     private GameView gameView;
+    private AdView adView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_game_screen);
 
+        setupAd();
+        setupGame();
+    }
+
+    private void setupAd(){
+        adView = new AdvertHandler().getGameBannerAd();
+        ConstraintLayout layout = findViewById(R.id.game_constraint_layout);
+        ViewGroup adParent = (ViewGroup) adView.getParent();
+        if(adParent != null) {
+            ((ViewGroup) adView.getParent()).removeView(adView);
+        }
+        layout.addView(adView, ConstraintLayout.LayoutParams.WRAP_CONTENT, ConstraintLayout.LayoutParams.WRAP_CONTENT);
+
+        adView.resume();
+    }
+
+    private void setupGame() {
         //default value
         Level level = Level.EASY;
         Bundle extras = getIntent().getExtras();
@@ -39,13 +55,7 @@ public class GameActivity extends Activity {
         gameView = findViewById(R.id.gameView);
         gameView.setLevel(level, this);
 
-        setupAd();
         sendAnalytics(level.name());
-    }
-
-    private void setupAd() {
-        AdView adView = findViewById(R.id.game_banner_ad);
-        adView.loadAd(new AdRequest.Builder().build());
     }
 
     private void sendAnalytics(String levelName) {
@@ -67,6 +77,7 @@ public class GameActivity extends Activity {
 
     @Override
     protected void onResume() {
+        //new WebView(this).resumeTimers();
         if (!BackgroundMusicService.changingActivity) {
             startService(new Intent(this, BackgroundMusicService.class));
         }
@@ -75,18 +86,25 @@ public class GameActivity extends Activity {
         if (gameView != null) {
             gameView.onResume();
         }
+        if(adView != null){
+            adView.resume();
+        }
 
         super.onResume();
     }
 
     @Override
     protected void onPause() {
+        //new WebView(this).pauseTimers();
         if (!BackgroundMusicService.changingActivity) {
             stopService(new Intent(this, BackgroundMusicService.class));
         }
 
         if (gameView != null) {
             gameView.onPause();
+        }
+        if(adView != null){
+            adView.pause();
         }
 
         super.onPause();
@@ -98,5 +116,14 @@ public class GameActivity extends Activity {
         onPause();
         onResume();
         BackgroundMusicService.changingActivity = false;
+    }
+
+    @Override
+    protected void onDestroy() {
+        gameView = null;
+        if (adView != null) {
+            adView.destroy();
+        }
+        super.onDestroy();
     }
 }
