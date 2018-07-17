@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -27,8 +26,6 @@ public class GameActivity extends Activity {
         setContentView(R.layout.activity_game_screen);
 
         setupAd();
-        Log.d("adverts", "RESUMED AD IN ON CREATE: " + adView.hashCode());
-        Log.d("adverts", "The real view id is:     " + findViewById(R.id.game_banner_ad).hashCode());
         setupGame();
     }
 

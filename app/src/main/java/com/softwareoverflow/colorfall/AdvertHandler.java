@@ -21,7 +21,6 @@ public class AdvertHandler {
         gameBannerAd.setAdListener( new AdListener(){
             @Override
             public void onAdLoaded() {
-                Log.d("adverts", "banner ad loaded (then paused)! " + gameBannerAd.hashCode());
                 gameBannerAd.pause();
             }
         });
