@@ -55,7 +55,7 @@ public class BackgroundMusicService extends Service {
                 }
 
                 if(volume < 1) {
-                    volume += 0.05;
+                    volume += 0.2;
                     mediaPlayer.setVolume(volume, volume);
 
                     fadeHandler.postDelayed(this, 500);

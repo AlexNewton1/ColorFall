@@ -17,22 +17,15 @@ import com.softwareoverflow.colorfall.media.SoundEffectHandler;
 
 public class MainActivity extends AppCompatActivity {
 
+    //TODO - FIX music starting on app launch, and staying when auto-opening consent activity!
+
     private final int SETTINGS_REQUEST_CODE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        //setup advert in advance
-        new AdvertHandler().setupGameBanner(this);
-
-        checkSettings();
-
-        //TODO use gradle for this to hide away private keys
-        MobileAds.initialize(this, getString(R.string.app_ad_id));
     }
-
 
     public void playGame(View v) {
         String difficulty = Level.BEGINNER.name(); //default to beginner
@@ -75,32 +68,49 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode != SETTINGS_REQUEST_CODE) return;
+        switch(requestCode){
+            case SETTINGS_REQUEST_CODE:
+                if(resultCode == RESULT_OK) {//settings modified
+                    Snackbar snackbar = Snackbar
+                            .make(findViewById(android.R.id.content),
+                                    R.string.settings_updated, Snackbar.LENGTH_SHORT);
 
-        if(resultCode == RESULT_OK) {//settings modified
-            Snackbar snackbar = Snackbar
-                    .make(findViewById(android.R.id.content),
-                            R.string.settings_updated, Snackbar.LENGTH_SHORT);
+                    View snackView = snackbar.getView();
+                    snackView.setAlpha(0.4f);
+                    TextView tv = snackView.findViewById(android.support.design.R.id.snackbar_text);
+                    tv.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
 
-            View snackView = snackbar.getView();
-            snackView.setAlpha(0.4f);
-            TextView tv = snackView.findViewById(android.support.design.R.id.snackbar_text);
-            tv.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                    snackbar.show();
 
-            snackbar.show();
-
-            checkSettings();
+                    checkSettings();
+                }
+                break;
         }
     }
 
     private void checkSettings(){
         SharedPreferences sharedPreferences = getSharedPreferences("settings", MODE_PRIVATE);
-        BackgroundMusicService.setPlayMusic(sharedPreferences.getBoolean("music", true));
-        SoundEffectHandler.setPlaySounds(sharedPreferences.getBoolean("sounds", true));
+        BackgroundMusicService.setPlayMusic(sharedPreferences.getBoolean(
+                "music", true));
+        SoundEffectHandler.setPlaySounds(sharedPreferences.getBoolean(
+                "sounds", true));
+
+        String consentValue = sharedPreferences.getString(
+                "consent", ConsentActivity.Consent.UNKNOWN.name());
+        try {
+            ConsentActivity.userConsent = ConsentActivity.Consent.valueOf(consentValue);
+        } catch (IllegalArgumentException ex){
+            ConsentActivity.userConsent = ConsentActivity.Consent.UNKNOWN;
+        }
     }
 
     @Override
     protected void onResume() {
+        //setup advert in advance
+        //TODO use gradle for this to hide away private keys
+        MobileAds.initialize(this, getString(R.string.app_ad_id));
+        new AdvertHandler().setupGameBanner(this);
+
         checkSettings();
 
         if(!BackgroundMusicService.changingActivity) {
@@ -108,6 +118,11 @@ public class MainActivity extends AppCompatActivity {
         }
 
         BackgroundMusicService.changingActivity = false;
+
+        if(ConsentActivity.userConsent == ConsentActivity.Consent.UNKNOWN){
+            BackgroundMusicService.changingActivity = true;
+            startActivity(new Intent(this, ConsentActivity.class));
+        }
 
         super.onResume();
     }

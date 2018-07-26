@@ -1,7 +1,6 @@
 package com.softwareoverflow.colorfall;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
@@ -30,9 +29,17 @@ public class AdvertHandler {
         return gameBannerAd;
     }
 
-    public InterstitialAd createInterstitialAd(Context context){
+    public InterstitialAd createEndGameInterstitialAd(Context context){
+        return createInterstitial(context, context.getString(R.string.end_game_interstitial_ad));
+    }
+
+    public InterstitialAd createQuitGameInterstitialAd(Context context){
+        return createInterstitial(context, context.getString(R.string.quit_game_interstitial_ad));
+    }
+
+    private InterstitialAd createInterstitial(Context context, String adUnitId){
         InterstitialAd interstitialAd = new InterstitialAd(context);
-        interstitialAd.setAdUnitId(context.getString(R.string.end_game_interstitial_ad));
+        interstitialAd.setAdUnitId(adUnitId);
         interstitialAd.loadAd(new AdRequest.Builder().build());
         return interstitialAd;
     }

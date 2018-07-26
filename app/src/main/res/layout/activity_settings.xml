@@ -75,7 +75,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:orientation="horizontal"
-        app:layout_constraintBottom_toTopOf="@+id/cancel_settings"
+        app:layout_constraintBottom_toTopOf="@+id/consent_layout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/music_layout">
@@ -99,6 +99,46 @@
 
         <TextView
             android:id="@+id/play_sounds_off"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_margin="4dp"
+            android:onClick="changeSettings"
+            android:padding="8dp"
+            android:text="@string/off" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/consent_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/cancel_settings"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sounds_layout">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center_vertical|end"
+            android:text="@string/settings_consent" />
+
+        <TextView
+            android:id="@+id/consent_on"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_margin="4dp"
+            android:onClick="changeSettings"
+            android:padding="8dp"
+            android:text="@string/on" />
+
+
+        <TextView
+            android:id="@+id/consent_off"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_margin="4dp"
