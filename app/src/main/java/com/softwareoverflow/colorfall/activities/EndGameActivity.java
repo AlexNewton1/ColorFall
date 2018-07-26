@@ -4,17 +4,15 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
-import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
-import android.view.animation.LinearInterpolator;
 import android.widget.TextView;
 
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.InterstitialAd;
 import com.softwareoverflow.colorfall.AdvertHandler;
 import com.softwareoverflow.colorfall.R;
+import com.softwareoverflow.colorfall.animations.FadeInOutAnimation;
 import com.softwareoverflow.colorfall.media.BackgroundMusicService;
 
 public class EndGameActivity extends AppCompatActivity {
@@ -49,7 +47,7 @@ public class EndGameActivity extends AppCompatActivity {
         showScore(score);
         checkIfHiScore(score);
 
-        interstitialAd = new AdvertHandler().createInterstitialAd(this);
+        interstitialAd = new AdvertHandler().createEndGameInterstitialAd(this);
         interstitialAd.setAdListener(new AdListener(){
 
             @Override
@@ -73,13 +71,7 @@ public class EndGameActivity extends AppCompatActivity {
     }
 
     private void animatePlayAgainButton(){
-        Animation fade = new AlphaAnimation(0.1f, 1f);
-        fade.setInterpolator(new LinearInterpolator());
-        fade.setRepeatCount(Animation.INFINITE);
-        fade.setRepeatMode(Animation.REVERSE);
-        fade.setDuration(1000);
-
-        playAgainButton.startAnimation(fade);
+        playAgainButton.startAnimation(new FadeInOutAnimation(Animation.INFINITE));
     }
 
     private void showScore(int score){
@@ -94,7 +86,16 @@ public class EndGameActivity extends AppCompatActivity {
             levelHiScore = score;
             sharedPrefs.edit().putInt(difficulty, levelHiScore).apply();
 
-            //TODO - add 'New Hi Score' visual user feedback on layout
+            TextView hiScoreLabel = findViewById(R.id.hi_score_label);
+            hiScoreLabel.setVisibility(View.GONE);
+
+
+            FadeInOutAnimation fade = new FadeInOutAnimation(Animation.INFINITE);
+            TextView hiScore = findViewById(R.id.endGameHiScoreTextView);
+            hiScore.startAnimation(fade);
+            TextView newHiScore = findViewById(R.id.new_hi_score);
+            newHiScore.setVisibility(View.VISIBLE);
+            newHiScore.startAnimation(fade);
         }
 
         hiScoreTextView.setText(String.valueOf(levelHiScore));
@@ -103,6 +104,7 @@ public class EndGameActivity extends AppCompatActivity {
     public void playAgain(View v){
         isPlayingAgain = true;
         if(interstitialAd.isLoaded()){
+            BackgroundMusicService.changingActivity = true;
             interstitialAd.show();
         } else {
             leaveActivity();
@@ -131,6 +133,7 @@ public class EndGameActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         if(interstitialAd != null && interstitialAd.isLoaded()){
+            BackgroundMusicService.changingActivity = true;
             interstitialAd.show();
         } else {
             leaveActivity();

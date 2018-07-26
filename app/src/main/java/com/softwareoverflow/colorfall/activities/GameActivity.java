@@ -7,7 +7,9 @@ import android.support.constraint.ConstraintLayout;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.InterstitialAd;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.softwareoverflow.colorfall.AdvertHandler;
 import com.softwareoverflow.colorfall.R;
@@ -19,17 +21,18 @@ public class GameActivity extends Activity {
 
     private GameView gameView;
     private AdView adView;
+    private InterstitialAd interstitialAd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_screen);
 
-        setupAd();
+        setupAds();
         setupGame();
     }
 
-    private void setupAd(){
+    private void setupAds(){
         adView = new AdvertHandler().getGameBannerAd();
         ConstraintLayout layout = findViewById(R.id.game_constraint_layout);
         ViewGroup adParent = (ViewGroup) adView.getParent();
@@ -39,6 +42,16 @@ public class GameActivity extends Activity {
         layout.addView(adView, ConstraintLayout.LayoutParams.WRAP_CONTENT, ConstraintLayout.LayoutParams.WRAP_CONTENT);
 
         adView.resume();
+
+        interstitialAd = new AdvertHandler().createQuitGameInterstitialAd(this);
+        interstitialAd.setAdListener(new AdListener(){
+            @Override
+            public void onAdClosed() {
+                super.onAdClosed();
+                leaveActivity();
+            }
+
+        });
     }
 
     private void setupGame() {
@@ -55,11 +68,12 @@ public class GameActivity extends Activity {
         gameView = findViewById(R.id.gameView);
         gameView.setLevel(level, this);
 
-        setupAd();
         sendAnalytics(level.name());
     }
 
     private void sendAnalytics(String levelName) {
+        if(ConsentActivity.userConsent != ConsentActivity.Consent.GIVEN) return;
+
         Bundle bundle = new Bundle();
         bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "Started new game");
         bundle.putString(FirebaseAnalytics.Param.LEVEL_NAME, levelName);
@@ -72,13 +86,19 @@ public class GameActivity extends Activity {
     }
 
     public void quitGame(View v) {
+        if(interstitialAd != null && interstitialAd.isLoaded()){
+            BackgroundMusicService.changingActivity = true;
+            interstitialAd.show();
+        }
+    }
+
+    private void leaveActivity(){
         BackgroundMusicService.changingActivity = true;
         this.finish();
     }
 
     @Override
     protected void onResume() {
-        //new WebView(this).resumeTimers();
         if (!BackgroundMusicService.changingActivity) {
             startService(new Intent(this, BackgroundMusicService.class));
         }
@@ -96,7 +116,6 @@ public class GameActivity extends Activity {
 
     @Override
     protected void onPause() {
-        //new WebView(this).pauseTimers();
         if (!BackgroundMusicService.changingActivity) {
             stopService(new Intent(this, BackgroundMusicService.class));
         }
