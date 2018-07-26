@@ -55,6 +55,7 @@ public class GameActivity extends Activity {
         gameView = findViewById(R.id.gameView);
         gameView.setLevel(level, this);
 
+        setupAd();
         sendAnalytics(level.name());
     }
 
