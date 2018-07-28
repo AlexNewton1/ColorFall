@@ -48,7 +48,7 @@ public class GameActivity extends Activity {
             @Override
             public void onAdClosed() {
                 super.onAdClosed();
-                leaveActivity();
+                finish();
             }
 
         });
@@ -87,14 +87,12 @@ public class GameActivity extends Activity {
 
     public void quitGame(View v) {
         if(interstitialAd != null && interstitialAd.isLoaded()){
-            BackgroundMusicService.changingActivity = true;
+            stopService(new Intent(this, BackgroundMusicService.class));
             interstitialAd.show();
+        } else {
+            BackgroundMusicService.changingActivity = true;
+            finish();
         }
-    }
-
-    private void leaveActivity(){
-        BackgroundMusicService.changingActivity = true;
-        this.finish();
     }
 
     @Override
