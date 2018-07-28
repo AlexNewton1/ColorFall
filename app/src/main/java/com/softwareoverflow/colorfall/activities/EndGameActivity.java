@@ -28,7 +28,7 @@ public class EndGameActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_end_game);
 
-        //setup advert in advance of playing again
+        //setup advert in advance
         new AdvertHandler().setupGameBanner(this);
 
         playAgainButton = findViewById(R.id.playAgainButton);
@@ -52,22 +52,20 @@ public class EndGameActivity extends AppCompatActivity {
 
             @Override
             public void onAdClosed() {
+                BackgroundMusicService.changingActivity = false;
                 leaveActivity();
             }
         });
     }
 
     private void leaveActivity(){
-        BackgroundMusicService.changingActivity = true;
-
         if(isPlayingAgain){
             Intent gameIntent = new Intent(this, GameActivity.class);
             gameIntent.putExtra("difficulty", difficulty);
             startActivity(gameIntent);
-            this.finish();
-        } else {
-            super.onBackPressed();
         }
+
+        this.finish();
     }
 
     private void animatePlayAgainButton(){
@@ -104,9 +102,10 @@ public class EndGameActivity extends AppCompatActivity {
     public void playAgain(View v){
         isPlayingAgain = true;
         if(interstitialAd.isLoaded()){
-            BackgroundMusicService.changingActivity = true;
+            BackgroundMusicService.changingActivity = false;
             interstitialAd.show();
         } else {
+            BackgroundMusicService.changingActivity = true;
             leaveActivity();
         }
     }
@@ -133,9 +132,10 @@ public class EndGameActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         if(interstitialAd != null && interstitialAd.isLoaded()){
-            BackgroundMusicService.changingActivity = true;
+            BackgroundMusicService.changingActivity = false;
             interstitialAd.show();
         } else {
+            BackgroundMusicService.changingActivity = true;
             leaveActivity();
         }
     }
