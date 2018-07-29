@@ -1,6 +1,7 @@
 package com.softwareoverflow.colorfall;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
@@ -13,6 +14,7 @@ public class AdvertHandler {
     private static AdView gameBannerAd;
 
     public void setupGameBanner(Context context){
+        Log.d("debug2", "Set up game banner");
         gameBannerAd = new AdView(context);
         gameBannerAd.setAdSize(AdSize.SMART_BANNER);
         gameBannerAd.setAdUnitId(context.getString(R.string.game_banner_ad_id));

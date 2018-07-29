@@ -4,8 +4,10 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdView;
@@ -13,6 +15,7 @@ import com.google.android.gms.ads.InterstitialAd;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.softwareoverflow.colorfall.AdvertHandler;
 import com.softwareoverflow.colorfall.R;
+import com.softwareoverflow.colorfall.free_trial.FreeTrialCountdown;
 import com.softwareoverflow.colorfall.game.GameView;
 import com.softwareoverflow.colorfall.game.Level;
 import com.softwareoverflow.colorfall.media.BackgroundMusicService;
@@ -23,10 +26,22 @@ public class GameActivity extends Activity {
     private AdView adView;
     private InterstitialAd interstitialAd;
 
+    private boolean isFreeTrial = true;
+    private FreeTrialCountdown countdown;
+    private TextView countdownTextView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_screen);
+
+        //TODO - set isFreeTrial based on if user purchased and if level is HARD / INSANE
+        countdownTextView = findViewById(R.id.free_trial_countdown_tv);
+        if(isFreeTrial){
+            countdownTextView.setVisibility(View.VISIBLE);
+        } else {
+            countdownTextView.setVisibility(View.GONE);
+        }
 
         setupAds();
         setupGame();
@@ -55,6 +70,8 @@ public class GameActivity extends Activity {
     }
 
     private void setupGame() {
+        findViewById(R.id.popup_free_trial).setVisibility(View.GONE);
+
         //default value
         Level level = Level.EASY;
         Bundle extras = getIntent().getExtras();
@@ -67,6 +84,7 @@ public class GameActivity extends Activity {
 
         gameView = findViewById(R.id.gameView);
         gameView.setLevel(level, this);
+        gameView.setFreeTrial(isFreeTrial, countdownTextView);
 
         sendAnalytics(level.name());
     }
@@ -81,8 +99,24 @@ public class GameActivity extends Activity {
         FirebaseAnalytics.getInstance(this).logEvent(FirebaseAnalytics.Event.LEVEL_START, bundle);
     }
 
+    public void endFreeTrial(){
+        //show end free trial screen here, promote full version
+
+        gameView.onPause();
+
+        gameView.setAlpha(0.8f);
+
+        /*ViewGroup viewRoot =  findViewById(android.R.id.content);
+        new FreeTrialDialog(this, viewRoot).show();*/
+        View freeTrialPopup = findViewById(R.id.popup_free_trial);
+        freeTrialPopup.findViewById(R.id.dialog_popup_bg).setClipToOutline(true);
+        freeTrialPopup.setVisibility(View.VISIBLE);
+
+    }
+
     public void resumeGame(View v) {
         gameView.startCountdown();
+        setupAds();
     }
 
     public void quitGame(View v) {
@@ -94,6 +128,7 @@ public class GameActivity extends Activity {
             finish();
         }
     }
+
 
     @Override
     protected void onResume() {
@@ -114,8 +149,13 @@ public class GameActivity extends Activity {
 
     @Override
     protected void onPause() {
+        Log.d("debug2", "game onPause");
         if (!BackgroundMusicService.changingActivity) {
             stopService(new Intent(this, BackgroundMusicService.class));
+        }
+
+        if(isFreeTrial && countdown != null){
+            countdown.cancel();
         }
 
         if (gameView != null) {
@@ -142,6 +182,8 @@ public class GameActivity extends Activity {
         if (adView != null) {
             adView.destroy();
         }
+
+        FreeTrialCountdown.reset();
         super.onDestroy();
     }
 }

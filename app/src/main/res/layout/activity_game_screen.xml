@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:ads="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/game_constraint_layout"
     android:layout_width="match_parent"
@@ -21,12 +21,12 @@
         android:id="@+id/gameView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintVertical_weight="1"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/game_banner_ad" />
+        app:layout_constraintTop_toBottomOf="@+id/game_banner_ad"
+        app:layout_constraintVertical_weight="1" />
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/frameLayout"
@@ -77,6 +77,19 @@
             android:textSize="12sp" />
     </android.support.constraint.ConstraintLayout>
 
+    <TextView
+        android:id="@+id/free_trial_countdown_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:gravity="center"
+        android:textSize="20sp"
+        ads:layout_constraintBottom_toBottomOf="@+id/frameLayout"
+        ads:layout_constraintEnd_toEndOf="parent"
+        ads:layout_constraintStart_toStartOf="parent"
+        ads:layout_constraintTop_toTopOf="@+id/frameLayout" />
+
     <ImageView
         android:id="@+id/countdown_image_view"
         android:layout_width="match_parent"
@@ -87,16 +100,16 @@
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/game_paused_view"
-        android:background="@drawable/ic_background"
-        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintVertical_weight="1"
+        android:background="@drawable/ic_background"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/game_banner_ad">
+        app:layout_constraintTop_toBottomOf="@+id/game_banner_ad"
+        app:layout_constraintVertical_weight="1">
 
 
         <android.support.v7.widget.AppCompatTextView
@@ -147,5 +160,21 @@
             app:layout_constraintTop_toBottomOf="@+id/resumeGame" />
 
     </android.support.constraint.ConstraintLayout>
+
+    <include
+        android:id="@+id/popup_free_trial"
+        layout="@layout/popup_free_trial"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        ads:layout_constraintVertical_weight="1"
+        android:layout_marginBottom="64dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="64dp"
+        android:visibility="visible"
+        ads:layout_constraintBottom_toBottomOf="@+id/gameView"
+        ads:layout_constraintEnd_toEndOf="parent"
+        ads:layout_constraintStart_toStartOf="parent"
+        ads:layout_constraintTop_toTopOf="@+id/gameView" />
 
 </android.support.constraint.ConstraintLayout>
