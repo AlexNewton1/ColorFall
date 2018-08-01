@@ -60,15 +60,16 @@
 
 
         <TextView
-            android:id="@+id/upgrade_to_pro"
+            android:id="@+id/play_free_version"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/play_free"
+            android:onClick="playFreeVersion"
             android:textSize="12sp" />
 
         <TextView
-            android:id="@+id/play_free_version"
+            android:id="@+id/upgrade_to_pro"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
