@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -71,7 +70,6 @@ public class GameActivity extends Activity implements FreeTrialPopup{
     @Override
     public void upgradeNow(View v) {
         //TODO - upgrade
-        Log.d("debug2", "Upgrade now!");
     }
 
     private void setupAds(){
@@ -130,15 +128,9 @@ public class GameActivity extends Activity implements FreeTrialPopup{
     }
 
     public void endFreeTrial(){
-        //TODO - show end free trial screen here, promote full version
-        Log.d("debug2", "playing sound");
         SoundEffectHandler.getInstance(this).playSound(SoundEffectHandler.Sound.GAME_OVER);
 
         gameView.onPause();
-
-        //fade out the pause screen
-        //gameView.fadePauseScreen();
-
         freeTrialPopup.setVisibility(View.VISIBLE);
     }
 
@@ -177,7 +169,6 @@ public class GameActivity extends Activity implements FreeTrialPopup{
 
     @Override
     protected void onPause() {
-        Log.d("debug2", "game onPause");
         if (!BackgroundMusicService.changingActivity) {
             stopService(new Intent(this, BackgroundMusicService.class));
         }

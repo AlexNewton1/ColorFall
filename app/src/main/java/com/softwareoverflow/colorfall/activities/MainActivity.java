@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -77,7 +76,6 @@ public class MainActivity extends AppCompatActivity implements FreeTrialPopup{
     @Override
     public void upgradeNow(View v) {
         //TODO - upgrade
-        Log.d("debug2", "UpgradeNow!");
     }
 
     public void showHiScores(View v) {

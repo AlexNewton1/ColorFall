@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.text.method.LinkMovementMethod;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.widget.TextView;
@@ -113,8 +112,6 @@ public class ConsentActivity extends AppCompatActivity implements View.OnClickLi
 
     @Override
     protected void onResume() {
-        Log.d("debug", "Consent: " + BackgroundMusicService.changingActivity);
-
         if(!BackgroundMusicService.changingActivity) {
             startService(new Intent(this, BackgroundMusicService.class));
         }
