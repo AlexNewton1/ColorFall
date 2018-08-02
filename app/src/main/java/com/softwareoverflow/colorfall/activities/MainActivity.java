@@ -11,24 +11,29 @@ import android.widget.TextView;
 import com.google.android.gms.ads.MobileAds;
 import com.softwareoverflow.colorfall.AdvertHandler;
 import com.softwareoverflow.colorfall.R;
+import com.softwareoverflow.colorfall.free_trial.FreeTrialPopup;
+import com.softwareoverflow.colorfall.free_trial.UpgradeManager;
 import com.softwareoverflow.colorfall.game.Level;
 import com.softwareoverflow.colorfall.media.BackgroundMusicService;
 import com.softwareoverflow.colorfall.media.SoundEffectHandler;
 
-public class MainActivity extends AppCompatActivity {
-
-    //TODO - FIX music starting on app launch, and staying when auto-opening consent activity!
+public class MainActivity extends AppCompatActivity implements FreeTrialPopup{
 
     private final int SETTINGS_REQUEST_CODE = 1;
+    private View freeTrialPopup;
+    private String difficulty = Level.BEGINNER.name();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        freeTrialPopup = findViewById(R.id.popup_free_trial);
+        freeTrialPopup.findViewById(R.id.dialog_popup_bg).setClipToOutline(true);
     }
 
     public void playGame(View v) {
-        String difficulty = Level.BEGINNER.name(); //default to beginner
+        difficulty = Level.BEGINNER.name(); //default to beginner
         switch (v.getId()) {
             case R.id.playBeginner:
                 difficulty = Level.BEGINNER.name();
@@ -47,10 +52,30 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
 
+        if(UpgradeManager.isFreeUser() &&
+                (difficulty.equals(Level.INSANE.name()) || difficulty.equals(Level.HARD.name()))){
+            freeTrialPopup.setVisibility(View.VISIBLE);
+        } else {
+            startGame(difficulty);
+        }
+
+    }
+
+    private void startGame(String difficulty){
         BackgroundMusicService.changingActivity = true;
         Intent gameIntent = new Intent(this, GameActivity.class);
         gameIntent.putExtra("difficulty", difficulty);
         startActivity(gameIntent);
+    }
+
+    @Override
+    public void playFreeVersion(View v) {
+        startGame(difficulty);
+    }
+
+    @Override
+    public void upgradeNow(View v) {
+        //TODO - upgrade
     }
 
     public void showHiScores(View v) {
@@ -111,6 +136,10 @@ public class MainActivity extends AppCompatActivity {
         MobileAds.initialize(this, getString(R.string.app_ad_id));
         new AdvertHandler().setupGameBanner(this);
 
+        if(freeTrialPopup != null){
+            freeTrialPopup.setVisibility(View.GONE);
+        }
+
         checkSettings();
 
         if(!BackgroundMusicService.changingActivity) {
@@ -133,6 +162,16 @@ public class MainActivity extends AppCompatActivity {
             stopService(new Intent(this, BackgroundMusicService.class));
         }
         super.onPause();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(freeTrialPopup.getVisibility() == View.VISIBLE){
+            freeTrialPopup.setVisibility(View.GONE);
+        } else {
+            super.onBackPressed();
+        }
+
     }
 
     @Override

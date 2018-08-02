@@ -1,7 +1,6 @@
 package com.softwareoverflow.colorfall.game;
 
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -19,7 +18,9 @@ import android.widget.TextView;
 
 import com.softwareoverflow.colorfall.R;
 import com.softwareoverflow.colorfall.activities.EndGameActivity;
+import com.softwareoverflow.colorfall.activities.GameActivity;
 import com.softwareoverflow.colorfall.animations.CountdownAnimation;
+import com.softwareoverflow.colorfall.free_trial.FreeTrialCountdown;
 import com.softwareoverflow.colorfall.game_pieces.Bitmaps;
 import com.softwareoverflow.colorfall.game_pieces.GameObject;
 import com.softwareoverflow.colorfall.game_pieces.Piece;
@@ -31,9 +32,12 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     //Game Items
     private GameThread gameThread = null;
-    private Activity gameActivity;
+    private GameActivity gameActivity;
     private TouchEventHandler touchEventHandler;
     private SoundEffectHandler soundEffectHandler;
+    private static CopyOnWriteArrayList<GameObject> gameObjects = new CopyOnWriteArrayList<>();
+    private Level level;
+    private Paint paint = new Paint();
 
     //UI items
     private int screenX, screenY;
@@ -46,11 +50,11 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private ConstraintLayout pauseLayout;
     private boolean isPaused;
 
-    Level level;
+    //Free trial items
+    private boolean isFreeTrial;
+    private TextView freeTrialCountdownTV;
+    private FreeTrialCountdown trialCountdown;
 
-    private Paint paint = new Paint();
-
-    private static CopyOnWriteArrayList<GameObject> gameObjects = new CopyOnWriteArrayList<>();
 
 
     public GameView(Context context) {
@@ -77,7 +81,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private void setup(Context context){
         soundEffectHandler = SoundEffectHandler.getInstance(context);
 
-        gameActivity = ((Activity) context);
+        gameActivity = ((GameActivity) context);
 
         gameObjects.clear();
         lives = 3;
@@ -86,6 +90,12 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         touchEventHandler = new TouchEventHandler(this);
         getHolder().addCallback(this);
         setFocusable(true);
+    }
+
+    public void setFreeTrial(boolean freeTrial, TextView countdownTV){
+        this.isFreeTrial = freeTrial;
+        this.freeTrialCountdownTV = countdownTV;
+        trialCountdown = new FreeTrialCountdown(countdownTV, gameActivity);
     }
 
     public void setLevel(Level level, Context context){
@@ -230,18 +240,28 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
         if(lives <= 0){
             soundEffectHandler.playSound(SoundEffectHandler.Sound.GAME_OVER);
-            Intent endGameIntent = new Intent(gameActivity, EndGameActivity.class);
-            endGameIntent.putExtra("score", score);
-            endGameIntent.putExtra("difficulty", level.name());
-            gameActivity.startActivity(endGameIntent);
-
-            gameActivity.finish();
+            endGame();
         } else {
             soundEffectHandler.playSound(SoundEffectHandler.Sound.LOSE_LIFE);
         }
-
     }
 
+    /**
+     * End the game. Sends the user to the EndGameActivity
+     */
+    public void endGame(){
+        Intent endGameIntent = new Intent(gameActivity, EndGameActivity.class);
+        endGameIntent.putExtra("score", score);
+        endGameIntent.putExtra("difficulty", level.name());
+        gameActivity.startActivity(endGameIntent);
+
+        gameActivity.finish();
+        FreeTrialCountdown.reset();
+    }
+
+    /**
+     * Start the countdown. Used at the start or on resuming the game.
+     */
     public void startCountdown(){
         pauseLayout.setVisibility(GONE);
         gameThread.updateCanvas();
@@ -254,6 +274,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         countdownAnimation.start();
     }
 
+    /**
+     * Start the game and start the free trial countdown if needed
+     */
     public void startGame(){
         isPaused = false;
         pauseLayout.setVisibility(GONE);
@@ -263,8 +286,20 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         if(!gameThread.isAlive()){
             gameThread.start();
         }
+
+        if(isFreeTrial){
+            if(trialCountdown != null)
+                trialCountdown.cancel();
+
+            trialCountdown = new FreeTrialCountdown(freeTrialCountdownTV, gameActivity);
+            trialCountdown.start();
+        }
     }
 
+
+    /**
+     * Resume the game - hide the pause layout and show the countdown
+     */
     public void onResume() {
         gameThread = new GameThread(getHolder(), this);
         if(isPaused){
@@ -275,6 +310,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         }
     }
 
+    /**
+     * Pause the game - show the pause screen.
+     */
     public void onPause(){
         //stop the thread
         boolean retry = true;
@@ -289,6 +327,11 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         }
 
         CountdownAnimation.setInCountdown(false);
+
+        if(isFreeTrial && trialCountdown != null){
+            trialCountdown.cancel();
+        }
+
         isPaused = true;
     }
 }
