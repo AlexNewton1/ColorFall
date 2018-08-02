@@ -15,6 +15,7 @@ import com.google.android.gms.ads.InterstitialAd;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.softwareoverflow.colorfall.AdvertHandler;
 import com.softwareoverflow.colorfall.R;
+import com.softwareoverflow.colorfall.free_trial.FreeTrialCountdown;
 import com.softwareoverflow.colorfall.free_trial.FreeTrialPopup;
 import com.softwareoverflow.colorfall.free_trial.UpgradeManager;
 import com.softwareoverflow.colorfall.game.GameView;
@@ -37,12 +38,14 @@ public class GameActivity extends Activity implements FreeTrialPopup{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_screen);
 
-        //TODO - set isFreeTrial based on if user purchased and if level is HARD / INSANE
+
         Level level = getLevel();
-        isFreeTrial = UpgradeManager.isFreeUser() && (level.equals(Level.HARD) || level.equals(Level.INSANE));
+        isFreeTrial = UpgradeManager.isFreeUser() &&
+                (level.equals(Level.HARD) || level.equals(Level.INSANE));
 
         countdownTextView = findViewById(R.id.free_trial_countdown_tv);
         if(isFreeTrial){
+            FreeTrialCountdown.reset();
             countdownTextView.setVisibility(View.VISIBLE);
         } else {
             countdownTextView.setVisibility(View.GONE);
@@ -61,6 +64,7 @@ public class GameActivity extends Activity implements FreeTrialPopup{
 
     @Override
     public void playFreeVersion(View v) {
+        SoundEffectHandler.getInstance(this).playSound(SoundEffectHandler.Sound.GAME_OVER);
         gameView.endGame();
     }
 

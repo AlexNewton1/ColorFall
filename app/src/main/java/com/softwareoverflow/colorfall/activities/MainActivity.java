@@ -167,6 +167,16 @@ public class MainActivity extends AppCompatActivity implements FreeTrialPopup{
     }
 
     @Override
+    public void onBackPressed() {
+        if(freeTrialPopup.getVisibility() == View.VISIBLE){
+            freeTrialPopup.setVisibility(View.GONE);
+        } else {
+            super.onBackPressed();
+        }
+
+    }
+
+    @Override
     protected void onDestroy() {
         stopService(new Intent(this, BackgroundMusicService.class));
         super.onDestroy();
