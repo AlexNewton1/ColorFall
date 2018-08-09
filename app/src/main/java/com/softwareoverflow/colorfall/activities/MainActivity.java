@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.google.android.gms.ads.MobileAds;
 import com.softwareoverflow.colorfall.AdvertHandler;
+import com.softwareoverflow.colorfall.BuildConfig;
 import com.softwareoverflow.colorfall.R;
 import com.softwareoverflow.colorfall.free_trial.FreeTrialPopup;
 import com.softwareoverflow.colorfall.free_trial.UpgradeManager;
@@ -133,7 +134,7 @@ public class MainActivity extends AppCompatActivity implements FreeTrialPopup{
     protected void onResume() {
         //setup advert in advance
         //TODO use gradle for this to hide away private keys
-        MobileAds.initialize(this, getString(R.string.app_ad_id));
+        MobileAds.initialize(this, BuildConfig.app_ad_id);
         new AdvertHandler().setupGameBanner(this);
 
         if(freeTrialPopup != null){

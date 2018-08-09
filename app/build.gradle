@@ -12,15 +12,27 @@ android {
         vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
+        debug {
+            //Test Ad Unit IDs
+            buildConfigField 'String', "app_ad_id", "\"ca-app-pub-3940256099942544~3347511713\""
+            buildConfigField 'String', "game_banner_ad_id", "\"ca-app-pub-3940256099942544/6300978111\""
+            buildConfigField 'String', "end_game_interstitial_ad", "\"ca-app-pub-3940256099942544/1033173712\""
+            buildConfigField 'String', "quit_game_interstitial_ad", "\"ca-app-pub-3940256099942544/1033173712\""
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            buildConfigField 'String', "app_ad_id", colorfall_app_ad_id
+            buildConfigField 'String', "game_banner_ad_id", colorfall_game_banner_ad
+            buildConfigField 'String', "end_game_interstitial_ad", colorfall_end_game_interstitial
+            buildConfigField 'String', "quit_game_interstitial_ad", colorfall_quit_game_interstitial
         }
     }
     buildToolsVersion '27.0.3'
 }
 
 dependencies {
+    implementation 'com.android.billingclient:billing:1.1'
     implementation 'com.google.firebase:firebase-core:16.0.1'
     implementation 'com.google.firebase:firebase-ads:15.0.1'
     implementation 'com.google.firebase:firebase-crash:16.0.1'
