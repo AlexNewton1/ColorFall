@@ -15,7 +15,7 @@ public class AdvertHandler {
     public void setupGameBanner(Context context){
         gameBannerAd = new AdView(context);
         gameBannerAd.setAdSize(AdSize.SMART_BANNER);
-        gameBannerAd.setAdUnitId(context.getString(R.string.game_banner_ad_id));
+        gameBannerAd.setAdUnitId(BuildConfig.game_banner_ad_id);
         gameBannerAd.loadAd(new AdRequest.Builder().build());
         gameBannerAd.setAdListener( new AdListener(){
             @Override
@@ -30,11 +30,11 @@ public class AdvertHandler {
     }
 
     public InterstitialAd createEndGameInterstitialAd(Context context){
-        return createInterstitial(context, context.getString(R.string.end_game_interstitial_ad));
+        return createInterstitial(context, BuildConfig.end_game_interstitial_ad);
     }
 
     public InterstitialAd createQuitGameInterstitialAd(Context context){
-        return createInterstitial(context, context.getString(R.string.quit_game_interstitial_ad));
+        return createInterstitial(context, BuildConfig.quit_game_interstitial_ad);
     }
 
     private InterstitialAd createInterstitial(Context context, String adUnitId){
