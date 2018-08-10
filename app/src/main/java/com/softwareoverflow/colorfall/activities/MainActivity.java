@@ -31,6 +31,9 @@ public class MainActivity extends AppCompatActivity implements FreeTrialPopup{
 
         freeTrialPopup = findViewById(R.id.popup_free_trial);
         freeTrialPopup.findViewById(R.id.dialog_popup_bg).setClipToOutline(true);
+
+        //start attempting to connect to billing service
+        UpgradeManager.getInstance(this);
     }
 
     public void playGame(View v) {
@@ -76,6 +79,7 @@ public class MainActivity extends AppCompatActivity implements FreeTrialPopup{
 
     @Override
     public void upgradeNow(View v) {
+        UpgradeManager.upgrade(this);
         //TODO - upgrade
     }
 

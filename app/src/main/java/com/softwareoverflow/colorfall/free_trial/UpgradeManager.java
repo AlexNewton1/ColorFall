@@ -19,18 +19,26 @@ import java.util.List;
 
 public class UpgradeManager implements PurchasesUpdatedListener, BillingClientStateListener{
 
-    private final BillingClient billingClient;
-    private Context context;
-    private String upgrade_sku = "colorfall_pro_upgrade";
+    private static UpgradeManager upgradeManager;
+
+    private static BillingClient billingClient;
+    private static String upgrade_sku = "colorfall_pro_upgrade";
 
     private static boolean hasUserUpgraded = false;
-    private boolean isConnected = false;
+    private static boolean isConnected = false;
     //TODO - this will be the class where all upgrades and interaction with google services are handled
 
     private String upgradePrice;
 
-    public UpgradeManager(Context context){
-        this.context = context;
+    public static UpgradeManager getInstance(Context context){
+        if(upgradeManager == null){
+           new UpgradeManager(context.getApplicationContext());
+        }
+
+        return upgradeManager;
+    }
+
+    private UpgradeManager(Context context){
 
         // create new Person
         billingClient = BillingClient.newBuilder(context).setListener(this).build();
@@ -39,6 +47,7 @@ public class UpgradeManager implements PurchasesUpdatedListener, BillingClientSt
 
         @Override
         public void onBillingSetupFinished(@BillingClient.BillingResponse int billingResponseCode) {
+        Log.d("debug2", "setup finished");
             isConnected = true;
 
             if (billingResponseCode == BillingClient.BillingResponse.OK) {
@@ -56,9 +65,11 @@ public class UpgradeManager implements PurchasesUpdatedListener, BillingClientSt
                         new SkuDetailsResponseListener() {
                             @Override
                             public void onSkuDetailsResponse(int responseCode, List<SkuDetails> skuDetailsList) {
+                                Log.d("debug2", "skuDetails done! " + responseCode + ", " + skuDetailsList.toString());
                                 if (responseCode == BillingClient.BillingResponse.OK
                                         && skuDetailsList != null) {
                                     for (SkuDetails skuDetails : skuDetailsList) {
+                                        Log.d("debug2", skuDetails.toString());
                                         String sku = skuDetails.getSku();
                                         String price = skuDetails.getPrice();
 
@@ -100,7 +111,7 @@ public class UpgradeManager implements PurchasesUpdatedListener, BillingClientSt
         }
     }
 
-    public void upgrade(){
+    public static void upgrade(Context context){
         //TODO -- show error if not connected
 
         if(isConnected){
@@ -115,18 +126,17 @@ public class UpgradeManager implements PurchasesUpdatedListener, BillingClientSt
     }
 
 
-    //TODO -- call this method onResume of whichever activities activate purcahse flows
-    private void checkUserPurchases(){
-        if(!isConnected){
-            //TODO -- show error if not connected
-            Log.d("debug2", "NOT CONNECTED!");
-        }
-
+    //TODO -- call this method onResume of whichever activities activate purchase flows
+    public static void checkUserPurchases(){
         Purchase.PurchasesResult purchasesResult =
                 billingClient.queryPurchases(BillingClient.SkuType.INAPP);
         if(purchasesResult.getResponseCode() == BillingClient.BillingResponse.OK){
             for(Purchase purchase : purchasesResult.getPurchasesList()){
                 if(purchase.getSku().equals(upgrade_sku)){
+
+                    //TODO - do some auth on getOriginalJson() or getSignature() and ensure maps to private key
+                    Log.d("debug2", purchase.getSignature());
+                    Log.d("debug2", purchase.getOriginalJson());
                     hasUserUpgraded = true;
                     break;
                 }
