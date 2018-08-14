@@ -1,6 +1,5 @@
 package com.softwareoverflow.colorfall.activities;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -89,6 +88,7 @@ public class SettingsActivity extends AppCompatActivity {
                 playSounds = false;
                 break;
             case R.id.play_sounds_on:
+                SoundEffectHandler.setPlaySounds(true);
                 soundEffectHandler.playSound(SoundEffectHandler.Sound.SCORE);
                 playSounds = true;
                 break;
@@ -122,8 +122,6 @@ public class SettingsActivity extends AppCompatActivity {
         sharedPreferences.edit().putString("consent", ConsentActivity.userConsent.name()).apply();
 
         BackgroundMusicService.changingActivity = true;
-        Intent returnIntent = new Intent();
-        setResult(Activity.RESULT_OK, returnIntent);
         finish();
 
         sendAnalytics();

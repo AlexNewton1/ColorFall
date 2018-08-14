@@ -3,15 +3,13 @@ package com.softwareoverflow.colorfall.activities;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.TextView;
 
 import com.google.android.gms.ads.MobileAds;
-import com.softwareoverflow.colorfall.AdvertHandler;
 import com.softwareoverflow.colorfall.BuildConfig;
 import com.softwareoverflow.colorfall.R;
+import com.softwareoverflow.colorfall.free_trial.AdvertHandler;
 import com.softwareoverflow.colorfall.free_trial.FreeTrialPopup;
 import com.softwareoverflow.colorfall.free_trial.UpgradeManager;
 import com.softwareoverflow.colorfall.game.Level;
@@ -20,9 +18,8 @@ import com.softwareoverflow.colorfall.media.SoundEffectHandler;
 
 public class MainActivity extends AppCompatActivity implements FreeTrialPopup{
 
-    private final int SETTINGS_REQUEST_CODE = 1;
     private View freeTrialPopup;
-    private String difficulty = Level.BEGINNER.name();
+    private String difficulty;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,7 +77,6 @@ public class MainActivity extends AppCompatActivity implements FreeTrialPopup{
     @Override
     public void upgradeNow(View v) {
         UpgradeManager.upgrade(this);
-        //TODO - upgrade
     }
 
     public void showHiScores(View v) {
@@ -91,31 +87,7 @@ public class MainActivity extends AppCompatActivity implements FreeTrialPopup{
     public void showSettings(View v) {
         BackgroundMusicService.changingActivity = true;
         Intent settingsIntent = new Intent(this, SettingsActivity.class);
-        startActivityForResult(settingsIntent, SETTINGS_REQUEST_CODE);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        switch(requestCode){
-            case SETTINGS_REQUEST_CODE:
-                if(resultCode == RESULT_OK) {//settings modified
-                    Snackbar snackbar = Snackbar
-                            .make(findViewById(android.R.id.content),
-                                    R.string.settings_updated, Snackbar.LENGTH_SHORT);
-
-                    View snackView = snackbar.getView();
-                    snackView.setAlpha(0.4f);
-                    TextView tv = snackView.findViewById(android.support.design.R.id.snackbar_text);
-                    tv.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-
-                    snackbar.show();
-
-                    checkSettings();
-                }
-                break;
-        }
+        startActivity(settingsIntent);
     }
 
     private void checkSettings(){
@@ -137,7 +109,6 @@ public class MainActivity extends AppCompatActivity implements FreeTrialPopup{
     @Override
     protected void onResume() {
         //setup advert in advance
-        //TODO use gradle for this to hide away private keys
         MobileAds.initialize(this, BuildConfig.app_ad_id);
         new AdvertHandler().setupGameBanner(this);
 
