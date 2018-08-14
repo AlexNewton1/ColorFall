@@ -129,6 +129,8 @@ public class MainActivity extends AppCompatActivity implements FreeTrialPopup{
             startActivity(new Intent(this, ConsentActivity.class));
         }
 
+        UpgradeManager.checkUserPurchases();
+
         super.onResume();
     }
 

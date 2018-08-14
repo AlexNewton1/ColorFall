@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.InterstitialAd;
-import com.softwareoverflow.colorfall.AdvertHandler;
+import com.softwareoverflow.colorfall.free_trial.AdvertHandler;
 import com.softwareoverflow.colorfall.R;
 import com.softwareoverflow.colorfall.animations.FadeInOutAnimation;
 import com.softwareoverflow.colorfall.media.BackgroundMusicService;

@@ -26,6 +26,8 @@ android {
             buildConfigField 'String', "game_banner_ad_id", colorfall_game_banner_ad
             buildConfigField 'String', "end_game_interstitial_ad", colorfall_end_game_interstitial
             buildConfigField 'String', "quit_game_interstitial_ad", colorfall_quit_game_interstitial
+
+            resValue 'String', 'game_banner_ad_id', colorfall_game_banner_ad
         }
     }
     buildToolsVersion '27.0.3'

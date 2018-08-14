@@ -6,13 +6,14 @@ import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
 import com.google.firebase.analytics.FirebaseAnalytics;
-import com.softwareoverflow.colorfall.AdvertHandler;
+import com.softwareoverflow.colorfall.free_trial.AdvertHandler;
 import com.softwareoverflow.colorfall.R;
 import com.softwareoverflow.colorfall.free_trial.FreeTrialCountdown;
 import com.softwareoverflow.colorfall.free_trial.FreeTrialPopup;
@@ -74,7 +75,7 @@ public class GameActivity extends Activity implements FreeTrialPopup{
 
     private void setupAds(){
         adView = new AdvertHandler().getGameBannerAd();
-        ConstraintLayout layout = findViewById(R.id.game_constraint_layout);
+        FrameLayout layout = findViewById(R.id.game_banner_ad_frame_wrapper);
         ViewGroup adParent = (ViewGroup) adView.getParent();
         if(adParent != null) {
             ((ViewGroup) adView.getParent()).removeView(adView);

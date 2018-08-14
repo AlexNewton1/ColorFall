@@ -22,7 +22,7 @@ public class UpgradeManager implements PurchasesUpdatedListener, BillingClientSt
     private static UpgradeManager upgradeManager;
 
     private static BillingClient billingClient;
-    private static String upgrade_sku = "colorfall_pro_upgrade";
+    private static final String UPGRADE_SKU = "colorfall_pro_upgrade";
 
     private static boolean hasUserUpgraded = false;
     private static boolean isConnected = false;
@@ -39,10 +39,10 @@ public class UpgradeManager implements PurchasesUpdatedListener, BillingClientSt
     }
 
     private UpgradeManager(Context context){
-
-        // create new Person
         billingClient = BillingClient.newBuilder(context).setListener(this).build();
         billingClient.startConnection(this);
+
+        checkUserPurchases();
     }
 
         @Override
@@ -51,29 +51,22 @@ public class UpgradeManager implements PurchasesUpdatedListener, BillingClientSt
             isConnected = true;
 
             if (billingResponseCode == BillingClient.BillingResponse.OK) {
-                // The billing client is ready. You can query purchases here.
-
-                //check if the user has made any purchases
-                checkUserPurchases();
-
-
                 List<String> skuList = new ArrayList<>();
-                skuList.add(upgrade_sku);
+                skuList.add(UPGRADE_SKU);
                 SkuDetailsParams.Builder params = SkuDetailsParams.newBuilder();
                 params.setSkusList(skuList).setType(BillingClient.SkuType.INAPP);
                 billingClient.querySkuDetailsAsync(params.build(),
                         new SkuDetailsResponseListener() {
                             @Override
                             public void onSkuDetailsResponse(int responseCode, List<SkuDetails> skuDetailsList) {
-                                Log.d("debug2", "skuDetails done! " + responseCode + ", " + skuDetailsList.toString());
                                 if (responseCode == BillingClient.BillingResponse.OK
                                         && skuDetailsList != null) {
                                     for (SkuDetails skuDetails : skuDetailsList) {
-                                        Log.d("debug2", skuDetails.toString());
+                                        Log.d("debug2", "querySkuDetailsAsync: " + skuDetails.toString());
                                         String sku = skuDetails.getSku();
                                         String price = skuDetails.getPrice();
 
-                                        if(sku.equals(upgrade_sku)){
+                                        if(sku.equals(UPGRADE_SKU)){
                                             upgradePrice = price;
                                             Log.d("debug2", "UPGRADE PRICE: " + price);
                                         }
@@ -91,7 +84,6 @@ public class UpgradeManager implements PurchasesUpdatedListener, BillingClientSt
             // Try to restart the connection on the next request to
             // Google Play by calling the startConnection() method.
             isConnected = false;
-            Log.d("debug2", "DISCONNECTED!");
         }
 
     @Override
@@ -99,30 +91,22 @@ public class UpgradeManager implements PurchasesUpdatedListener, BillingClientSt
         if (responseCode == BillingClient.BillingResponse.OK
                 && purchases != null) {
             for (Purchase purchase : purchases) {
-                if(purchase.getSku().equals(upgrade_sku)){
+                if(purchase.getSku().equals(UPGRADE_SKU)){
                     hasUserUpgraded = true;
                     break;
                 }
             }
-        } else if (responseCode == BillingClient.BillingResponse.USER_CANCELED) {
-            // TODO - Handle an error caused by a user cancelling the purchase flow.
         } else {
             //TODO -  Handle any other error codes.
         }
     }
 
     public static void upgrade(Context context){
-        //TODO -- show error if not connected
-
-        if(isConnected){
-            BillingFlowParams flowParams = BillingFlowParams.newBuilder()
-                    .setSku("SKU_ID_GOES_HERE!") //TODO - get the sku id
-                    .setType(BillingClient.SkuType.INAPP) // SkuType.SUB for subscription
+         BillingFlowParams flowParams = BillingFlowParams.newBuilder()
+                    .setSku(UPGRADE_SKU)
+                    .setType(BillingClient.SkuType.INAPP)
                     .build();
-            int responseCode = billingClient.launchBillingFlow( (Activity) context, flowParams);
-        } else {
-            Log.d("debug2", "NOT CONNECTED!");
-        }
+         billingClient.launchBillingFlow( (Activity) context, flowParams);
     }
 
 
@@ -132,11 +116,9 @@ public class UpgradeManager implements PurchasesUpdatedListener, BillingClientSt
                 billingClient.queryPurchases(BillingClient.SkuType.INAPP);
         if(purchasesResult.getResponseCode() == BillingClient.BillingResponse.OK){
             for(Purchase purchase : purchasesResult.getPurchasesList()){
-                if(purchase.getSku().equals(upgrade_sku)){
-
-                    //TODO - do some auth on getOriginalJson() or getSignature() and ensure maps to private key
-                    Log.d("debug2", purchase.getSignature());
-                    Log.d("debug2", purchase.getOriginalJson());
+                Log.d("debug2", "Checking against purchase: " + purchase);
+                if(purchase.getSku().equals(UPGRADE_SKU)){
+                    Log.d("debug2", "Purchase recognized as UPGRADE_SKU!\nSignature: " + purchase.getSignature() + "\n" + purchase.getOriginalJson());
                     hasUserUpgraded = true;
                     break;
                 }
