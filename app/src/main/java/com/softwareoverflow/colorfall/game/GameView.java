@@ -156,7 +156,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         gameObjects.clear();
 
         for (int i = 0; i < level.getNumBalls(); i++) {
-            Piece piece = new Piece(screenX, level.getNumPanels());
+            Piece piece = new Piece(screenX, screenY, level.getNumPanels());
             piece.resetPiece(level);
             gameObjects.add(piece);
         }
@@ -166,9 +166,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         return gameObjects;
     }
 
-    public void update(double frameTime) {
+    public void update() {
         for (GameObject gameObject : gameObjects) {
-            gameObject.update(frameTime);
+            gameObject.update();
 
             if(gameObject.getY() > screenY) {
                 if(gameObject.didPieceScore(level)){
@@ -196,8 +196,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         }
     }
 
-    @Override
-    public void draw(Canvas canvas) {
+    public void draw(Canvas canvas, double interpolation) {
         super.draw(canvas);
         if (canvas != null) {
             int panelWidth = screenX / level.getNumPanels();
@@ -210,8 +209,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                         screenY, paint);
             }
 
+
             for (GameObject gameObject : gameObjects) {
-                gameObject.draw(canvas);
+                int[] position =  ((Piece) gameObject).interpolate(interpolation);
+                gameObject.draw(canvas, position);
             }
         }
 
@@ -264,7 +265,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
      */
     public void startCountdown(){
         pauseLayout.setVisibility(GONE);
-        gameThread.updateCanvas();
+        gameThread.updateCanvas(1);
         countdownTimer.setVisibility(VISIBLE);
 
         float scaleX = screenX / 2;

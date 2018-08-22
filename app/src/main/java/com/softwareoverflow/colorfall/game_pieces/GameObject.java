@@ -10,16 +10,18 @@ public abstract class GameObject{
 
     final int screenX;
     int x = 0, y =0;
+    final float BASE_SPEED;
     float speed = 1;
     int panelWidth;
 
     private Bitmap bitmap;
     private Colour colour;
 
-    GameObject(int screenX, int numPanels){
+    GameObject(int screenX, int screenY, int numPanels){
         this.screenX = screenX;
         this.panelWidth = screenX / numPanels;
-
+        BASE_SPEED = screenY / 90f; //30 FPS for 3 seconds is base speed
+        
         //placeholder to init bitmap
         setColour(Colour.BLUE);
     }
@@ -42,8 +44,8 @@ public abstract class GameObject{
     }
 
 
-    public void draw(Canvas canvas){
-        canvas.drawBitmap(bitmap, x, y, null);
+    public void draw(Canvas canvas, int[] position){
+        canvas.drawBitmap(bitmap, position[0], position[1], null);
     }
 
     /**
@@ -57,9 +59,8 @@ public abstract class GameObject{
     }
 
     /**
-     * @param frameTime The time of the frame, used to maintain a smooth ui
      */
-    public abstract void update(double frameTime);
+    public abstract void update();
     /**
      *
      * @return true if the piece scored a point, false otherwise
