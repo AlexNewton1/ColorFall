@@ -1,6 +1,10 @@
 <resources>
     <string name="app_name">ColorFall</string>
 
+    <!--___________________Splash Screen Resources_________________-->
+    <string name="background_img_content_desc">Colourful geometric pattern formed of triangles</string>
+    <string name="add_color">Adding Color</string>
+
     <!--___________________Home Screen Resources___________________-->
     <string name="level_beginner">Beginner</string>
     <string name="level_easy">Easy</string>

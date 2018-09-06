@@ -21,7 +21,7 @@ public abstract class GameObject{
         this.screenX = screenX;
         this.panelWidth = screenX / numPanels;
         BASE_SPEED = screenY / 90f; //30 FPS for 3 seconds is base speed
-        
+
         //placeholder to init bitmap
         setColour(Colour.BLUE);
     }

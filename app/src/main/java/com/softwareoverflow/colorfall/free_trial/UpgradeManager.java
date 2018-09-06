@@ -24,7 +24,7 @@ public class UpgradeManager implements PurchasesUpdatedListener, BillingClientSt
     private static BillingClient billingClient;
     private static final String UPGRADE_SKU = "colorfall_pro_upgrade";
 
-    private static boolean hasUserUpgraded = false;
+    private static boolean hasUserUpgraded = true;
     private static boolean isConnected = false;
     //TODO - this will be the class where all upgrades and interaction with google services are handled
 
@@ -47,7 +47,6 @@ public class UpgradeManager implements PurchasesUpdatedListener, BillingClientSt
 
         @Override
         public void onBillingSetupFinished(@BillingClient.BillingResponse int billingResponseCode) {
-        Log.d("debug2", "setup finished");
             isConnected = true;
 
             if (billingResponseCode == BillingClient.BillingResponse.OK) {

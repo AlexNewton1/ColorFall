@@ -4,12 +4,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 
-import com.google.android.gms.ads.MobileAds;
-import com.softwareoverflow.colorfall.BuildConfig;
 import com.softwareoverflow.colorfall.R;
-import com.softwareoverflow.colorfall.free_trial.AdvertHandler;
 import com.softwareoverflow.colorfall.free_trial.FreeTrialPopup;
 import com.softwareoverflow.colorfall.free_trial.UpgradeManager;
 import com.softwareoverflow.colorfall.game.Level;
@@ -23,14 +21,12 @@ public class MainActivity extends AppCompatActivity implements FreeTrialPopup{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         freeTrialPopup = findViewById(R.id.popup_free_trial);
         freeTrialPopup.findViewById(R.id.dialog_popup_bg).setClipToOutline(true);
-
-        //start attempting to connect to billing service
-        UpgradeManager.getInstance(this);
     }
 
     public void playGame(View v) {
@@ -108,10 +104,7 @@ public class MainActivity extends AppCompatActivity implements FreeTrialPopup{
 
     @Override
     protected void onResume() {
-        //setup advert in advance
-        MobileAds.initialize(this, BuildConfig.app_ad_id);
-        new AdvertHandler().setupGameBanner(this);
-
+        Log.d("debug2", "Main Resume");
         if(freeTrialPopup != null){
             freeTrialPopup.setVisibility(View.GONE);
         }
@@ -121,7 +114,6 @@ public class MainActivity extends AppCompatActivity implements FreeTrialPopup{
         if(!BackgroundMusicService.changingActivity) {
             startService(new Intent(this, BackgroundMusicService.class));
         }
-
         BackgroundMusicService.changingActivity = false;
 
         if(ConsentActivity.userConsent == ConsentActivity.Consent.UNKNOWN){

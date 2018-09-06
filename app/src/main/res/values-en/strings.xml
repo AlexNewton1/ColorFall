@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">ColourFall</string>
+    <string name="add_color">Adding Colour</string>
 </resources>
