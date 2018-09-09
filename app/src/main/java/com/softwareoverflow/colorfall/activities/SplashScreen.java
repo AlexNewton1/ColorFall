@@ -1,20 +1,21 @@
 package com.softwareoverflow.colorfall.activities;
 
+import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Point;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Display;
-import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.TranslateAnimation;
+import android.view.animation.AccelerateInterpolator;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.softwareoverflow.colorfall.R;
@@ -27,6 +28,9 @@ public class SplashScreen extends AppCompatActivity {
 
     private BackgroundLoader loader;
 
+    private ImageView background;
+    private  TextView loadingTV;
+
     private int loadingTextUpdateCount;
     private final int LOADING_UPDATE_FREQUENCY = 500;
     private boolean animationFinished, loadingFinished;
@@ -38,59 +42,62 @@ public class SplashScreen extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
+
+        loadingTV = findViewById(R.id.loading_ellipsis);
+        background = findViewById(R.id.splash_screen_background_img);
     }
 
     private void setupLoadingScreen() {
+        loadingTextUpdateCount = 0;
+        animationFinished = loadingFinished = false;
+
         UpgradeManager.getInstance(SplashScreen.this);
         new AdvertHandler().setupGameBanner(SplashScreen.this);
 
-        View backgroundOverlay = findViewById(R.id.splash_screen_background_overlay);
-        final TextView loadingTV = findViewById(R.id.loading_text_view);
-        final String baseText = getResources().getString(R.string.add_color);
+        final ColorMatrix matrix = new ColorMatrix();
+        final Drawable drawable = background.getDrawable();
 
-        Display display = getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        int screenHeight = size.y;
-
-
-        Animation animation = new TranslateAnimation(0, 0, 0, screenHeight);
-        animation.setStartOffset(LOADING_UPDATE_FREQUENCY);
-        animation.setDuration(2000);
-        animation.setFillAfter(true);
-        animation.setAnimationListener(new Animation.AnimationListener() {
+        ValueAnimator animation = ValueAnimator.ofFloat(0f, 1f);
+        animation.setDuration(2500);
+        animation.setInterpolator(new AccelerateInterpolator());
+        animation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
-            public void onAnimationStart(Animation animation) {}
+            public void onAnimationUpdate(ValueAnimator animation) {
+                matrix.setSaturation(animation.getAnimatedFraction());
+                ColorMatrixColorFilter filter = new ColorMatrixColorFilter(matrix);
+                drawable.setColorFilter(filter);
 
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                animationFinished = true;
+                if(animation.getAnimatedFraction() == 1){
+                    animationFinished = true;
+                }
             }
 
-            @Override
-            public void onAnimationRepeat(Animation animation) {}
         });
-        backgroundOverlay.startAnimation(animation);
-
+        animation.start();
 
         loaderRunnable = new Runnable() {
             @Override
             public void run() {
-                loadingTextUpdateCount++;
-                StringBuilder sb = new StringBuilder().append(baseText);
-                for (int i = 0; i < loadingTextUpdateCount % 4; i++) {
-                    sb.append(" .");
-                }
-                loadingTV.setText(sb.toString());
+                updateLoadingText();
 
                 if(loadingFinished && animationFinished){
                     startGame();
                 } else {
-                    handler.postDelayed(loaderRunnable, LOADING_UPDATE_FREQUENCY);
+                    handler.postDelayed(this, LOADING_UPDATE_FREQUENCY);
                 }
             }
         };
+
         handler.postDelayed(loaderRunnable, LOADING_UPDATE_FREQUENCY);
+    }
+
+    private void updateLoadingText(){
+        loadingTextUpdateCount++;
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < loadingTextUpdateCount % 4; i++) {
+            sb.append(". ");
+        }
+        loadingTV.setText(sb.toString());
     }
 
     private void startGame(){
