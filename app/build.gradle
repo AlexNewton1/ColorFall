@@ -36,6 +36,7 @@ android {
 }
 
 dependencies {
+    implementation 'com.github.faruktoptas:FancyShowCaseView:1.0.0'
     implementation 'com.android.billingclient:billing:1.1'
     implementation 'com.google.firebase:firebase-core:16.0.3'
     implementation 'com.google.firebase:firebase-ads:15.0.1'

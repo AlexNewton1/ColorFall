@@ -55,6 +55,12 @@
     <string name="game_paused">Game\nPaused</string>
     <string name="resume">Resume</string>
     <string name="quit">Quit</string>
+    <string name="hand_pointer_content_desc">A hand icon demonstrating gameplay to the user</string>
+    <string name="tutorial_text">
+        Swipe the falling balls to move them to the matching column.
+        \n\n
+        Tap anywhere to continue.
+    </string>
 
     <!--___________________End Game Screen Resources_______________-->
     <string name="game_over">Game\n Over</string>

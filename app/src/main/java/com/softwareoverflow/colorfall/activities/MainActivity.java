@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 
 import com.softwareoverflow.colorfall.R;
@@ -104,7 +103,6 @@ public class MainActivity extends AppCompatActivity implements FreeTrialPopup{
 
     @Override
     protected void onResume() {
-        Log.d("debug2", "Main Resume");
         if(freeTrialPopup != null){
             freeTrialPopup.setVisibility(View.GONE);
         }
@@ -121,7 +119,7 @@ public class MainActivity extends AppCompatActivity implements FreeTrialPopup{
             startActivity(new Intent(this, ConsentActivity.class));
         }
 
-        UpgradeManager.checkUserPurchases();
+        UpgradeManager.checkUserPurchases(this);
 
         super.onResume();
     }
