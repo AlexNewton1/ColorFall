@@ -32,12 +32,11 @@ public class SplashScreen extends AppCompatActivity {
     private  TextView loadingTV;
 
     private int loadingTextUpdateCount;
-    private final int LOADING_UPDATE_FREQUENCY = 500, SATURATION_UPDATE_FREQUENCY = 100;
+    private final int LOADING_UPDATE_FREQUENCY = 500;
     private boolean animationFinished, loadingFinished;
-    private long elapsedTime;
 
     private Handler handler = new Handler(Looper.getMainLooper());
-    private Runnable loaderRunnable, saturationRunnable;
+    private Runnable loaderRunnable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,7 +89,6 @@ public class SplashScreen extends AppCompatActivity {
         };
 
         handler.postDelayed(loaderRunnable, LOADING_UPDATE_FREQUENCY);
-        handler.postDelayed(saturationRunnable, SATURATION_UPDATE_FREQUENCY);
     }
 
     private void updateLoadingText(){
@@ -114,7 +112,6 @@ public class SplashScreen extends AppCompatActivity {
         super.onPause();
         loader.cancel(true);
         handler.removeCallbacks(loaderRunnable);
-        handler.removeCallbacks(saturationRunnable);
         try {
             handler.getLooper().quit();
         } catch (IllegalStateException e){
