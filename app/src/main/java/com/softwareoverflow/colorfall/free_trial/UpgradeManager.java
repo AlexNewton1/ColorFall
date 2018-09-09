@@ -19,22 +19,30 @@ import java.util.List;
 
 public class UpgradeManager implements PurchasesUpdatedListener, BillingClientStateListener{
 
-    private final BillingClient billingClient;
-    private Context context;
-    private String upgrade_sku = "colorfall_pro_upgrade";
+    private static UpgradeManager upgradeManager;
 
-    private static boolean hasUserUpgraded = false;
-    private boolean isConnected = false;
+    private static BillingClient billingClient;
+    private static final String UPGRADE_SKU = "colorfall_pro_upgrade";
+
+    private static boolean hasUserUpgraded = true;
+    private static boolean isConnected = false;
     //TODO - this will be the class where all upgrades and interaction with google services are handled
 
     private String upgradePrice;
 
-    public UpgradeManager(Context context){
-        this.context = context;
+    public static UpgradeManager getInstance(Context context){
+        if(upgradeManager == null){
+           new UpgradeManager(context.getApplicationContext());
+        }
 
-        // create new Person
+        return upgradeManager;
+    }
+
+    private UpgradeManager(Context context){
         billingClient = BillingClient.newBuilder(context).setListener(this).build();
         billingClient.startConnection(this);
+
+        checkUserPurchases();
     }
 
         @Override
@@ -42,14 +50,8 @@ public class UpgradeManager implements PurchasesUpdatedListener, BillingClientSt
             isConnected = true;
 
             if (billingResponseCode == BillingClient.BillingResponse.OK) {
-                // The billing client is ready. You can query purchases here.
-
-                //check if the user has made any purchases
-                checkUserPurchases();
-
-
                 List<String> skuList = new ArrayList<>();
-                skuList.add(upgrade_sku);
+                skuList.add(UPGRADE_SKU);
                 SkuDetailsParams.Builder params = SkuDetailsParams.newBuilder();
                 params.setSkusList(skuList).setType(BillingClient.SkuType.INAPP);
                 billingClient.querySkuDetailsAsync(params.build(),
@@ -59,10 +61,11 @@ public class UpgradeManager implements PurchasesUpdatedListener, BillingClientSt
                                 if (responseCode == BillingClient.BillingResponse.OK
                                         && skuDetailsList != null) {
                                     for (SkuDetails skuDetails : skuDetailsList) {
+                                        Log.d("debug2", "querySkuDetailsAsync: " + skuDetails.toString());
                                         String sku = skuDetails.getSku();
                                         String price = skuDetails.getPrice();
 
-                                        if(sku.equals(upgrade_sku)){
+                                        if(sku.equals(UPGRADE_SKU)){
                                             upgradePrice = price;
                                             Log.d("debug2", "UPGRADE PRICE: " + price);
                                         }
@@ -80,7 +83,6 @@ public class UpgradeManager implements PurchasesUpdatedListener, BillingClientSt
             // Try to restart the connection on the next request to
             // Google Play by calling the startConnection() method.
             isConnected = false;
-            Log.d("debug2", "DISCONNECTED!");
         }
 
     @Override
@@ -88,45 +90,34 @@ public class UpgradeManager implements PurchasesUpdatedListener, BillingClientSt
         if (responseCode == BillingClient.BillingResponse.OK
                 && purchases != null) {
             for (Purchase purchase : purchases) {
-                if(purchase.getSku().equals(upgrade_sku)){
+                if(purchase.getSku().equals(UPGRADE_SKU)){
                     hasUserUpgraded = true;
                     break;
                 }
             }
-        } else if (responseCode == BillingClient.BillingResponse.USER_CANCELED) {
-            // TODO - Handle an error caused by a user cancelling the purchase flow.
         } else {
             //TODO -  Handle any other error codes.
         }
     }
 
-    public void upgrade(){
-        //TODO -- show error if not connected
-
-        if(isConnected){
-            BillingFlowParams flowParams = BillingFlowParams.newBuilder()
-                    .setSku("SKU_ID_GOES_HERE!") //TODO - get the sku id
-                    .setType(BillingClient.SkuType.INAPP) // SkuType.SUB for subscription
+    public static void upgrade(Context context){
+         BillingFlowParams flowParams = BillingFlowParams.newBuilder()
+                    .setSku(UPGRADE_SKU)
+                    .setType(BillingClient.SkuType.INAPP)
                     .build();
-            int responseCode = billingClient.launchBillingFlow( (Activity) context, flowParams);
-        } else {
-            Log.d("debug2", "NOT CONNECTED!");
-        }
+         billingClient.launchBillingFlow( (Activity) context, flowParams);
     }
 
 
-    //TODO -- call this method onResume of whichever activities activate purcahse flows
-    private void checkUserPurchases(){
-        if(!isConnected){
-            //TODO -- show error if not connected
-            Log.d("debug2", "NOT CONNECTED!");
-        }
-
+    //TODO -- call this method onResume of whichever activities activate purchase flows
+    public static void checkUserPurchases(){
         Purchase.PurchasesResult purchasesResult =
                 billingClient.queryPurchases(BillingClient.SkuType.INAPP);
         if(purchasesResult.getResponseCode() == BillingClient.BillingResponse.OK){
             for(Purchase purchase : purchasesResult.getPurchasesList()){
-                if(purchase.getSku().equals(upgrade_sku)){
+                Log.d("debug2", "Checking against purchase: " + purchase);
+                if(purchase.getSku().equals(UPGRADE_SKU)){
+                    Log.d("debug2", "Purchase recognized as UPGRADE_SKU!\nSignature: " + purchase.getSignature() + "\n" + purchase.getOriginalJson());
                     hasUserUpgraded = true;
                     break;
                 }

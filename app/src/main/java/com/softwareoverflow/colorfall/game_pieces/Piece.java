@@ -11,21 +11,36 @@ public class Piece extends GameObject{
     private int targetX;
     private float speedX;
 
-    public Piece(int screenX, int numPanels){
-        super(screenX, numPanels);
+    public Piece(int screenX, int screenY, int numPanels){
+        super(screenX, screenY, numPanels);
 
-        speedX = panelWidth / 20;
+        speedX = panelWidth / 3;
         random = new Random();
+    }
+
+    public int[] interpolate(double interpolation){
+        int lerpY = y + (int) (speed * interpolation);
+        int lerpX = x;
+        if(targetX != x){
+            int direction = (targetX > x) ? 1 : -1;
+            lerpX = x + (int) (direction * speedX * interpolation);
+
+            if(direction * (x - targetX) > 0) {
+                lerpX = targetX;
+            }
+        }
+
+        return new int[] {lerpX, lerpY};
     }
 
 
     @Override
-    public void update(double frameTime) {
-        y += speed * frameTime;
+    public void update() {
+        y += speed;
 
         if(targetX != x){
             int direction = (targetX > x) ? 1 : -1;
-            x += direction * speedX * frameTime;
+            x += direction * speedX;
 
             if(direction * (x - targetX) > 0) {
                 x = targetX;
@@ -57,12 +72,15 @@ public class Piece extends GameObject{
         int start = random.nextInt(3);
         targetX = x = getPxFromPanelNum(start);
 
-        int maxSpeed = level.getMaxSpeed();
-        int minSpeed = level.getMinSpeed();
-        speed = (random.nextInt(maxSpeed - minSpeed) + minSpeed) / 100f;
+        float maxSpeedMultiplier = level.getMaxSpeedMultiplier();
+        float minSpeedMultiplier = level.getMinSpeedMultiplier();
 
-        int minStartY = minSpeed * 20;
-        int maxStartY = maxSpeed * 50;
+        float randSpeedMultiplier = (maxSpeedMultiplier - minSpeedMultiplier)
+                * random.nextFloat() + minSpeedMultiplier;
+        speed = BASE_SPEED * randSpeedMultiplier;
+
+        int minStartY = (int) (BASE_SPEED * minSpeedMultiplier * 50) + getBitmap().getHeight();
+        int maxStartY = (int) (BASE_SPEED * maxSpeedMultiplier * 100);
         int startY = (random.nextInt(maxStartY - minStartY) + minStartY);
         y = -random.nextInt(startY) - getBitmap().getHeight();
     }
