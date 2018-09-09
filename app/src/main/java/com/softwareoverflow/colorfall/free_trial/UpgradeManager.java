@@ -42,7 +42,7 @@ public class UpgradeManager implements PurchasesUpdatedListener, BillingClientSt
         billingClient = BillingClient.newBuilder(context).setListener(this).build();
         billingClient.startConnection(this);
 
-        checkUserPurchases();
+        checkUserPurchases(context);
     }
 
         @Override
@@ -110,7 +110,12 @@ public class UpgradeManager implements PurchasesUpdatedListener, BillingClientSt
 
 
     //TODO -- call this method onResume of whichever activities activate purchase flows
-    public static void checkUserPurchases(){
+    public static void checkUserPurchases(Context context){
+        if(billingClient == null){
+            upgradeManager = new UpgradeManager(context);
+            return;
+        }
+
         Purchase.PurchasesResult purchasesResult =
                 billingClient.queryPurchases(BillingClient.SkuType.INAPP);
         if(purchasesResult.getResponseCode() == BillingClient.BillingResponse.OK){

@@ -9,6 +9,7 @@ import android.graphics.Paint;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -31,6 +32,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     //Game Items
+    private Tutorial tutorial;
     private GameThread gameThread = null;
     private GameActivity gameActivity;
     private TouchEventHandler touchEventHandler;
@@ -123,6 +125,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
+        Log.d("debug2","Surface created");
         screenX = holder.getSurfaceFrame().width();
         screenY = holder.getSurfaceFrame().height();
 
@@ -146,6 +149,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             pauseLayout.setVisibility(VISIBLE);
         } else {
             startCountdown();
+        }
+
+        if(level == Level.BEGINNER && tutorial == null){
+            tutorial = new Tutorial(gameActivity, this, gameObjects);
         }
     }
 
@@ -295,6 +302,24 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             trialCountdown = new FreeTrialCountdown(freeTrialCountdownTV, gameActivity);
             trialCountdown.start();
         }
+
+        if(tutorial != null){
+            tutorial.resume();
+        }
+    }
+
+    public void pauseGame(){
+        //stop the thread
+        boolean retry = true;
+        while (retry) {
+            try {
+                gameThread.setRunning(false);
+                gameThread.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            retry = false;
+        }
     }
 
 
@@ -302,6 +327,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
      * Resume the game - hide the pause layout and show the countdown
      */
     public void onResume() {
+        Log.d("debug2", "Resuming the game!");
         gameThread = new GameThread(getHolder(), this);
         if(isPaused){
             pauseLayout.setVisibility(VISIBLE);
@@ -315,22 +341,16 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
      * Pause the game - show the pause screen.
      */
     public void onPause(){
-        //stop the thread
-        boolean retry = true;
-        while (retry) {
-            try {
-                gameThread.setRunning(false);
-                gameThread.join();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            retry = false;
-        }
+        pauseGame();
 
         CountdownAnimation.setInCountdown(false);
 
         if(isFreeTrial && trialCountdown != null){
             trialCountdown.cancel();
+        }
+
+        if(tutorial != null){
+            tutorial.pause();
         }
 
         isPaused = true;

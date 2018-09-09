@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.animation.Animation;
@@ -61,14 +60,11 @@ public class SplashScreen extends AppCompatActivity {
         animation.setFillAfter(true);
         animation.setAnimationListener(new Animation.AnimationListener() {
             @Override
-            public void onAnimationStart(Animation animation) {
-                Log.d("debug2", "Started anim");
-            }
+            public void onAnimationStart(Animation animation) {}
 
             @Override
             public void onAnimationEnd(Animation animation) {
                 animationFinished = true;
-                Log.d("debug2", "Finished anim");
             }
 
             @Override
@@ -80,7 +76,6 @@ public class SplashScreen extends AppCompatActivity {
         loaderRunnable = new Runnable() {
             @Override
             public void run() {
-                Log.d("debug2", "Updating Text");
                 loadingTextUpdateCount++;
                 StringBuilder sb = new StringBuilder().append(baseText);
                 for (int i = 0; i < loadingTextUpdateCount % 4; i++) {
@@ -139,7 +134,6 @@ public class SplashScreen extends AppCompatActivity {
 
         @Override
         protected Void doInBackground(Void... voids) {
-            Log.d("debug2", "DO IN BACKGROUND!");
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
