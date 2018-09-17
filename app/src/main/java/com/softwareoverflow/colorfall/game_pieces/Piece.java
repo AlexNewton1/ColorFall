@@ -59,6 +59,8 @@ public class Piece extends GameObject{
 
     @Override
     public void onSwipe(float endX) {
+        if(endX == screenX) endX--;
+
         int panelNum = (int) (endX / panelWidth);
         targetX = getPxFromPanelNum(panelNum);
     }
@@ -85,7 +87,7 @@ public class Piece extends GameObject{
 
     private int getPxFromPanelNum(int panelNum){
         if(panelNum < 0 ) panelNum = 0;
-        else if(panelNum > screenX / panelWidth) panelNum = (screenX / panelWidth) - 1;
+        else if(panelNum >= (screenX / panelWidth)) panelNum = (screenX / panelWidth) - 1;
         return (int) (panelWidth * (panelNum + 0.5) - getBitmap().getWidth() / 2);
     }
 }

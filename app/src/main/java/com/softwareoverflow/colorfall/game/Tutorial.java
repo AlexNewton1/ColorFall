@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -46,7 +45,7 @@ public class Tutorial implements View.OnClickListener{
                         final int centreX = object.getX() + bitmapSize;
                         final int centreY = heightOffset + bitmapSize;
                         int radius = (int) (bitmapSize * 1.1);
-                        Log.d("debug2", "Showing the view");
+
                         showCaseView = new FancyShowCaseView.Builder(activity)
                                 .closeOnTouch(false)
                                 .customView(R.layout.tutorial_pointer_overlay, new OnViewInflateListener() {
