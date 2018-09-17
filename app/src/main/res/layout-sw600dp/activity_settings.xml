@@ -130,35 +130,35 @@
         app:layout_constraintTop_toBottomOf="@+id/sounds_layout">
 
         <TextView
-            android:textSize="25sp"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="2"
             android:gravity="center_vertical|end"
-            android:text="@string/settings_tutorial" />
+            android:text="@string/settings_tutorial"
+            android:textSize="25sp" />
 
         <TextView
-            android:textSize="25sp"
             android:id="@+id/tutorial_on"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="match_parent"
             android:layout_margin="4dp"
+            android:layout_weight="1"
             android:onClick="changeSettings"
             android:padding="8dp"
-            android:text="@string/on" />
+            android:text="@string/on"
+            android:textSize="25sp" />
 
 
         <TextView
-            android:textSize="25sp"
             android:id="@+id/tutorial_off"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="match_parent"
             android:layout_margin="4dp"
+            android:layout_weight="1"
             android:onClick="changeSettings"
             android:padding="8dp"
-            android:text="@string/off" />
+            android:text="@string/off"
+            android:textSize="25sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -175,35 +175,35 @@
         app:layout_constraintTop_toBottomOf="@+id/tutorial_layout">
 
         <TextView
-            android:textSize="25sp"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="2"
             android:gravity="center_vertical|end"
-            android:text="@string/settings_consent" />
+            android:text="@string/settings_consent"
+            android:textSize="25sp" />
 
         <TextView
-            android:textSize="25sp"
             android:id="@+id/consent_on"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="match_parent"
             android:layout_margin="4dp"
+            android:layout_weight="1"
             android:onClick="changeSettings"
             android:padding="8dp"
-            android:text="@string/on" />
+            android:text="@string/on"
+            android:textSize="25sp" />
 
 
         <TextView
-            android:textSize="25sp"
             android:id="@+id/consent_off"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="match_parent"
             android:layout_margin="4dp"
+            android:layout_weight="1"
             android:onClick="changeSettings"
             android:padding="8dp"
-            android:text="@string/off" />
+            android:text="@string/off"
+            android:textSize="25sp" />
     </LinearLayout>
 
 
