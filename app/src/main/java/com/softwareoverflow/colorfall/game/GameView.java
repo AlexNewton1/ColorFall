@@ -149,7 +149,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             startCountdown();
         }
 
-        if(level == Level.BEGINNER && tutorial == null){
+        boolean showTutorial = getContext().getSharedPreferences("settings", Context.MODE_PRIVATE).getBoolean("tutorial", true);
+        if(showTutorial && level == Level.BEGINNER && tutorial == null){
             tutorial = new Tutorial(gameActivity, this, gameObjects);
         }
     }

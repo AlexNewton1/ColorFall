@@ -126,6 +126,7 @@ public class SplashScreen extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        animationFinished = loadingFinished = false;
         loader = new BackgroundLoader(SplashScreen.this);
         loader.execute();
     }
