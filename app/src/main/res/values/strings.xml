@@ -37,6 +37,7 @@
     <!--___________________Settings Screen Resources_______________-->
     <string name="settings_music">Music:</string>
     <string name="settings_sound_effects">Sound Effects:</string>
+    <string name="settings_tutorial">Tutorial:</string>
     <string name="settings_consent">Analytics:</string>
     <string name="save">Save</string>
     <string name="cancel">Cancel</string>

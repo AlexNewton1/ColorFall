@@ -19,11 +19,12 @@ public class SettingsActivity extends AppCompatActivity {
     private final int CONSENT_REQUEST_CODE = 1;
 
     private SharedPreferences sharedPreferences;
-    private boolean playMusic, playSounds;
+    private boolean playMusic, playSounds, showTutorial;
 
     private SoundEffectHandler soundEffectHandler;
 
-    TextView playMusicOn, playMusicOff, playSoundsOn, playSoundsOff, consentOn, consentOff;
+    TextView playMusicOn, playMusicOff, playSoundsOn, playSoundsOff,
+            consentOn, consentOff, tutorialOn, tutorialOff;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,10 +39,13 @@ public class SettingsActivity extends AppCompatActivity {
         playSoundsOff = findViewById(R.id.play_sounds_off);
         consentOn = findViewById(R.id.consent_on);
         consentOff = findViewById(R.id.consent_off);
+        tutorialOn = findViewById(R.id.tutorial_on);
+        tutorialOff = findViewById(R.id.tutorial_off);
 
         sharedPreferences = getSharedPreferences("settings", MODE_PRIVATE);
         playMusic = sharedPreferences.getBoolean("music", true);
         playSounds = sharedPreferences.getBoolean("sounds", true);
+        showTutorial = sharedPreferences.getBoolean("tutorial", true);
 
         updateViews();
     }
@@ -61,6 +65,14 @@ public class SettingsActivity extends AppCompatActivity {
         } else {
             playSoundsOn.setTextColor(Color.GRAY);
             playSoundsOff.setTextColor(Color.WHITE);
+        }
+
+        if(showTutorial){
+            tutorialOn.setTextColor(Color.WHITE);
+            tutorialOff.setTextColor(Color.GRAY);
+        } else {
+            tutorialOn.setTextColor(Color.GRAY);
+            tutorialOff.setTextColor(Color.WHITE);
         }
 
         if(ConsentActivity.userConsent == ConsentActivity.Consent.GIVEN){
@@ -92,6 +104,12 @@ public class SettingsActivity extends AppCompatActivity {
                 soundEffectHandler.playSound(SoundEffectHandler.Sound.SCORE);
                 playSounds = true;
                 break;
+            case R.id.tutorial_off:
+                showTutorial = false;
+                break;
+            case R.id.tutorial_on:
+                showTutorial = true;
+                break;
             case R.id.consent_on: //fall through
             case R.id.consent_off:
                 BackgroundMusicService.changingActivity = true;
@@ -120,6 +138,7 @@ public class SettingsActivity extends AppCompatActivity {
         sharedPreferences.edit().putBoolean("music", playMusic).apply();
         sharedPreferences.edit().putBoolean("sounds", playSounds).apply();
         sharedPreferences.edit().putString("consent", ConsentActivity.userConsent.name()).apply();
+        sharedPreferences.edit().putBoolean("tutorial", showTutorial).apply();
 
         BackgroundMusicService.changingActivity = true;
         finish();
