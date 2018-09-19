@@ -4,11 +4,13 @@ import android.app.Activity;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
 import com.softwareoverflow.colorfall.R;
 import com.softwareoverflow.colorfall.free_trial.AdvertHandler;
+import com.softwareoverflow.colorfall.free_trial.UpgradeManager;
 import com.softwareoverflow.colorfall.game_pieces.GameObject;
 
 import java.util.List;
@@ -24,14 +26,18 @@ public class Tutorial implements View.OnClickListener{
     private GameView gameView;
 
     private FancyShowCaseView showCaseView;
+    private int heightOffset;
 
-    private boolean hasBeenShown, isCurrentlyShowing;
+    private boolean hasBeenShown;
+    public boolean isCurrentlyShowing;
 
     Tutorial (final Activity activity, final GameView gameView, final List<GameObject> gameObjects){
         this.gameView = gameView;
 
         handler = new Handler();
-        final int heightOffset = new AdvertHandler().getGameBannerAd().getMeasuredHeight();
+        heightOffset = 0;
+        if(UpgradeManager.isFreeUser())
+            heightOffset = new AdvertHandler().getGameBannerAd().getMeasuredHeight();
 
         runnable = new Runnable() {
             @Override
@@ -43,7 +49,7 @@ public class Tutorial implements View.OnClickListener{
 
                         final int bitmapSize = object.getBitmap().getWidth() / 2;
                         final int centreX = object.getX() + bitmapSize;
-                        final int centreY = heightOffset + bitmapSize;
+                        final int centreY = heightOffset + object.getY() + bitmapSize;
                         int radius = (int) (bitmapSize * 1.1);
 
                         showCaseView = new FancyShowCaseView.Builder(activity)
@@ -70,7 +76,7 @@ public class Tutorial implements View.OnClickListener{
                         return;
                     }
                 }
-                if(showCaseView == null || !showCaseView.isShown()){
+                if(showCaseView == null || !hasBeenShown){
                     handler.post(this);
                 }
             }
@@ -78,25 +84,28 @@ public class Tutorial implements View.OnClickListener{
     }
 
     public void pause(){
-        handler.removeCallbacks(runnable);
-        if(showCaseView !=null && showCaseView.isShown()){
-            showCaseView.hide();
+        if(showCaseView != null && isCurrentlyShowing){
+            try {
+                showCaseView.hide();
+            } catch (IllegalStateException ex){
+                ex.printStackTrace();
+            }
         }
     }
 
     public void resume(){
-        if(isCurrentlyShowing){
-            showCaseView.show();
-        }
-        if(!hasBeenShown){
+        if(showCaseView == null || !hasBeenShown){
             handler.post(runnable);
         }
     }
 
     @Override
     public void onClick(View v) {
+        handler.removeCallbacks(runnable);
+
         hasBeenShown = true;
         showCaseView.hide();
+        showCaseView.removeView();
         isCurrentlyShowing = false;
 
         gameView.onResume();

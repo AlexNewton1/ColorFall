@@ -11,6 +11,8 @@ public class Piece extends GameObject{
     private int targetX;
     private float speedX;
 
+    private int lerpX, lerpY;
+
     public Piece(int screenX, int screenY, int numPanels){
         super(screenX, screenY, numPanels);
 
@@ -19,8 +21,8 @@ public class Piece extends GameObject{
     }
 
     public int[] interpolate(double interpolation){
-        int lerpY = y + (int) (speed * interpolation);
-        int lerpX = x;
+        lerpY = y + (int) (speed * interpolation);
+        lerpX = x;
         if(targetX != x){
             int direction = (targetX > x) ? 1 : -1;
             lerpX = x + (int) (direction * speedX * interpolation);
@@ -31,6 +33,15 @@ public class Piece extends GameObject{
         }
 
         return new int[] {lerpX, lerpY};
+    }
+
+    /**
+     * Set the position of the piece to the value it was linearly interpolated to as of the last frame.
+     * This removes the unpleasant visuals of the ball moving back up slightly when the game is resumed.
+     */
+    public void setPositionToLerp(){
+        x = lerpX;
+        y = lerpY;
     }
 
 

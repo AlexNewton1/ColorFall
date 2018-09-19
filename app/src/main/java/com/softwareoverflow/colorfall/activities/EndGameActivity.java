@@ -10,9 +10,10 @@ import android.widget.TextView;
 
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.InterstitialAd;
-import com.softwareoverflow.colorfall.free_trial.AdvertHandler;
 import com.softwareoverflow.colorfall.R;
 import com.softwareoverflow.colorfall.animations.FadeInOutAnimation;
+import com.softwareoverflow.colorfall.free_trial.AdvertHandler;
+import com.softwareoverflow.colorfall.free_trial.UpgradeManager;
 import com.softwareoverflow.colorfall.media.BackgroundMusicService;
 
 public class EndGameActivity extends AppCompatActivity {
@@ -28,8 +29,6 @@ public class EndGameActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_end_game);
 
-        //setup advert in advance
-        new AdvertHandler().setupGameBanner(this);
 
         playAgainButton = findViewById(R.id.playAgainButton);
         scoreTextView = findViewById(R.id.endGameScoreTextView);
@@ -47,15 +46,20 @@ public class EndGameActivity extends AppCompatActivity {
         showScore(score);
         checkIfHiScore(score);
 
-        interstitialAd = new AdvertHandler().createEndGameInterstitialAd(this);
-        interstitialAd.setAdListener(new AdListener(){
 
-            @Override
-            public void onAdClosed() {
-                BackgroundMusicService.changingActivity = false;
-                leaveActivity();
-            }
-        });
+        //setup advert in advance
+        if(UpgradeManager.isFreeUser()) {
+            new AdvertHandler().setupGameBanner(this);
+            interstitialAd = new AdvertHandler().createEndGameInterstitialAd(this);
+            interstitialAd.setAdListener(new AdListener(){
+
+                @Override
+                public void onAdClosed() {
+                    BackgroundMusicService.changingActivity = false;
+                    leaveActivity();
+                }
+            });
+        }
     }
 
     private void leaveActivity(){
@@ -101,7 +105,7 @@ public class EndGameActivity extends AppCompatActivity {
 
     public void playAgain(View v){
         isPlayingAgain = true;
-        if(interstitialAd.isLoaded()){
+        if(interstitialAd != null && interstitialAd.isLoaded()){
             BackgroundMusicService.changingActivity = false;
             interstitialAd.show();
         } else {

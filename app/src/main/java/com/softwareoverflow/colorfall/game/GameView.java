@@ -106,6 +106,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         oldHiScore = sharedPrefs.getInt(level.name(), 0);
     }
 
+    public Tutorial getTutorial(){
+        return tutorial;
+    }
+
 
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
@@ -288,22 +292,31 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         isPaused = false;
         pauseLayout.setVisibility(GONE);
         countdownTimer.setVisibility(GONE);
-        gameThread.setRunning(true);
 
-        if(!gameThread.isAlive()){
-            gameThread.start();
-        }
-
-        if(isFreeTrial){
-            if(trialCountdown != null)
-                trialCountdown.cancel();
-
-            trialCountdown = new FreeTrialCountdown(freeTrialCountdownTV, gameActivity);
-            trialCountdown.start();
-        }
 
         if(tutorial != null){
             tutorial.resume();
+        }
+
+        if(tutorial == null || !tutorial.isCurrentlyShowing) {
+            for(GameObject gameObject : gameObjects){
+                //remove unpleasant jitter on resume
+                ((Piece) gameObject).setPositionToLerp();
+            }
+
+            gameThread.setRunning(true);
+
+            if(!gameThread.isAlive()){
+                gameThread.start();
+            }
+
+            if(isFreeTrial){
+                if(trialCountdown != null)
+                    trialCountdown.cancel();
+
+                trialCountdown = new FreeTrialCountdown(freeTrialCountdownTV, gameActivity);
+                trialCountdown.start();
+            }
         }
     }
 
@@ -318,6 +331,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                 e.printStackTrace();
             }
             retry = false;
+        }
+
+        for(GameObject gameObject : gameObjects){
+            ((Piece) gameObject).setPositionToLerp();
         }
     }
 
@@ -347,6 +364,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             trialCountdown.cancel();
         }
 
+        //don't need to pause the tutorial if we are changing activity
         if(tutorial != null){
             tutorial.pause();
         }

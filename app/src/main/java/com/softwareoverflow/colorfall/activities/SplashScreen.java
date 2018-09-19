@@ -51,8 +51,9 @@ public class SplashScreen extends AppCompatActivity {
         loadingTextUpdateCount = 0;
         animationFinished = loadingFinished = false;
 
-        UpgradeManager.getInstance(SplashScreen.this);
-        new AdvertHandler().setupGameBanner(SplashScreen.this);
+        UpgradeManager.setup(SplashScreen.this);
+        if(UpgradeManager.isFreeUser())
+            new AdvertHandler().setupGameBanner(SplashScreen.this);
 
         final ColorMatrix matrix = new ColorMatrix();
         final Drawable drawable = background.getDrawable();
