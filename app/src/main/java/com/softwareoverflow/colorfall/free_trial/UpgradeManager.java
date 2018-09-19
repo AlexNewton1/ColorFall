@@ -30,7 +30,7 @@ public class UpgradeManager implements PurchasesUpdatedListener, BillingClientSt
 
     private String upgradePrice;
 
-    public static UpgradeManager getInstance(Context context){
+    public static UpgradeManager setup(Context context){
         if(upgradeManager == null){
            new UpgradeManager(context.getApplicationContext());
         }

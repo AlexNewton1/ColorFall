@@ -74,6 +74,10 @@ public class GameActivity extends Activity implements FreeTrialPopup{
     }
 
     private void setupAds(){
+        if(!UpgradeManager.isFreeUser()){
+            return;
+        }
+
         adView = new AdvertHandler().getGameBannerAd();
         FrameLayout layout = findViewById(R.id.game_banner_ad_frame_wrapper);
         ViewGroup adParent = (ViewGroup) adView.getParent();
@@ -141,7 +145,10 @@ public class GameActivity extends Activity implements FreeTrialPopup{
     }
 
     public void quitGame(View v) {
-        if(interstitialAd != null && interstitialAd.isLoaded()){
+        if(UpgradeManager.isFreeUser())
+            new AdvertHandler().setupGameBanner(this);
+
+        if(interstitialAd != null && interstitialAd.isLoaded() && UpgradeManager.isFreeUser()){
             stopService(new Intent(this, BackgroundMusicService.class));
             interstitialAd.show();
         } else {
@@ -189,6 +196,13 @@ public class GameActivity extends Activity implements FreeTrialPopup{
         if(freeTrialPopup.getVisibility() == View.VISIBLE){
             return; //do nothing
         }
+
+        if(gameView.getTutorial().isCurrentlyShowing){
+            gameView.getTutorial().onClick(null);
+            gameView.startGame();
+            return;
+        }
+
 
         BackgroundMusicService.changingActivity = true;
         onPause();

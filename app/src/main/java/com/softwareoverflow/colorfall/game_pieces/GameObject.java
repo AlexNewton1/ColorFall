@@ -43,7 +43,7 @@ public abstract class GameObject{
         return y;
     }
 
-    public int getX() { return x; };
+    public int getX() { return x; }
 
     public void draw(Canvas canvas, int[] position){
         canvas.drawBitmap(bitmap, position[0], position[1], null);
