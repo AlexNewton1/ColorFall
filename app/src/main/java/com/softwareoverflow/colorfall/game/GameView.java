@@ -9,7 +9,6 @@ import android.graphics.Paint;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -296,12 +295,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
 
         if(tutorial != null){
-            Log.d("debug2", "startGame - tutorial resume");
             tutorial.resume();
         }
 
         if(tutorial == null || !tutorial.isCurrentlyShowing) {
-            Log.d("debug2", "StartGame run");
             for(GameObject gameObject : gameObjects){
                 //remove unpleasant jitter on resume
                 ((Piece) gameObject).setPositionToLerp();

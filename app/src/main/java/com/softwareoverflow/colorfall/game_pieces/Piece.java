@@ -40,11 +40,8 @@ public class Piece extends GameObject{
      * This removes the unpleasant visuals of the ball moving back up slightly when the game is resumed.
      */
     public void setPositionToLerp(){
-        //Log.d("debug2", "Updating values from y: " + y  + " to y: " + lerpY);
-
         x = lerpX;
         y = lerpY;
-
     }
 
 

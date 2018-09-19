@@ -32,7 +32,6 @@ public class Tutorial implements View.OnClickListener{
     public boolean isCurrentlyShowing;
 
     Tutorial (final Activity activity, final GameView gameView, final List<GameObject> gameObjects){
-        Log.d("debug2", "Tutorial constructor");
         this.gameView = gameView;
 
         handler = new Handler();
@@ -96,7 +95,6 @@ public class Tutorial implements View.OnClickListener{
 
     public void resume(){
         if(showCaseView == null || !hasBeenShown){
-            Log.d("debug2", "Posting runnable");
             handler.post(runnable);
         }
     }
