@@ -33,6 +33,9 @@ public class GameActivity extends Activity implements FreeTrialPopup{
     private TextView countdownTextView;
     private View freeTrialPopup;
 
+    //boolean for track if the game activity is running (used in the AdvertHandler class)
+    public static boolean isGameRunning = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,7 +73,7 @@ public class GameActivity extends Activity implements FreeTrialPopup{
 
     @Override
     public void upgradeNow(View v) {
-        //TODO - upgrade
+        UpgradeManager.upgrade(this);
     }
 
     private void setupAds(){
@@ -160,16 +163,25 @@ public class GameActivity extends Activity implements FreeTrialPopup{
 
     @Override
     protected void onResume() {
+        isGameRunning = true;
+
         if (!BackgroundMusicService.changingActivity) {
             startService(new Intent(this, BackgroundMusicService.class));
         }
         BackgroundMusicService.changingActivity = false;
 
+        UpgradeManager.checkUserPurchases(this);
+        if(!UpgradeManager.isFreeUser()) {
+            adView.setVisibility(View.GONE);
+            interstitialAd = null;
+        }
+        else if(adView != null){
+            adView.resume();
+        }
+
+
         if (gameView != null) {
             gameView.onResume();
-        }
-        if(adView != null){
-            adView.resume();
         }
 
         super.onResume();
@@ -177,6 +189,8 @@ public class GameActivity extends Activity implements FreeTrialPopup{
 
     @Override
     protected void onPause() {
+        isGameRunning = false;
+
         if (!BackgroundMusicService.changingActivity) {
             stopService(new Intent(this, BackgroundMusicService.class));
         }
@@ -197,7 +211,7 @@ public class GameActivity extends Activity implements FreeTrialPopup{
             return; //do nothing
         }
 
-        if(gameView.getTutorial().isCurrentlyShowing){
+        if(gameView.getTutorial() != null && gameView.getTutorial().isCurrentlyShowing){
             gameView.getTutorial().onClick(null);
             gameView.startGame();
             return;
@@ -217,6 +231,7 @@ public class GameActivity extends Activity implements FreeTrialPopup{
             adView.destroy();
         }
 
+        isGameRunning = false;
         super.onDestroy();
     }
 }

@@ -8,6 +8,7 @@ import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
 import com.softwareoverflow.colorfall.BuildConfig;
+import com.softwareoverflow.colorfall.activities.GameActivity;
 
 public class AdvertHandler {
 
@@ -19,10 +20,12 @@ public class AdvertHandler {
         gameBannerAd.setAdUnitId(BuildConfig.game_banner_ad_id);
         gameBannerAd.loadAd(new AdRequest.Builder().build());
         gameBannerAd.setAdListener( new AdListener(){
+
             @Override
             public void onAdLoaded() {
                 super.onAdLoaded();
-                gameBannerAd.pause();
+                if(!GameActivity.isGameRunning)
+                    gameBannerAd.pause();
             }
         });
     }

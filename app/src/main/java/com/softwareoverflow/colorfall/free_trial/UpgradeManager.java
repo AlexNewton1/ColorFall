@@ -24,7 +24,7 @@ public class UpgradeManager implements PurchasesUpdatedListener, BillingClientSt
     private static BillingClient billingClient;
     private static final String UPGRADE_SKU = "colorfall_pro_upgrade";
 
-    private static boolean hasUserUpgraded = true;
+    private static boolean hasUserUpgraded = false;
     private static boolean isConnected = false;
     //TODO - this will be the class where all upgrades and interaction with google services are handled
 
@@ -109,7 +109,6 @@ public class UpgradeManager implements PurchasesUpdatedListener, BillingClientSt
     }
 
 
-    //TODO -- call this method onResume of whichever activities activate purchase flows
     public static void checkUserPurchases(Context context){
         if(billingClient == null){
             upgradeManager = new UpgradeManager(context);
