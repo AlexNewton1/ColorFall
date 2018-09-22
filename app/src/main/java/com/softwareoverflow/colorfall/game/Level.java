@@ -8,7 +8,7 @@ import java.util.Random;
 
 public enum Level {
 
-    BEGINNER(3, 3, 1, 1.6f), EASY(3, 4, 1.2f, 2f), MEDIUM(3, 4, 1.4f, 2.2f), HARD(4, 4, 1.5f, 2.2f), INSANE(4, 6, 1.6f, 2.5f);
+    BEGINNER(3, 3, 1f, 1.6f), EASY(3, 4, 1.2f, 2f), MEDIUM(3, 4, 1.4f, 2.2f), HARD(4, 4, 1.4f, 2.2f), INSANE(4, 6, 1.8f, 2.5f);
 
     private Colour[] colours;
     private int numPanels, numBalls;
@@ -50,7 +50,7 @@ public enum Level {
         this.maxSpeedMultiplier *= 1.2;
         this.minSpeedMultiplier *= 1.2;
 
-        final float MAX_SPEED_MULTIPLIER_LIMIT = 6, MIN_SPEED_MULTIPLIER_LIMIT = 5;
+        final float MAX_SPEED_MULTIPLIER_LIMIT = 3.5f, MIN_SPEED_MULTIPLIER_LIMIT = 3;
         if(maxSpeedMultiplier > MAX_SPEED_MULTIPLIER_LIMIT)
             maxSpeedMultiplier = MAX_SPEED_MULTIPLIER_LIMIT;
         if(minSpeedMultiplier > MIN_SPEED_MULTIPLIER_LIMIT)
