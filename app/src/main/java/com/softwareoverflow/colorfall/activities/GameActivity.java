@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -96,7 +95,6 @@ public class GameActivity extends Activity implements FreeTrialPopup{
         interstitialAd.setAdListener(new AdListener(){
             @Override
             public void onAdClosed() {
-                Log.d("debug2", "interstitial closed");
                 super.onAdClosed();
                 finish();
             }
