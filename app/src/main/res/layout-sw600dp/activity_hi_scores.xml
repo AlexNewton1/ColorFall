@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/ic_background"
+    tools:context=".activities.HiScoresActivity">
+
+    <TextView
+        android:id="@+id/score_label_beginner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/beginner"
+        app:layout_constraintBottom_toTopOf="@+id/score_label_easy"
+        app:layout_constraintEnd_toStartOf="@+id/hi_score_beginner"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView15"
+        app:layout_constraintVertical_chainStyle="spread" />
+
+    <TextView
+        android:id="@+id/hi_score_beginner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/score_label_beginner"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/score_label_beginner"
+        app:layout_constraintTop_toTopOf="@+id/score_label_beginner" />
+
+    <TextView
+        android:id="@+id/score_label_easy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/easy"
+        app:layout_constraintBottom_toTopOf="@+id/score_label_medium"
+        app:layout_constraintEnd_toEndOf="@+id/score_label_beginner"
+        app:layout_constraintTop_toBottomOf="@+id/score_label_beginner" />
+
+    <TextView
+        android:id="@+id/hi_score_easy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/score_label_easy"
+        app:layout_constraintEnd_toEndOf="@+id/hi_score_beginner"
+        app:layout_constraintTop_toTopOf="@+id/score_label_easy" />
+
+    <TextView
+        android:id="@+id/score_label_medium"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/medium"
+        app:layout_constraintBottom_toTopOf="@+id/score_label_hard"
+        app:layout_constraintEnd_toEndOf="@+id/score_label_beginner"
+        app:layout_constraintTop_toBottomOf="@+id/score_label_easy" />
+
+    <TextView
+        android:id="@+id/hi_score_medium"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/score_label_medium"
+        app:layout_constraintEnd_toEndOf="@+id/hi_score_beginner"
+        app:layout_constraintTop_toTopOf="@+id/score_label_medium" />
+
+    <TextView
+        android:id="@+id/score_label_hard"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/hard"
+        app:layout_constraintBottom_toTopOf="@+id/score_label_insane"
+        app:layout_constraintEnd_toEndOf="@+id/score_label_beginner"
+        app:layout_constraintTop_toBottomOf="@+id/score_label_medium" />
+
+    <TextView
+        android:id="@+id/hi_score_hard"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/score_label_hard"
+        app:layout_constraintEnd_toEndOf="@+id/hi_score_beginner"
+        app:layout_constraintTop_toTopOf="@+id/score_label_hard" />
+
+    <TextView
+        android:id="@+id/score_label_insane"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/insane"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/score_label_beginner"
+        app:layout_constraintTop_toBottomOf="@+id/score_label_hard" />
+
+    <TextView
+        android:id="@+id/hi_score_insane"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/score_label_insane"
+        app:layout_constraintEnd_toEndOf="@+id/hi_score_beginner"
+        app:layout_constraintTop_toTopOf="@+id/score_label_insane" />
+
+    <TextView
+        android:id="@+id/textView15"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="32dp"
+        android:text="@string/high_scores"
+        android:textSize="25sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</android.support.constraint.ConstraintLayout>

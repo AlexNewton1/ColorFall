@@ -13,7 +13,6 @@ import com.softwareoverflow.colorfall.R;
 import com.softwareoverflow.colorfall.media.BackgroundMusicService;
 import com.softwareoverflow.colorfall.media.SoundEffectHandler;
 
-//TODO - Fix outline not appearing properly
 public class SettingsActivity extends AppCompatActivity {
 
     private final int CONSENT_REQUEST_CODE = 1;
@@ -23,7 +22,7 @@ public class SettingsActivity extends AppCompatActivity {
 
     private SoundEffectHandler soundEffectHandler;
 
-    TextView playMusicOn, playMusicOff, playSoundsOn, playSoundsOff,
+    private TextView playMusicOn, playMusicOff, playSoundsOn, playSoundsOff,
             consentOn, consentOff, tutorialOn, tutorialOff;
 
     @Override

@@ -7,13 +7,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.softwareoverflow.colorfall.R;
-import com.softwareoverflow.colorfall.free_trial.FreeTrialPopup;
 import com.softwareoverflow.colorfall.free_trial.UpgradeManager;
 import com.softwareoverflow.colorfall.game.Level;
 import com.softwareoverflow.colorfall.media.BackgroundMusicService;
 import com.softwareoverflow.colorfall.media.SoundEffectHandler;
 
-public class MainActivity extends AppCompatActivity implements FreeTrialPopup{
+public class MainActivity extends AppCompatActivity {
 
     private View freeTrialPopup;
     private String difficulty;
@@ -64,12 +63,10 @@ public class MainActivity extends AppCompatActivity implements FreeTrialPopup{
         startActivity(gameIntent);
     }
 
-    @Override
     public void playFreeVersion(View v) {
         startGame(difficulty);
     }
 
-    @Override
     public void upgradeNow(View v) {
         UpgradeManager.upgrade(this);
     }

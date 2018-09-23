@@ -67,10 +67,6 @@ public class BackgroundMusicService extends Service {
         fadeHandler.post(fadeInRunnable);
     }
 
-    public static boolean getPlayMusic(){
-        return playMusic;
-    }
-
     @Override
     public void onDestroy() {
         if(mediaPlayer != null) {
@@ -87,7 +83,7 @@ public class BackgroundMusicService extends Service {
         }
     }
 
-    public static void resumeMusic() {
+    static void resumeMusic() {
         if(mediaPlayer != null && playMusic) {
             mediaPlayer.start();
             fadeIn();

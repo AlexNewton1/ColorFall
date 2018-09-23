@@ -16,14 +16,13 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 import com.softwareoverflow.colorfall.R;
 import com.softwareoverflow.colorfall.free_trial.AdvertHandler;
 import com.softwareoverflow.colorfall.free_trial.FreeTrialCountdown;
-import com.softwareoverflow.colorfall.free_trial.FreeTrialPopup;
 import com.softwareoverflow.colorfall.free_trial.UpgradeManager;
 import com.softwareoverflow.colorfall.game.GameView;
 import com.softwareoverflow.colorfall.game.Level;
 import com.softwareoverflow.colorfall.media.BackgroundMusicService;
 import com.softwareoverflow.colorfall.media.SoundEffectHandler;
 
-public class GameActivity extends Activity implements FreeTrialPopup{
+public class GameActivity extends Activity {
 
     private GameView gameView;
     private AdView adView;
@@ -65,13 +64,11 @@ public class GameActivity extends Activity implements FreeTrialPopup{
         }
     }
 
-    @Override
     public void playFreeVersion(View v) {
         SoundEffectHandler.getInstance(this).playSound(SoundEffectHandler.Sound.GAME_OVER);
         gameView.endGame();
     }
 
-    @Override
     public void upgradeNow(View v) {
         UpgradeManager.upgrade(this);
     }
@@ -171,12 +168,14 @@ public class GameActivity extends Activity implements FreeTrialPopup{
         BackgroundMusicService.changingActivity = false;
 
         UpgradeManager.checkUserPurchases(this);
-        if(!UpgradeManager.isFreeUser()) {
-            adView.setVisibility(View.GONE);
-            interstitialAd = null;
-        }
-        else if(adView != null){
-            adView.resume();
+        if(adView != null){
+            if(!UpgradeManager.isFreeUser()) {
+                adView.setVisibility(View.GONE);
+                interstitialAd = null;
+            }
+            else {
+                adView.resume();
+            }
         }
 
 
