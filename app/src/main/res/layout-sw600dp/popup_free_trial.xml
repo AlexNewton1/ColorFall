@@ -29,14 +29,15 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="64dp"
         android:text="@string/free_trial"
-        android:textSize="22sp"
+        android:textSize="45sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/view" />
 
     <TextView
+        android:textSize="30sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
@@ -69,9 +70,9 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/play_free"
             android:onClick="playFreeVersion"
-            android:textSize="12sp" />
+            android:text="@string/play_free"
+            android:textSize="24sp" />
 
         <TextView
             android:id="@+id/upgrade_to_pro"
@@ -80,7 +81,7 @@
             android:layout_weight="1"
             android:onClick="upgradeNow"
             android:text="@string/upgrade_now"
-            android:textSize="12sp" />
+            android:textSize="24sp" />
 
     </LinearLayout>
 

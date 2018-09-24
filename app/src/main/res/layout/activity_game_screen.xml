@@ -24,7 +24,7 @@
         app:layout_constraintTop_toBottomOf="@+id/game_banner_ad_frame_wrapper"
         app:layout_constraintVertical_weight="1" />
 
-    <android.support.constraint.ConstraintLayout
+    <FrameLayout
         android:id="@+id/frameLayout"
         android:layout_width="40dp"
         android:layout_height="40dp"
@@ -40,16 +40,16 @@
             android:src="@drawable/heart" />
 
 
-        <android.support.v7.widget.AppCompatTextView
+        <TextView
             android:id="@+id/livesTextView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:gravity="center"
             android:textSize="12sp" />
-    </android.support.constraint.ConstraintLayout>
+    </FrameLayout>
 
-    <android.support.constraint.ConstraintLayout
+    <FrameLayout
         android:id="@+id/constraintLayout"
         android:layout_width="40dp"
         android:layout_height="40dp"
@@ -65,14 +65,14 @@
             android:src="@drawable/gold_coin" />
 
 
-        <android.support.v7.widget.AppCompatTextView
+        <TextView
             android:id="@+id/scoreTextView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:gravity="center"
             android:textSize="12sp" />
-    </android.support.constraint.ConstraintLayout>
+    </FrameLayout>
 
     <TextView
         android:id="@+id/free_trial_countdown_tv"
@@ -162,17 +162,17 @@
         android:id="@+id/popup_free_trial"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/game_banner_ad_frame_wrapper"
-        android:visibility="visible">
+        app:layout_constraintTop_toBottomOf="@id/game_banner_ad_frame_wrapper">
 
         <View
-            android:background="@color/browser_actions_bg_grey"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:alpha="0.5"/>
+            android:alpha="0.5"
+            android:background="@color/browser_actions_bg_grey" />
 
         <FrameLayout
             android:layout_width="match_parent"

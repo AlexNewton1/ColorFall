@@ -12,6 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/beginner"
+        android:textSize="30sp"
         app:layout_constraintBottom_toTopOf="@+id/score_label_easy"
         app:layout_constraintEnd_toStartOf="@+id/hi_score_beginner"
         app:layout_constraintHorizontal_bias="0.5"
@@ -23,6 +24,7 @@
         android:id="@+id/hi_score_beginner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textSize="30sp"
         app:layout_constraintBottom_toBottomOf="@+id/score_label_beginner"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -34,6 +36,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/easy"
+        android:textSize="30sp"
         app:layout_constraintBottom_toTopOf="@+id/score_label_medium"
         app:layout_constraintEnd_toEndOf="@+id/score_label_beginner"
         app:layout_constraintTop_toBottomOf="@+id/score_label_beginner" />
@@ -42,6 +45,7 @@
         android:id="@+id/hi_score_easy"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textSize="30sp"
         app:layout_constraintBottom_toBottomOf="@+id/score_label_easy"
         app:layout_constraintEnd_toEndOf="@+id/hi_score_beginner"
         app:layout_constraintTop_toTopOf="@+id/score_label_easy" />
@@ -51,6 +55,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/medium"
+        android:textSize="30sp"
         app:layout_constraintBottom_toTopOf="@+id/score_label_hard"
         app:layout_constraintEnd_toEndOf="@+id/score_label_beginner"
         app:layout_constraintTop_toBottomOf="@+id/score_label_easy" />
@@ -59,6 +64,7 @@
         android:id="@+id/hi_score_medium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textSize="30sp"
         app:layout_constraintBottom_toBottomOf="@+id/score_label_medium"
         app:layout_constraintEnd_toEndOf="@+id/hi_score_beginner"
         app:layout_constraintTop_toTopOf="@+id/score_label_medium" />
@@ -68,6 +74,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/hard"
+        android:textSize="30sp"
         app:layout_constraintBottom_toTopOf="@+id/score_label_insane"
         app:layout_constraintEnd_toEndOf="@+id/score_label_beginner"
         app:layout_constraintTop_toBottomOf="@+id/score_label_medium" />
@@ -76,6 +83,7 @@
         android:id="@+id/hi_score_hard"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textSize="30sp"
         app:layout_constraintBottom_toBottomOf="@+id/score_label_hard"
         app:layout_constraintEnd_toEndOf="@+id/hi_score_beginner"
         app:layout_constraintTop_toTopOf="@+id/score_label_hard" />
@@ -85,6 +93,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/insane"
+        android:textSize="30sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/score_label_beginner"
         app:layout_constraintTop_toBottomOf="@+id/score_label_hard" />
@@ -93,6 +102,7 @@
         android:id="@+id/hi_score_insane"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textSize="30sp"
         app:layout_constraintBottom_toBottomOf="@+id/score_label_insane"
         app:layout_constraintEnd_toEndOf="@+id/hi_score_beginner"
         app:layout_constraintTop_toTopOf="@+id/score_label_insane" />
@@ -103,9 +113,9 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="64dp"
         android:text="@string/high_scores"
-        android:textSize="25sp"
+        android:textSize="50sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
