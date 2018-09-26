@@ -20,7 +20,6 @@ import com.softwareoverflow.colorfall.free_trial.UpgradeManager;
 import com.softwareoverflow.colorfall.game.GameView;
 import com.softwareoverflow.colorfall.game.Level;
 import com.softwareoverflow.colorfall.media.BackgroundMusicService;
-import com.softwareoverflow.colorfall.media.SoundEffectHandler;
 
 public class GameActivity extends Activity {
 
@@ -30,7 +29,7 @@ public class GameActivity extends Activity {
 
     private boolean isFreeTrial = false;
     private TextView countdownTextView;
-    private View freeTrialPopup;
+
 
     //boolean for track if the game activity is running (used in the AdvertHandler class)
     public static boolean isGameRunning = false;
@@ -53,9 +52,6 @@ public class GameActivity extends Activity {
             countdownTextView.setVisibility(View.GONE);
         }
 
-        freeTrialPopup = findViewById(R.id.popup_free_trial);
-        freeTrialPopup.findViewById(R.id.dialog_popup_bg).setClipToOutline(true);
-
         setupAds();
         setupGame(level);
 
@@ -64,13 +60,8 @@ public class GameActivity extends Activity {
         }
     }
 
-    public void playFreeVersion(View v) {
-        SoundEffectHandler.getInstance(this).playSound(SoundEffectHandler.Sound.GAME_OVER);
-        gameView.endGame();
-    }
-
-    public void upgradeNow(View v) {
-        UpgradeManager.upgrade(this);
+    public GameView getGameView() {
+        return gameView;
     }
 
     private void setupAds(){
@@ -100,8 +91,6 @@ public class GameActivity extends Activity {
     }
 
     private void setupGame(Level level) {
-        findViewById(R.id.popup_free_trial).setVisibility(View.GONE);
-
         //default value
         level.resetSpeed();
         level.setColours();
@@ -130,13 +119,6 @@ public class GameActivity extends Activity {
         bundle.putString(FirebaseAnalytics.Param.LEVEL_NAME, levelName);
 
         FirebaseAnalytics.getInstance(this).logEvent(FirebaseAnalytics.Event.LEVEL_START, bundle);
-    }
-
-    public void endFreeTrial(){
-        SoundEffectHandler.getInstance(this).playSound(SoundEffectHandler.Sound.GAME_OVER);
-
-        gameView.onPause();
-        freeTrialPopup.setVisibility(View.VISIBLE);
     }
 
     public void resumeGame(View v) {
@@ -206,10 +188,6 @@ public class GameActivity extends Activity {
 
     @Override
     public void onBackPressed() {
-        if(freeTrialPopup.getVisibility() == View.VISIBLE){
-            return; //do nothing
-        }
-
         if(gameView.getTutorial() != null && gameView.getTutorial().isCurrentlyShowing){
             gameView.getTutorial().onClick(null);
             gameView.startGame();

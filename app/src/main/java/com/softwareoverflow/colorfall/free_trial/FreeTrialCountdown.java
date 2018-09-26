@@ -33,7 +33,7 @@ public class FreeTrialCountdown {
             @Override
             public void onFinish() {
                 timeLeft = DURATION;
-                gameActivity.endFreeTrial();
+                gameActivity.getGameView().endGame();
             }
         };
 
