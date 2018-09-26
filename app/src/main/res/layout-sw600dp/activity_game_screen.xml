@@ -25,9 +25,9 @@
         app:layout_constraintVertical_weight="1" />
 
     <FrameLayout
-        android:id="@+id/frameLayout"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:id="@+id/lives_constraint_layout"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:layout_marginEnd="8dp"
         android:layout_marginTop="8dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -46,13 +46,13 @@
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:gravity="center"
-            android:textSize="12sp" />
+            android:textSize="30sp" />
     </FrameLayout>
 
     <FrameLayout
-        android:id="@+id/constraintLayout"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:id="@+id/score_constraint_layout"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         app:layout_constraintStart_toStartOf="parent"
@@ -71,21 +71,22 @@
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:gravity="center"
-            android:textSize="12sp" />
+            android:textSize="30sp" />
     </FrameLayout>
 
     <TextView
         android:id="@+id/free_trial_countdown_tv"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="100dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:gravity="center"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="@+id/frameLayout"
+        android:textSize="30sp"
+        app:layout_constraintBottom_toBottomOf="@+id/lives_constraint_layout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/frameLayout" />
+        app:layout_constraintTop_toTopOf="@+id/lives_constraint_layout" />
 
     <ImageView
         android:id="@+id/countdown_image_view"
@@ -119,7 +120,7 @@
             android:layout_marginTop="8dp"
             android:gravity="center"
             android:text="@string/game_paused"
-            android:textSize="30sp"
+            android:textSize="55sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -136,7 +137,7 @@
             android:layout_marginTop="8dp"
             android:onClick="resumeGame"
             android:text="@string/resume"
-            android:textSize="20sp"
+            android:textSize="30sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -151,7 +152,7 @@
             android:layout_marginTop="16dp"
             android:onClick="quitGame"
             android:text="@string/quit"
-            android:textSize="20sp"
+            android:textSize="30sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/resumeGame" />
@@ -184,7 +185,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/constraintLayout"
+            app:layout_constraintTop_toBottomOf="@+id/score_constraint_layout"
             app:layout_constraintVertical_weight="1">
 
             <include layout="@layout/popup_free_trial" />

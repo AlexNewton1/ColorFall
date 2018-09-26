@@ -27,7 +27,7 @@ public class SoundEffectHandler {
             this.resId = resId;
         }
 
-        public int getResId() {
+        int getResId() {
             return resId;
         }
     }
@@ -80,14 +80,6 @@ public class SoundEffectHandler {
 
         int soundId = soundMap.get(sound);
         soundPool.play(soundId, 1, 1, 1, 0, 1);
-    }
-
-    //TODO - release this onDestroy of gameActivity?
-    public void release(){
-        if(soundPool !=null ) {
-            soundPool.release();
-            soundPool = null;
-        }
     }
 
     public static void setPlaySounds(boolean playSounds){

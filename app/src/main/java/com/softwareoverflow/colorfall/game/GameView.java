@@ -47,7 +47,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private TextView scoreTextView, livesTextView;
 
     //Pause screen items
-    ImageView countdownTimer;
+    private ImageView countdownTimer;
     private ConstraintLayout pauseLayout;
     private boolean isPaused;
 
@@ -228,7 +228,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     }
 
-    public void playerScored(){
+    private void playerScored(){
         score++;
         scoreTextView.setText(String.valueOf(score));
 

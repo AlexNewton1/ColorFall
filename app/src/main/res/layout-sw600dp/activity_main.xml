@@ -17,7 +17,7 @@
         android:layout_marginTop="8dp"
         android:gravity="center"
         android:text="@string/app_name"
-        android:textSize="30sp"
+        android:textSize="55sp"
         app:layout_constraintBottom_toTopOf="@+id/playBeginner"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -36,7 +36,7 @@
         android:layout_marginTop="16dp"
         android:onClick="playGame"
         android:text="@string/level_beginner"
-        android:textSize="24sp"
+        android:textSize="45sp"
         app:layout_constraintBottom_toTopOf="@+id/playEasy"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -55,7 +55,7 @@
         android:layout_marginTop="16dp"
         android:onClick="playGame"
         android:text="@string/level_easy"
-        android:textSize="24sp"
+        android:textSize="45sp"
         app:layout_constraintBottom_toTopOf="@+id/playMedium"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -74,7 +74,7 @@
         android:layout_marginTop="16dp"
         android:onClick="playGame"
         android:text="@string/level_medium"
-        android:textSize="24sp"
+        android:textSize="45sp"
         app:layout_constraintBottom_toTopOf="@+id/playHard"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -92,7 +92,7 @@
         android:layout_marginTop="16dp"
         android:onClick="playGame"
         android:text="@string/level_hard"
-        android:textSize="24sp"
+        android:textSize="45sp"
         app:layout_constraintBottom_toTopOf="@+id/playInsane"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -108,7 +108,7 @@
         android:layout_marginTop="16dp"
         android:onClick="playGame"
         android:text="@string/level_insane"
-        android:textSize="24sp"
+        android:textSize="45sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -119,17 +119,17 @@
         android:id="@+id/popup_free_trial"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="gone">
 
         <View
+            android:background="@color/browser_actions_bg_grey"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:alpha="0.5"
-            android:background="@color/browser_actions_bg_grey" />
+            android:alpha="0.5"/>
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -164,7 +164,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:onClick="showSettings"
-            android:text="@string/settings" />
+            android:text="@string/settings"
+            android:textSize="25sp" />
 
         <TextView
             android:id="@+id/creditsTextView"
@@ -172,7 +173,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:onClick="showHiScores"
-            android:text="@string/credits" />
+            android:text="@string/credits"
+            android:textSize="25sp" />
 
     </LinearLayout>
 

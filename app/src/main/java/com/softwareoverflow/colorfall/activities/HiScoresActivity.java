@@ -10,7 +10,7 @@ import com.softwareoverflow.colorfall.R;
 
 public class HiScoresActivity extends AppCompatActivity {
 
-    TextView beginnerHiScore, easyHiScore, mediumHiScore, hardHiScore, insaneHiScore;
+    private TextView beginnerHiScore, easyHiScore, mediumHiScore, hardHiScore, insaneHiScore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

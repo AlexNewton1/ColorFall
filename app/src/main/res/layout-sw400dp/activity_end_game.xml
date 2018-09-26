@@ -17,7 +17,7 @@
         android:gravity="center"
         android:padding="8dp"
         android:text="@string/game_over"
-        android:textSize="55sp"
+        android:textSize="70sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -65,13 +65,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/score"
-                android:textSize="17sp" />
+                android:textSize="22sp" />
 
             <TextView
                 android:id="@+id/endGameScoreTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="17sp" />
+                android:textSize="22sp" />
 
         </LinearLayout>
 
@@ -85,7 +85,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/new_hi_score"
-                android:textSize="17sp"
+                android:textSize="22sp"
                 android:visibility="visible" />
 
             <TextView
@@ -93,14 +93,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/hi_score"
-                android:textSize="17sp"
+                android:textSize="22sp"
                 android:visibility="gone" />
 
             <TextView
                 android:id="@+id/endGameHiScoreTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="17sp" />
+                android:textSize="22sp" />
 
         </LinearLayout>
     </LinearLayout>

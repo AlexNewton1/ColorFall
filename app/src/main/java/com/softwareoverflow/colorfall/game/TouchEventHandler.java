@@ -6,7 +6,7 @@ import com.softwareoverflow.colorfall.game_pieces.GameObject;
 
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public class TouchEventHandler {
+class TouchEventHandler {
 
     private float x1, y1;
     private GameObject touchedObject;

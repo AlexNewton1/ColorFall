@@ -26,16 +26,14 @@ public class UpgradeManager implements PurchasesUpdatedListener, BillingClientSt
 
     private static boolean hasUserUpgraded = false;
     private static boolean isConnected = false;
-    //TODO - this will be the class where all upgrades and interaction with google services are handled
 
     private String upgradePrice;
 
-    public static UpgradeManager setup(Context context){
+    public static void setup(Context context){
         if(upgradeManager == null){
-           new UpgradeManager(context.getApplicationContext());
+           upgradeManager = new UpgradeManager(context.getApplicationContext());
         }
 
-        return upgradeManager;
     }
 
     private UpgradeManager(Context context){
@@ -97,6 +95,7 @@ public class UpgradeManager implements PurchasesUpdatedListener, BillingClientSt
             }
         } else {
             //TODO -  Handle any other error codes.
+            Log.d("debug2", "NOT OK: " + responseCode);
         }
     }
 

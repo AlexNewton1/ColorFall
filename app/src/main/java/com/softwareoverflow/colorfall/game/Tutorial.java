@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
