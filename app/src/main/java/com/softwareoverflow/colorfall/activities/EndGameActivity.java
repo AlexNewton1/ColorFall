@@ -15,12 +15,15 @@ import com.softwareoverflow.colorfall.animations.FadeInOutAnimation;
 import com.softwareoverflow.colorfall.free_trial.AdvertHandler;
 import com.softwareoverflow.colorfall.free_trial.UpgradeManager;
 import com.softwareoverflow.colorfall.media.BackgroundMusicService;
+import com.softwareoverflow.colorfall.media.SoundEffectHandler;
 
 public class EndGameActivity extends AppCompatActivity {
 
     private InterstitialAd interstitialAd;
     private TextView playAgainButton, scoreTextView, hiScoreTextView;
     private String difficulty;
+
+    private View freeTrialPopup;
 
     private boolean isPlayingAgain = false;
 
@@ -46,6 +49,9 @@ public class EndGameActivity extends AppCompatActivity {
         showScore(score);
         checkIfHiScore(score);
 
+        freeTrialPopup = findViewById(R.id.popup_free_trial);
+        freeTrialPopup.findViewById(R.id.dialog_popup_bg).setClipToOutline(true);
+
 
         //setup advert in advance
         if(UpgradeManager.isFreeUser()) {
@@ -59,6 +65,8 @@ public class EndGameActivity extends AppCompatActivity {
                     leaveActivity();
                 }
             });
+
+            freeTrialPopup.setVisibility(View.VISIBLE);
         }
     }
 
@@ -114,9 +122,23 @@ public class EndGameActivity extends AppCompatActivity {
         }
     }
 
+    public void playFreeVersion(View v){
+        SoundEffectHandler.getInstance(this).playSound(SoundEffectHandler.Sound.GAME_OVER);
+        freeTrialPopup.setVisibility(View.GONE);
+    }
+
+    public void upgradeNow(View v){
+        UpgradeManager.upgrade(this);
+    }
+
 
     @Override
     protected void onResume() {
+        UpgradeManager.checkUserPurchases(this);
+        if(!UpgradeManager.isFreeUser()) {
+            interstitialAd = null;
+        }
+
         if(!BackgroundMusicService.changingActivity) {
             startService(new Intent(this, BackgroundMusicService.class));
         }
@@ -135,6 +157,11 @@ public class EndGameActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        if(freeTrialPopup.getVisibility() == View.VISIBLE){
+            playFreeVersion(null);
+            return;
+        }
+
         if(interstitialAd != null && interstitialAd.isLoaded()){
             BackgroundMusicService.changingActivity = false;
             interstitialAd.show();
