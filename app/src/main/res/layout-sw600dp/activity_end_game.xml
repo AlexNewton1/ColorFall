@@ -86,7 +86,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/new_hi_score"
                 android:textSize="35sp"
-                android:visibility="visible" />
+                android:visibility="gone" />
 
             <TextView
                 android:id="@+id/hi_score_label"
@@ -94,7 +94,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/hi_score"
                 android:textSize="35sp"
-                android:visibility="gone" />
+                android:visibility="visible" />
 
             <TextView
                 android:id="@+id/endGameHiScoreTextView"
