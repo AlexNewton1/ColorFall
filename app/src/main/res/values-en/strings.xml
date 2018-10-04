@@ -1,4 +1,88 @@
 <resources>
     <string name="app_name">ColourFall</string>
+
+    <!--___________________Splash Screen Resources_________________-->
+    <string name="background_img_content_desc">Colourful geometric pattern formed of triangles</string>
     <string name="add_color">Adding Colour</string>
+
+    <!--___________________Home Screen Resources___________________-->
+    <string name="level_beginner">Beginner</string>
+    <string name="level_easy">Easy</string>
+    <string name="level_medium">Medium</string>
+    <string name="level_hard">Hard</string>
+    <string name="level_insane">Insane</string>
+    <string name="credits">Scores</string>
+    <string name="settings">Settings</string>
+
+    <!--___________________Consent Screen Resources___________________-->
+    <string name="consent_title">Consent\nto\nAnalytics?</string>
+    <string name="consent_info">
+        We care about your privacy and data security.
+        We would like to collect analytics data about how users interact with our app
+        to help us make this app better.
+        This will include basic device and location information.\n\n
+        For more information please visit:\n
+        <a href="http://www.google.com/policies/privacy/partners/">
+        <i>How Google uses data when you use our partners’ sites or apps</i>
+        </a>
+        \n\n\n
+
+        You can change these settings at any time from the settings page.\n\n\n\n
+        Can we collect this information to help us improve this app?
+    </string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+
+    <!--___________________Settings Screen Resources_______________-->
+    <string name="settings_music">Music:</string>
+    <string name="settings_sound_effects">Sound Effects:</string>
+    <string name="settings_tutorial">Tutorial:</string>
+    <string name="settings_consent">Analytics:</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+    <string name="on">On</string>
+    <string name="off">Off</string>
+
+    <!--___________________Hi Scores Screen Resources______________-->
+    <string name="high_scores">High Scores</string>
+    <string name="beginner">Beginner:</string>
+    <string name="easy">Easy:</string>
+    <string name="medium">Medium:</string>
+    <string name="hard">Hard:</string>
+    <string name="insane">Insane:</string>
+
+    <!--___________________Game Screen Resources___________________-->
+    <string name="game_paused">Game\nPaused</string>
+    <string name="resume">Resume</string>
+    <string name="quit">Quit</string>
+    <string name="hand_pointer_content_desc">A hand icon demonstrating game play to the user</string>
+    <string name="tutorial_text">
+        Swipe the falling balls to move them to the matching column before they reach the bottom.
+        \n\n
+        Tap anywhere to continue.
+    </string>
+
+    <!--___________________End Game Screen Resources_______________-->
+    <string name="game_over">Game\n Over</string>
+    <string name="play_again">Play Again</string>
+    <string name="score">Score: </string>
+    <string name="hi_score">Hi Score: </string>
+    <string name="new_hi_score">New Hi Score: </string>
+
+    <!--___________________Image Content Description Resources_____-->
+    <string name="resume_countdown_content_desc">Fading out countdown to resume the game</string>
+    <string name="heart_img_content_desc">Heart shape overlaid with the player score</string>
+    <string name="coin_img_content_desc">Gold coin overlaid with the player score</string>
+    <string name="popup_content_desc">Popup background outlined in white</string>
+
+    <!--___________________Free Trial Dialog Resources_____________-->
+    <string name="free_trial">Free Trial</string>
+    <string name="free_trial_info">
+        You are currently playing the free version! The free version is limited to a 15 second trial for HARD and INSANE game modes.
+        \n\n
+        Upgrade now for unlimited play time and no adverts!
+    </string>
+    <string name="upgrade_now">Upgrade Now</string>
+    <string name="play_free">Play Free</string>
+
 </resources>

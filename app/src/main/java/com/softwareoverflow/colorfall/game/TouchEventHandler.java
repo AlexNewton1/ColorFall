@@ -13,7 +13,7 @@ class TouchEventHandler {
     private long downTime = 0;
     private static final int SWIPE_MIN_DISTANCE = 100;
     private static final int SWIPE_MAX_OFF_PATH = 250;
-    private static final int SWIPE_MAX_TIME = 1200;
+    private static final int SWIPE_MAX_TIME = 500;
 
     private GameView gameView;
 
