@@ -93,9 +93,6 @@ public class UpgradeManager implements PurchasesUpdatedListener, BillingClientSt
                     break;
                 }
             }
-        } else {
-            //TODO -  Handle any other error codes.
-            Log.d("debug2", "NOT OK: " + responseCode);
         }
     }
 
