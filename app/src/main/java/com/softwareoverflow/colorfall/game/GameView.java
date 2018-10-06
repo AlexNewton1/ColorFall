@@ -294,7 +294,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         countdownTimer.setVisibility(GONE);
 
 
-        if(tutorial != null){
+        if(tutorial != null && !tutorial.hasBeenShown()){
+            tutorial.cancel();
+            tutorial = new Tutorial(gameActivity, this, gameObjects);
             tutorial.resume();
         }
 

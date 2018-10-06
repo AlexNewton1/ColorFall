@@ -25,15 +25,11 @@ public class UpgradeManager implements PurchasesUpdatedListener, BillingClientSt
     private static final String UPGRADE_SKU = "colorfall_pro_upgrade";
 
     private static boolean hasUserUpgraded = false;
-    private static boolean isConnected = false;
-
-    private String upgradePrice;
 
     public static void setup(Context context){
         if(upgradeManager == null){
            upgradeManager = new UpgradeManager(context.getApplicationContext());
         }
-
     }
 
     private UpgradeManager(Context context){
@@ -45,7 +41,6 @@ public class UpgradeManager implements PurchasesUpdatedListener, BillingClientSt
 
         @Override
         public void onBillingSetupFinished(@BillingClient.BillingResponse int billingResponseCode) {
-            isConnected = true;
 
             if (billingResponseCode == BillingClient.BillingResponse.OK) {
                 List<String> skuList = new ArrayList<>();
@@ -64,7 +59,6 @@ public class UpgradeManager implements PurchasesUpdatedListener, BillingClientSt
                                         String price = skuDetails.getPrice();
 
                                         if(sku.equals(UPGRADE_SKU)){
-                                            upgradePrice = price;
                                             Log.d("debug2", "UPGRADE PRICE: " + price);
                                         }
 
@@ -72,16 +66,14 @@ public class UpgradeManager implements PurchasesUpdatedListener, BillingClientSt
                                 }
                             }
                         });
-
-
             }
         }
-        @Override
-        public void onBillingServiceDisconnected() {
-            // Try to restart the connection on the next request to
-            // Google Play by calling the startConnection() method.
-            isConnected = false;
-        }
+
+    @Override
+    public void onBillingServiceDisconnected() {
+        // Try to restart the connection on the next request to
+        // Google Play by calling the startConnection() method.
+    }
 
     @Override
     public void onPurchasesUpdated(int responseCode, @Nullable List<Purchase> purchases) {
@@ -115,9 +107,7 @@ public class UpgradeManager implements PurchasesUpdatedListener, BillingClientSt
                 billingClient.queryPurchases(BillingClient.SkuType.INAPP);
         if(purchasesResult.getResponseCode() == BillingClient.BillingResponse.OK){
             for(Purchase purchase : purchasesResult.getPurchasesList()){
-                Log.d("debug2", "Checking against purchase: " + purchase);
                 if(purchase.getSku().equals(UPGRADE_SKU)){
-                    Log.d("debug2", "Purchase recognized as UPGRADE_SKU!\nSignature: " + purchase.getSignature() + "\n" + purchase.getOriginalJson());
                     hasUserUpgraded = true;
                     break;
                 }

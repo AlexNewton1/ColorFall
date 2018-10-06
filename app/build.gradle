@@ -30,7 +30,7 @@ android {
             buildConfigField 'String', "quit_game_interstitial_ad", colorfall_quit_game_interstitial
         }
     }
-    buildToolsVersion '27.0.3'
+    buildToolsVersion '28.0.2'
 }
 
 dependencies {

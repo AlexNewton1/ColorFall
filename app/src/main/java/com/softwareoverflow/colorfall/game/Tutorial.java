@@ -98,9 +98,17 @@ public class Tutorial implements View.OnClickListener{
         }
     }
 
+    public void cancel(){
+        handler.removeCallbacks(runnable);
+    }
+
+    public boolean hasBeenShown(){
+        return hasBeenShown;
+    }
+
     @Override
     public void onClick(View v) {
-        handler.removeCallbacks(runnable);
+        cancel();
 
         hasBeenShown = true;
         showCaseView.hide();
