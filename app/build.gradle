@@ -28,20 +28,18 @@ android {
             buildConfigField 'String', "game_banner_ad_id", colorfall_game_banner_ad
             buildConfigField 'String', "end_game_interstitial_ad", colorfall_end_game_interstitial
             buildConfigField 'String', "quit_game_interstitial_ad", colorfall_quit_game_interstitial
-
-            resValue 'String', 'game_banner_ad_id', colorfall_game_banner_ad
         }
     }
-    buildToolsVersion '27.0.3'
+    buildToolsVersion '28.0.2'
 }
 
 dependencies {
     implementation 'com.github.faruktoptas:FancyShowCaseView:1.0.0'
     implementation 'com.android.billingclient:billing:1.1'
-    implementation 'com.google.firebase:firebase-core:16.0.3'
-    implementation 'com.google.firebase:firebase-ads:15.0.1'
-    implementation 'com.google.firebase:firebase-crash:16.2.0'
-    implementation 'com.google.firebase:firebase-perf:16.1.0'
+    implementation 'com.google.firebase:firebase-core:16.0.4'
+    implementation 'com.google.firebase:firebase-ads:16.0.1'
+    implementation 'com.google.firebase:firebase-crash:16.2.1'
+    implementation 'com.google.firebase:firebase-perf:16.1.2'
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.android.support:appcompat-v7:27.1.1'
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'

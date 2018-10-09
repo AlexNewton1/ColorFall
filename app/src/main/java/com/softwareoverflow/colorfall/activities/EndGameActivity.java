@@ -40,7 +40,7 @@ public class EndGameActivity extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         int score = 0;
         difficulty = "EASY";
-        if(extras != null){
+        if (extras != null) {
             score = extras.getInt("score");
             difficulty = extras.getString("difficulty");
         }
@@ -54,10 +54,10 @@ public class EndGameActivity extends AppCompatActivity {
 
 
         //setup advert in advance
-        if(UpgradeManager.isFreeUser()) {
+        if (UpgradeManager.isFreeUser()) {
             new AdvertHandler().setupGameBanner(this);
             interstitialAd = new AdvertHandler().createEndGameInterstitialAd(this);
-            interstitialAd.setAdListener(new AdListener(){
+            interstitialAd.setAdListener(new AdListener() {
 
                 @Override
                 public void onAdClosed() {
@@ -70,8 +70,8 @@ public class EndGameActivity extends AppCompatActivity {
         }
     }
 
-    private void leaveActivity(){
-        if(isPlayingAgain){
+    private void leaveActivity() {
+        if (isPlayingAgain) {
             Intent gameIntent = new Intent(this, GameActivity.class);
             gameIntent.putExtra("difficulty", difficulty);
             startActivity(gameIntent);
@@ -80,19 +80,19 @@ public class EndGameActivity extends AppCompatActivity {
         this.finish();
     }
 
-    private void animatePlayAgainButton(){
+    private void animatePlayAgainButton() {
         playAgainButton.startAnimation(new FadeInOutAnimation(Animation.INFINITE));
     }
 
-    private void showScore(int score){
+    private void showScore(int score) {
         scoreTextView.setText(String.valueOf(score));
     }
 
-    private void checkIfHiScore(int score){
+    private void checkIfHiScore(int score) {
         SharedPreferences sharedPrefs = getSharedPreferences("scores", MODE_PRIVATE);
         int levelHiScore = sharedPrefs.getInt(difficulty, 0);
 
-        if(score > levelHiScore){
+        if (score > levelHiScore) {
             levelHiScore = score;
             sharedPrefs.edit().putInt(difficulty, levelHiScore).apply();
 
@@ -111,9 +111,9 @@ public class EndGameActivity extends AppCompatActivity {
         hiScoreTextView.setText(String.valueOf(levelHiScore));
     }
 
-    public void playAgain(View v){
+    public void playAgain(View v) {
         isPlayingAgain = true;
-        if(interstitialAd != null && interstitialAd.isLoaded()){
+        if (interstitialAd != null && interstitialAd.isLoaded()) {
             BackgroundMusicService.changingActivity = false;
             interstitialAd.show();
         } else {
@@ -122,12 +122,12 @@ public class EndGameActivity extends AppCompatActivity {
         }
     }
 
-    public void playFreeVersion(View v){
+    public void playFreeVersion(View v) {
         SoundEffectHandler.getInstance(this).playSound(SoundEffectHandler.Sound.GAME_OVER);
         freeTrialPopup.setVisibility(View.GONE);
     }
 
-    public void upgradeNow(View v){
+    public void upgradeNow(View v) {
         UpgradeManager.upgrade(this);
     }
 
@@ -135,11 +135,12 @@ public class EndGameActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         UpgradeManager.checkUserPurchases(this);
-        if(!UpgradeManager.isFreeUser()) {
+        if (!UpgradeManager.isFreeUser()) {
             interstitialAd = null;
+            if (freeTrialPopup != null) freeTrialPopup.setVisibility(View.GONE);
         }
 
-        if(!BackgroundMusicService.changingActivity) {
+        if (!BackgroundMusicService.changingActivity) {
             startService(new Intent(this, BackgroundMusicService.class));
         }
         BackgroundMusicService.changingActivity = false;
@@ -149,7 +150,7 @@ public class EndGameActivity extends AppCompatActivity {
 
     @Override
     protected void onPause() {
-        if(!BackgroundMusicService.changingActivity) {
+        if (!BackgroundMusicService.changingActivity) {
             stopService(new Intent(this, BackgroundMusicService.class));
         }
         super.onPause();
@@ -157,12 +158,12 @@ public class EndGameActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if(freeTrialPopup.getVisibility() == View.VISIBLE){
+        if (freeTrialPopup.getVisibility() == View.VISIBLE) {
             playFreeVersion(null);
             return;
         }
 
-        if(interstitialAd != null && interstitialAd.isLoaded()){
+        if (interstitialAd != null && interstitialAd.isLoaded()) {
             BackgroundMusicService.changingActivity = false;
             interstitialAd.show();
         } else {
