@@ -24,6 +24,7 @@ import com.softwareoverflow.colorfall.free_trial.FreeTrialCountdown;
 import com.softwareoverflow.colorfall.game_pieces.Bitmaps;
 import com.softwareoverflow.colorfall.game_pieces.GameObject;
 import com.softwareoverflow.colorfall.game_pieces.Piece;
+import com.softwareoverflow.colorfall.media.BackgroundMusicService;
 import com.softwareoverflow.colorfall.media.SoundEffectHandler;
 
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -250,7 +251,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         livesTextView.setText(String.valueOf(lives));
 
         if(lives <= 0){
-            soundEffectHandler.playSound(SoundEffectHandler.Sound.GAME_OVER);
             endGame();
         } else {
             soundEffectHandler.playSound(SoundEffectHandler.Sound.LOSE_LIFE);
@@ -264,6 +264,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         Intent endGameIntent = new Intent(gameActivity, EndGameActivity.class);
         endGameIntent.putExtra("score", score);
         endGameIntent.putExtra("difficulty", level.name());
+
+        soundEffectHandler.playSound(SoundEffectHandler.Sound.GAME_OVER);
+        BackgroundMusicService.changingActivity = true;
         gameActivity.startActivity(endGameIntent);
 
         gameActivity.finish();

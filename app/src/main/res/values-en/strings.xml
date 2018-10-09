@@ -15,19 +15,25 @@
     <string name="settings">Settings</string>
 
     <!--___________________Consent Screen Resources___________________-->
-    <string name="consent_title">Consent\nto\nAnalytics?</string>
+    <string name="consent_title">Consent to\nAnalytics?</string>
     <string name="consent_info">
         We care about your privacy and data security.
-        We would like to collect analytics data about how users interact with our app
-        to help us make this app better.
-        This will include basic device and location information.\n\n
-        For more information please visit:\n
+        We would like to use Google Analytics for Firebase to collect analytics data
+        about how users interact with our app to help us make this app better.
+        This will include basic device and location information.
+        \n\n
+        For more info visit:
+        \n\n
         <a href="http://www.google.com/policies/privacy/partners/">
         <i>How Google uses data when you use our partners’ sites or apps</i>
         </a>
+        \n\n
+        <a href="https://firebase.google.com/support/privacy/">
+            <i>Firebase privacy policy</i>
+        </a>
         \n\n\n
-
-        You can change these settings at any time from the settings page.\n\n\n\n
+        You can change your mind at any time in the settings page.
+        \n\n\n
         Can we collect this information to help us improve this app?
     </string>
     <string name="yes">Yes</string>

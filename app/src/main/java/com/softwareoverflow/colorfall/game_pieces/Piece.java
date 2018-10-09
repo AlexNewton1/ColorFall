@@ -91,7 +91,7 @@ public class Piece extends GameObject{
         speed = BASE_SPEED * randSpeedMultiplier;
 
         int minStartY = (int) (BASE_SPEED * minSpeedMultiplier * 50) + getBitmap().getHeight();
-        int maxStartY = (int) (BASE_SPEED * maxSpeedMultiplier * 100);
+        int maxStartY = (int) (BASE_SPEED * maxSpeedMultiplier * 110);
         int startY = (random.nextInt(maxStartY - minStartY) + minStartY);
         y = -random.nextInt(startY) - getBitmap().getHeight();
     }
