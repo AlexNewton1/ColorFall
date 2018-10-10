@@ -80,14 +80,16 @@ public class GameActivity extends Activity {
         adView.resume();
 
         interstitialAd = new AdvertHandler().createQuitGameInterstitialAd(this);
-        interstitialAd.setAdListener(new AdListener(){
-            @Override
-            public void onAdClosed() {
-                super.onAdClosed();
-                finish();
-            }
+        if(interstitialAd != null){
+            interstitialAd.setAdListener(new AdListener(){
+                @Override
+                public void onAdClosed() {
+                    super.onAdClosed();
+                    finish();
+                }
 
-        });
+            });
+        }
     }
 
     private void setupGame(Level level) {

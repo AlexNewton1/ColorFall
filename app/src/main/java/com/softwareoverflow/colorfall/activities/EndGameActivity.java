@@ -57,14 +57,17 @@ public class EndGameActivity extends AppCompatActivity {
         if (UpgradeManager.isFreeUser()) {
             new AdvertHandler().setupGameBanner(this);
             interstitialAd = new AdvertHandler().createEndGameInterstitialAd(this);
-            interstitialAd.setAdListener(new AdListener() {
+            if(interstitialAd != null)
+            {
+                interstitialAd.setAdListener(new AdListener() {
 
-                @Override
-                public void onAdClosed() {
-                    BackgroundMusicService.changingActivity = false;
-                    leaveActivity();
-                }
-            });
+                    @Override
+                    public void onAdClosed() {
+                        BackgroundMusicService.changingActivity = false;
+                        leaveActivity();
+                    }
+                });
+            }
 
             freeTrialPopup.setVisibility(View.VISIBLE);
         }
