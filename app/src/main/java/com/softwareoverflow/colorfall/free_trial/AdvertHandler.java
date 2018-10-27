@@ -13,9 +13,10 @@ import com.softwareoverflow.colorfall.activities.GameActivity;
 public class AdvertHandler {
 
     private static AdView gameBannerAd;
+    private static InterstitialAd endGameInterstitialAd, quitGameInterstitialAd;
 
     private static final int AD_FREQUENCY = 3; //only show ads every x times
-    private static int quitGameInterstitialNum = 0, endGameInterstitialNum = 0;
+    private static int quitGameInterstitialNum = 2, endGameInterstitialNum = 2;
 
 
     public void setupGameBanner(final Context context) {
@@ -38,24 +39,32 @@ public class AdvertHandler {
         return gameBannerAd;
     }
 
-    public InterstitialAd createEndGameInterstitialAd(Context context) {
-        endGameInterstitialNum++;
-        if(endGameInterstitialNum % AD_FREQUENCY == 0)
-            return createInterstitial(context, BuildConfig.end_game_interstitial_ad);
-        else
-            return null;
+    public InterstitialAd getEndGameInterstitialAd(Context context) {
+        return endGameInterstitialAd;
     }
 
-    public InterstitialAd createQuitGameInterstitialAd(Context context) {
-        quitGameInterstitialNum++;
-        if(quitGameInterstitialNum % AD_FREQUENCY == 0)
-            return createInterstitial(context, BuildConfig.quit_game_interstitial_ad);
+    public InterstitialAd getQuitGameInterstitialAd(Context context) {
+        return quitGameInterstitialAd;
+    }
+
+    public void setupEndGameInterstitial(Context context) {
+        endGameInterstitialNum++;
+        if (endGameInterstitialNum % AD_FREQUENCY == 0)
+            endGameInterstitialAd = createInterstitial(context, BuildConfig.end_game_interstitial_ad);
         else
-            return null;
+            endGameInterstitialAd = null;
+    }
+
+    public void setupQuitGameInterstitial(Context context) {
+        quitGameInterstitialNum++;
+        if (quitGameInterstitialNum % AD_FREQUENCY == 0)
+            quitGameInterstitialAd = createInterstitial(context, BuildConfig.quit_game_interstitial_ad);
+        else
+            quitGameInterstitialAd = null;
     }
 
     private InterstitialAd createInterstitial(Context context, String adUnitId) {
-        InterstitialAd interstitialAd = new InterstitialAd(context);
+        InterstitialAd interstitialAd = new InterstitialAd(context.getApplicationContext());
         interstitialAd.setAdUnitId(adUnitId);
         interstitialAd.loadAd(new AdRequest.Builder().build());
         return interstitialAd;

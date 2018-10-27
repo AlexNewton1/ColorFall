@@ -45,7 +45,7 @@ public class GameActivity extends Activity {
                 (level.equals(Level.HARD) || level.equals(Level.INSANE));
 
         countdownTextView = findViewById(R.id.free_trial_countdown_tv);
-        if(isFreeTrial){
+        if (isFreeTrial) {
             FreeTrialCountdown.reset();
             countdownTextView.setVisibility(View.VISIBLE);
         } else {
@@ -55,7 +55,7 @@ public class GameActivity extends Activity {
         setupAds();
         setupGame(level);
 
-        if(ConsentActivity.userConsent == ConsentActivity.Consent.GIVEN){
+        if (ConsentActivity.userConsent == ConsentActivity.Consent.GIVEN) {
             sendAnalytics(level.name());
         }
     }
@@ -64,24 +64,24 @@ public class GameActivity extends Activity {
         return gameView;
     }
 
-    private void setupAds(){
-        if(!UpgradeManager.isFreeUser()){
+    private void setupAds() {
+        if (!UpgradeManager.isFreeUser()) {
             return;
         }
 
         adView = new AdvertHandler().getGameBannerAd();
         FrameLayout layout = findViewById(R.id.game_banner_ad_frame_wrapper);
         ViewGroup adParent = (ViewGroup) adView.getParent();
-        if(adParent != null) {
+        if (adParent != null) {
             ((ViewGroup) adView.getParent()).removeView(adView);
         }
         layout.addView(adView, ConstraintLayout.LayoutParams.WRAP_CONTENT, ConstraintLayout.LayoutParams.WRAP_CONTENT);
 
         adView.resume();
 
-        interstitialAd = new AdvertHandler().createQuitGameInterstitialAd(this);
-        if(interstitialAd != null){
-            interstitialAd.setAdListener(new AdListener(){
+        interstitialAd = new AdvertHandler().getQuitGameInterstitialAd(this);
+        if (interstitialAd != null) {
+            interstitialAd.setAdListener(new AdListener() {
                 @Override
                 public void onAdClosed() {
                     super.onAdClosed();
@@ -102,7 +102,7 @@ public class GameActivity extends Activity {
         gameView.setFreeTrial(isFreeTrial, countdownTextView);
     }
 
-    private Level getLevel(){
+    private Level getLevel() {
         Level level = Level.EASY;
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
@@ -114,7 +114,7 @@ public class GameActivity extends Activity {
     }
 
     private void sendAnalytics(String levelName) {
-        if(ConsentActivity.userConsent != ConsentActivity.Consent.GIVEN) return;
+        if (ConsentActivity.userConsent != ConsentActivity.Consent.GIVEN) return;
 
         Bundle bundle = new Bundle();
         bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "Started new game");
@@ -129,16 +129,22 @@ public class GameActivity extends Activity {
     }
 
     public void quitGame(View v) {
-        if(UpgradeManager.isFreeUser())
-            new AdvertHandler().setupGameBanner(this);
-
-        if(interstitialAd != null && interstitialAd.isLoaded() && UpgradeManager.isFreeUser()){
+        if (interstitialAd != null && interstitialAd.isLoaded() && UpgradeManager.isFreeUser()) {
             stopService(new Intent(this, BackgroundMusicService.class));
             interstitialAd.show();
         } else {
             BackgroundMusicService.changingActivity = true;
             finish();
         }
+
+        if(UpgradeManager.isFreeUser()) {
+            AdvertHandler advertHandler = new AdvertHandler();
+            advertHandler.setupGameBanner(this);
+            advertHandler.setupQuitGameInterstitial(this);
+
+        }
+
+
     }
 
 
@@ -152,12 +158,11 @@ public class GameActivity extends Activity {
         BackgroundMusicService.changingActivity = false;
 
         UpgradeManager.checkUserPurchases(this);
-        if(adView != null){
-            if(!UpgradeManager.isFreeUser()) {
+        if (adView != null) {
+            if (!UpgradeManager.isFreeUser()) {
                 adView.setVisibility(View.GONE);
                 interstitialAd = null;
-            }
-            else {
+            } else {
                 adView.resume();
             }
         }
@@ -181,7 +186,7 @@ public class GameActivity extends Activity {
         if (gameView != null) {
             gameView.onPause();
         }
-        if(adView != null){
+        if (adView != null) {
             adView.pause();
         }
 
@@ -190,7 +195,7 @@ public class GameActivity extends Activity {
 
     @Override
     public void onBackPressed() {
-        if(gameView.getTutorial() != null && gameView.getTutorial().isCurrentlyShowing){
+        if (gameView.getTutorial() != null && gameView.getTutorial().isCurrentlyShowing) {
             gameView.getTutorial().onClick(null);
             gameView.startGame();
             return;

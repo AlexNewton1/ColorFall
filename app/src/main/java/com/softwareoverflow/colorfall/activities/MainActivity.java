@@ -14,7 +14,6 @@ import com.softwareoverflow.colorfall.media.SoundEffectHandler;
 
 public class MainActivity extends AppCompatActivity {
 
-    private View freeTrialPopup;
     private String difficulty;
 
     @Override
@@ -22,9 +21,6 @@ public class MainActivity extends AppCompatActivity {
         setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        freeTrialPopup = findViewById(R.id.popup_free_trial);
-        freeTrialPopup.findViewById(R.id.dialog_popup_bg).setClipToOutline(true);
     }
 
     public void playGame(View v) {
@@ -47,13 +43,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
 
-        if(UpgradeManager.isFreeUser() &&
-                (difficulty.equals(Level.INSANE.name()) || difficulty.equals(Level.HARD.name()))){
-            freeTrialPopup.setVisibility(View.VISIBLE);
-        } else {
-            startGame(difficulty);
-        }
-
+        startGame(difficulty);
     }
 
     private void startGame(String difficulty){
@@ -100,10 +90,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
-        if(freeTrialPopup != null){
-            freeTrialPopup.setVisibility(View.GONE);
-        }
-
         checkSettings();
 
         if(!BackgroundMusicService.changingActivity) {
@@ -127,16 +113,6 @@ public class MainActivity extends AppCompatActivity {
             stopService(new Intent(this, BackgroundMusicService.class));
         }
         super.onPause();
-    }
-
-    @Override
-    public void onBackPressed() {
-        if(freeTrialPopup.getVisibility() == View.VISIBLE){
-            freeTrialPopup.setVisibility(View.GONE);
-        } else {
-            super.onBackPressed();
-        }
-
     }
 
     @Override
