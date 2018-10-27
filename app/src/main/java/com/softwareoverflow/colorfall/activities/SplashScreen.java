@@ -18,6 +18,8 @@ import android.view.animation.AccelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.ads.MobileAds;
+import com.softwareoverflow.colorfall.BuildConfig;
 import com.softwareoverflow.colorfall.R;
 import com.softwareoverflow.colorfall.free_trial.AdvertHandler;
 import com.softwareoverflow.colorfall.free_trial.UpgradeManager;
@@ -53,6 +55,7 @@ public class SplashScreen extends AppCompatActivity {
 
         UpgradeManager.setup(SplashScreen.this);
         if(UpgradeManager.isFreeUser()) {
+            MobileAds.initialize(this, BuildConfig.app_ad_id);
             AdvertHandler advertHandler = new AdvertHandler();
             advertHandler.setupGameBanner(SplashScreen.this);
             advertHandler.setupEndGameInterstitial(SplashScreen.this);
