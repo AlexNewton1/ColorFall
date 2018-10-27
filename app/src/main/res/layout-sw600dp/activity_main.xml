@@ -115,40 +115,6 @@
         app:layout_constraintTop_toBottomOf="@+id/playHard"
         app:layout_constraintVertical_bias="0.5" />
 
-    <FrameLayout
-        android:id="@+id/popup_free_trial"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:visibility="gone">
-
-        <View
-            android:background="@color/browser_actions_bg_grey"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:alpha="0.5"/>
-
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="56dp"
-            android:layout_marginEnd="24dp"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="56dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/constraintLayout"
-            app:layout_constraintVertical_weight="1">
-
-            <include layout="@layout/popup_free_trial" />
-        </FrameLayout>
-
-    </FrameLayout>
-
     <LinearLayout
         android:id="@+id/linearLayout4"
         android:layout_width="match_parent"

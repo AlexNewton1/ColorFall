@@ -56,7 +56,7 @@ public class EndGameActivity extends AppCompatActivity {
         //setup advert in advance
         if (UpgradeManager.isFreeUser()) {
             new AdvertHandler().setupGameBanner(this);
-            interstitialAd = new AdvertHandler().createEndGameInterstitialAd(this);
+            interstitialAd = new AdvertHandler().getEndGameInterstitialAd(this);
             if(interstitialAd != null)
             {
                 interstitialAd.setAdListener(new AdListener() {
@@ -69,7 +69,8 @@ public class EndGameActivity extends AppCompatActivity {
                 });
             }
 
-            freeTrialPopup.setVisibility(View.VISIBLE);
+            if(difficulty.toLowerCase().equals("hard") || difficulty.toLowerCase().equals("insane"))
+                freeTrialPopup.setVisibility(View.VISIBLE);
         }
     }
 
@@ -78,6 +79,11 @@ public class EndGameActivity extends AppCompatActivity {
             Intent gameIntent = new Intent(this, GameActivity.class);
             gameIntent.putExtra("difficulty", difficulty);
             startActivity(gameIntent);
+        }
+
+        if(UpgradeManager.isFreeUser()){
+            new AdvertHandler().setupEndGameInterstitial(this);
+            new AdvertHandler().setupQuitGameInterstitial(this);
         }
 
         this.finish();
